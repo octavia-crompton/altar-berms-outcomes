@@ -1,0 +1,23 @@
+name: berms
+channels:
+  - defaults
+dependencies:
+  - ipykernel
+  - matplotlib
+  - numpy
+  - pandas
+  - earthengine-api
+  - scipy
+  - seaborn
+  - geetools
+  - rioxarray
+  - netcdf4
+  - h5netcdf
+  - gstools
+  - bs4
+  - geopy
+  - cdsapi
+  - sympy
+  - earthaccess
+  - openpyxl
+  - datacube

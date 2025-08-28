@@ -1,0 +1,7 @@
+berm-regression/*
+figures/*
+manuscript/*
+
+summary/*
+.DS_Store
+.ipynb_checkpoints
