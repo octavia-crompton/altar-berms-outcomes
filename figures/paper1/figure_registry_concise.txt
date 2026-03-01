@@ -1,0 +1,54 @@
+### fig2 ###
+File    : fig2_geomorph_soil_intact_effective.png
+Updated : 2026-02-27 08:45
+────────────────────────────────────────────────────────────────────────
+Stats   : Panel A uses Pearson χ² (φ coefficient) for a 2×2 intact × vegetation-response
+          table; Panel B uses two-sided Fisher's exact test to compare proportions
+          between Intact and Degraded berms within each soil texture class.
+Interpretation: Berm intactness and vegetation response are statistically independent
+  (φ = -0.01, p = 0.739), indicating that intact and degraded berms produce vegetation
+  responses at similar overall rates. The exception is Sandy loam, where intact berms
+  show significantly higher vegetation response than degraded berms (p = 0.034).
+### end fig2 ###
+
+### fig3 ###
+File    : fig3_berm_condition.png
+Updated : 2026-02-27 09:39
+────────────────────────────────────────────────────────────────────────
+Stats   : Two-category panels use one-sided Fisher's exact test; multi-category panels
+          (landform, texture) use pairwise Fisher's exact with overall χ² p-value.
+Interpretation: Berm condition is strongly associated with berm length — shorter berms
+  are markedly more likely to be intact (p < 0.001) — and modestly associated with slope
+  class (p < 0.05). Landform does not significantly predict condition (p = 0.204), but
+  soil texture does (p < 0.001).
+### end fig3 ###
+
+### fig4 ###
+File    : fig4_vegetation_response.png
+Updated : 2026-02-27 08:54
+────────────────────────────────────────────────────────────────────────
+Stats   : Two-category panels use one-sided Fisher's exact test; multi-category panels
+          (landform, texture) use pairwise Fisher's exact with overall χ² p-value.
+Interpretation: Vegetation response is significantly associated with slope class (p < 0.001),
+  landform (p < 0.001), and soil texture (p < 0.001), but not with berm length alone.
+  Steep-slope berms and flood-plain berms show the highest rates of vegetation response.
+### end fig4 ###
+
+### SI_fig1 ###
+File    : SI_landform_by_predictors.png
+Updated : 2026-02-27 08:43
+────────────────────────────────────────────────────────────────────────
+Stats   : Two-sided binomial test (H₀: 50/50 split) applied within each landform group
+          for each predictor category (length, slope, clay content, soil development).
+Interpretation: Predictors are non-randomly distributed across landforms — high-clay
+  soils concentrate on flood plains, steep slopes on fan terraces, and B-horizon
+  development on fan and stream terraces — confirming that landform is a meaningful
+  stratification variable and motivating its inclusion as a covariate.
+### end SI_fig1 ###
+### Supplementary Figure 1 ###
+File    : SI\_fig1\_fa30\_pointplot\_by\_landform.png
+Updated : 2026-02-28 20:12
+────────────────────────────────────────────────────────────────────────
+Stats   : Point plots show mean $\pm$ 95\% CI of 30\,m flow accumulation (log scale) by landform, grouped by vegetation response (Panel A) and structural condition (Panel B).
+Interpretation: Flood-plain berms experience the highest contributing flow accumulation regardless of outcome, while fan-terrace berms receive the least. Within each landform, effective berms tend to have similar or higher flow accumulation than ineffective berms, and degraded berms tend toward higher values than intact berms, consistent with greater hydraulic stress on degraded structures.
+### end Supplementary Figure 1 ###

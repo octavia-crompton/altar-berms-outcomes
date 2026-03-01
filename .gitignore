@@ -1,7 +1,36 @@
-berm-regression/*
-figures/*
-manuscript/*
-
-summary/*
+# ── OS / editor ──────────────────────────────────────────────
 .DS_Store
-.ipynb_checkpoints
+Thumbs.db
+Icon?
+.vscode/
+*.swp
+*.swo
+
+# ── Python ───────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.ipynb_checkpoints/
+
+# ── Jupyter ──────────────────────────────────────────────────
+*.ipynb.bak
+
+# ── LaTeX build artifacts ────────────────────────────────────
+latex/*.aux
+latex/*.log
+latex/*.fls
+latex/*.fdb_latexmk
+latex/*.synctex.gz
+latex/*.out
+latex/*.toc
+
+# ── Large / binary data (track with Git LFS or keep local) ──
+*.tif
+*.zip
+*.pptx
+
+# ── Legacy / unused ─────────────────────────────────────────
+berm-regression/
+manuscript/
+summary/

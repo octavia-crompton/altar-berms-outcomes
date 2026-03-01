@@ -1,0 +1,201 @@
+### fig1 ###
+File    : fig1_rf_permutation_importance.png
+Updated : 2026-02-28 07:10
+────────────────────────────────────────────────────────────────────────
+Statistical test:
+Random Forest classifier with 5-fold cross-validation; permutation importance
+computed by randomly shuffling each predictor and measuring the decrease in AUC.
+Top 5 predictors shown for each outcome. Mean CV AUC for structural integrity = 0.73 ± 0.02 (n=743).
+Mean CV AUC for vegetation response = 0.66 ± 0.03 (n=743).
+
+Interpretation:
+The top predictors for structural integrity are flow accumulation, berm length,
+slope (100 m and 200 m), and soil texture. For vegetation response, the top
+predictors are landform, soil texture, flow accumulation, soil development, and
+berm length. Both outcomes are strongly associated with berm length and landscape
+position (flow accumulation), while vegetation response is more influenced by soil
+and landform characteristics than structural integrity.
+### end fig1 ###
+
+### fig1_alt ###
+File    : fig1_alt.png
+Updated : 2026-02-28 07:11
+────────────────────────────────────────────────────────────────────────
+Statistical test:
+Random Forest classifier with 5-fold cross-validation; drop-column importance
+computed by comparing baseline CV AUC (with all predictors) to CV AUC with each
+predictor removed. Mean CV AUC for structural integrity = 0.73 ± 0.01 (n=743).
+Mean CV AUC for vegetation response = 0.66 ± 0.03 (n=743).
+
+Interpretation:
+The top predictors for structural integrity are berm length, slope (200 m),
+slope (100 m), flow accumulation, and soil texture. For vegetation response,
+the top predictors are landform, soil texture, flow accumulation, berm length,
+and soil development. Both outcomes show strong associations with berm length
+and landscape position (flow accumulation), while vegetation response is more
+strongly influenced by soil and landform characteristics.
+### end fig1_alt ###
+
+### fig2 ###
+File    : fig2_geomorph_soil_intact_effective.png
+Updated : 2026-02-28 07:12
+────────────────────────────────────────────────────────────────────────
+Two-panel figure: intact/effective co-occurrence + texture dot plot.
+
+Panel A: 2×2 heatmap of Intact × Vegetation response co-occurrence.
+  N = 743 berms. φ = -0.01, p = 0.739  (no significant association).
+  Off-diagonal (discordant) cells highlighted in red.
+
+Panel B: Proportion with vegetation response by soil texture and berm
+  condition (Intact vs Degraded). Top 3 textures: slope_200, slope_100, surf_sandbg.
+  Textures with significant intact/degraded difference: Sandy loam (significant).
+
+Statistics:
+  Panel A — φ (phi coefficient) measures association between two binary
+  variables; equivalent to Pearson r for 2×2 tables. φ = 0 indicates no
+  association; ±1 indicates perfect association. p-value from Pearson χ²
+  test (N = 743).
+  Panel B — proportions compared between Intact and Degraded berms within
+  each texture class using two-sided Fisher's exact test. Bold solid lines
+  connect pairs with p < 0.05; dashed lines are non-significant.
+  p-values annotated on significant pairs.
+
+Interpretation:
+  Panel A: berm intactness and vegetation response are nearly independent
+  (φ = -0.01, p = 0.739). The near-zero φ indicates that whether a berm
+  is intact or degraded bears little overall relationship to whether it
+  produces a vegetation response.
+  Panel B: among the top 3 soil textures, only Sandy loam
+  shows a significant intact/degraded difference (p = 0.034). Intact berms
+  on Sandy loam have a notably higher proportion
+  of vegetation response than degraded berms. Finer-textured soils (clay
+  loam, silt loam) show no significant difference, possibly because higher
+  water-holding capacity reduces the marginal benefit of berm intactness.
+### end fig2 ###
+
+### fig3 ###
+File    : fig3_berm_condition.png
+Updated : 2026-02-28 07:10
+────────────────────────────────────────────────────────────────────────
+Figure 3 — Berm condition (Intact vs Degraded) by predictor class (2×2 panel)
+─────────────────────────────────────────────────────────────────────────────
+Four grouped bar panels showing the proportion of berms classified as Intact
+vs Degraded, stratified by: (A) berm length class (Long / Short, threshold
+60 m), (B) slope class (Shallow ≤2% / Steep >2%), (C) landform (fan
+terrace, flood plain, stream terrace), and (D) soil texture (classes with
+n > 100).
+
+Significance brackets use one-sided Fisher's exact tests for two-category
+panels and pairwise Fisher's exact for multi-category panels; overall
+chi-square p-values are shown in panel titles.
+
+Display mode: proportion
+
+Key test results:
+  Condition – Intact: Long (>60 m)=47.1% vs Short (<60 m)=70.4%, p=***
+  Condition – Degraded: Long (>60 m)=52.9% vs Short (<60 m)=29.6%, p=***
+  Slope – Intact: Shallow (≤ 2%)=63.3% vs Steep (> 2%)=55.0%, p=*
+  Slope – Degraded: Shallow (≤ 2%)=36.7% vs Steep (> 2%)=45.0%, p=*
+  Landform: chi-square overall p = 0.204 (ns)
+  Soil texture (n > 100): chi-square overall p = 0.000401 (significant)
+
+Interpretation:
+  Berm condition is significantly associated with berm length (shorter berms
+  tend to be more intact) and slope class. Landform and soil texture show
+  varying degrees of association with condition.
+### end fig3 ###
+
+### fig4 ###
+File    : fig4_vegetation_response.png
+Updated : 2026-02-28 07:10
+────────────────────────────────────────────────────────────────────────
+Figure 4 — Vegetation response by berm and site characteristics (2×2 panel)
+─────────────────────────────────────────────────────────────────────────────
+Four grouped bar panels showing the count of berms achieving vegetation
+response ('Effective') vs no vegetation response ('Ineffective'), stratified
+by: (A) berm length class (Long / Short, threshold 60 m), (B) slope class
+(Shallow ≤2% / Steep >2%), (C) landform (fan terrace, flood plain, stream
+terrace), and (D) soil texture (classes with n > 100).
+
+Significance brackets use one-sided Fisher's exact tests for two-category
+panels and pairwise Fisher's exact for multi-category panels; overall
+chi-square p-values are shown in panel titles.
+
+Display mode: count
+
+Key test results:
+  Berm length – Vegetation response: Long (>60 m)=48.7% vs Short (<60 m)=46.4%, p=ns
+  Berm length – No response: Long (>60 m)=51.3% vs Short (<60 m)=53.6%, p=ns
+  Slope class – Vegetation response: Shallow (≤ 2%)=37.8% vs Steep (> 2%)=57.0%, p=***
+  Slope class – No response: Shallow (≤ 2%)=62.2% vs Steep (> 2%)=43.0%, p=***
+  Landform: chi-square overall p = 0.000385 (significant)
+  Soil texture (n > 100): chi-square overall p = 1.41e-05 (significant)
+
+Interpretation:
+  Vegetation response is associated with shorter berms (more sheltered
+  micro-environment) and shallower slopes. Landform is a significant
+  predictor, with flood-plain berms showing higher response rates.
+  Soil texture differences are modest but statistically detectable.
+### end fig4 ###
+
+### SI_fig1 ###
+File    : SI_landform_by_predictors.png
+Updated : 2026-02-28 07:10
+────────────────────────────────────────────────────────────────────────
+SI Figure 1 — Landform distribution by predictor category (count, dodged bar)
+──────────────────────────────────────────────────────────────────────────────
+Four panels showing the count of berms in each landform class (Fan terraces,
+Flood plains, Stream terraces) split by: berm length class, slope class,
+clay content (high/low), and soil development (B horizon / No B horizon).
+Significance brackets show two-sided binomial tests (H₀: 50/50 split within
+each landform group); labels: *** p<0.001, ** p<0.01, * p<0.05, ns = p≥0.05.
+
+Statistical tests (two-sided binomial, H₀: equal split within landform):
+
+  Berm length (Short (≤ 50 m) vs Long (> 50 m)):
+    Fan terraces: n=276  Short (≤ 50 m)=110 (40%), Long (> 50 m)=166 (60%)  p=0.0009 ***
+    Stream terraces: n=140  Short (≤ 50 m)=71 (51%), Long (> 50 m)=69 (49%)  p=0.9327 ns
+    Flood plains: n=359  Short (≤ 50 m)=146 (41%), Long (> 50 m)=213 (59%)  p=0.0005 ***
+
+  Slope class (Shallow (≤ 2%) vs Steep (> 2%)):
+    Fan terraces: n=276  Shallow (≤ 2%)=36 (13%), Steep (> 2%)=240 (87%)  p=0.0000 ***
+    Stream terraces: n=140  Shallow (≤ 2%)=109 (78%), Steep (> 2%)=31 (22%)  p=0.0000 ***
+    Flood plains: n=359  Shallow (≤ 2%)=239 (67%), Steep (> 2%)=120 (33%)  p=0.0000 ***
+
+  Clay content (Low clay vs High clay):
+    Fan terraces: n=276  Low clay=215 (78%), High clay=61 (22%)  p=0.0000 ***
+    Stream terraces: n=140  Low clay=140 (100%), High clay=0 (0%)  p=0.0000 ***
+    Flood plains: n=359  Low clay=76 (21%), High clay=283 (79%)  p=0.0000 ***
+
+  Soil development (No B horizon vs B horizon):
+    Fan terraces: n=276  No B horizon=13 (5%), B horizon=263 (95%)  p=0.0000 ***
+    Stream terraces: n=140  No B horizon=124 (89%), B horizon=16 (11%)  p=0.0000 ***
+    Flood plains: n=359  No B horizon=349 (97%), B horizon=10 (3%)  p=0.0000 ***
+
+Interpretation:
+  Berm length: Long berms predominate on flood plains and fan terraces;
+    stream terraces show roughly equal proportions (ns), suggesting that
+    landform does not strongly constrain berm length at that setting.
+  Slope class: Steep slopes are far more common on fan terraces and flood
+    plains than on stream terraces, consistent with the geomorphic gradient
+    from active alluvial fans to low-gradient stream corridors.
+  Clay content: High-clay soils concentrate on flood plains; fan terraces
+    and stream terraces are predominantly low-clay — reflecting the finer
+    sediment deposited in flood-plain environments.
+  Soil development: B-horizon soils dominate fan terraces and stream
+    terraces, while flood plains are largely No-B-horizon, indicating younger
+    or more frequently reworked surfaces on the flood plain.
+  Overall: Predictors are non-randomly distributed across landforms,
+    motivating their inclusion as covariates and supporting landform as a
+    meaningful stratification variable in the main analysis.
+### end SI_fig1 ###
+### Supplementary Figure 1 ###
+File    : SI\_fig1\_fa30\_pointplot\_by\_landform.png
+Updated : 2026-02-28 20:12
+────────────────────────────────────────────────────────────────────────
+Statistical test:
+Point plots show mean $\pm$ 95\% CI of 30\,m flow accumulation (log scale) by landform, grouped by vegetation response (Panel A) and structural condition (Panel B).
+
+Interpretation:
+Flood-plain berms experience the highest contributing flow accumulation regardless of outcome, while fan-terrace berms receive the least. Within each landform, effective berms tend to have similar or higher flow accumulation than ineffective berms, and degraded berms tend toward higher values than intact berms, consistent with greater hydraulic stress on degraded structures.
+### end Supplementary Figure 1 ###
