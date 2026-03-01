@@ -50,7 +50,7 @@
     \rowlbl{Interpretation} & #5 \\
     \bottomrule
   \end{tabularx}
-  \vspace{2em}
+  \vspace{3em}
 }
 
 % ============================================================
@@ -158,7 +158,7 @@ statistical test applied, and a brief interpretation of the key result.
 \figentry%
   {Supplementary Figure 1}%
   {SI\_fig1\_fa30\_pointplot\_by\_landform.png}%
-  {2026-02-28 20:12}%
+  {2026-03-01 05:51}%
   {Point plots show mean $\pm$ 95\% CI of 30\,m flow accumulation (log scale) by landform, grouped by vegetation response (Panel A) and structural condition (Panel B).}%
   {Flood-plain berms experience the highest contributing flow accumulation regardless of outcome, while fan-terrace berms receive the least. Within each landform, effective berms tend to have similar or higher flow accumulation than ineffective berms, and degraded berms tend toward higher values than intact berms, consistent with greater hydraulic stress on degraded structures.}
 %% SI_FIG_1_END
@@ -201,13 +201,13 @@ These univariate rankings complement the multivariate Random Forest analysis (Fi
 \caption*{\textbf{Top 15 predictors for Vegetation Response}}
 \small
 \csvreader[
-  tabular=lcccccc,
-  table head=\toprule \textbf{Predictor} & \textbf{Type} & \textbf{n} & \textbf{McFadden R²} & \textbf{Tjur R²} & \textbf{CV AUC} & \textbf{LRT p} \\ \midrule,
+  tabular=lrrrr,
+  table head=\toprule \textbf{Predictor} & \textbf{McFadden $R^2$} & \textbf{Tjur $R^2$} & \textbf{CV AUC} & \textbf{LRT $p$} \\ \midrule,
   late after line=\\,
   table foot=\bottomrule
-]{../figures/paper1/SI_table_predictors_vegetation_response.csv}
-{predictor=\pred,type=\typ,n=\n,mcfadden_r2=\mcfad,tjur_r2=\tjur,cv_auc=\cvauc,lrt_p=\lrtp}
-{\pred & \typ & \n & \mcfad & \tjur & \cvauc & \lrtp}
+]{../figures/paper1/SI_table_predictors_vegetation_response_clean.csv}
+{predictor=\pred,mcfadden_r2=\mcfad,tjur_r2=\tjur,cv_auc=\cvauc,lrt_p=\lrtp}
+{\pred & \mcfad & \tjur & \cvauc & \lrtp}
 \end{table}
 
 \vspace{2em}
@@ -219,13 +219,22 @@ These univariate rankings complement the multivariate Random Forest analysis (Fi
 \caption*{\textbf{Top 15 predictors for Structural Integrity}}
 \small
 \csvreader[
-  tabular=lcccccc,
-  table head=\toprule \textbf{Predictor} & \textbf{Type} & \textbf{n} & \textbf{McFadden R²} & \textbf{Tjur R²} & \textbf{CV AUC} & \textbf{LRT p} \\ \midrule,
+  tabular=lrrrr,
+  table head=\toprule \textbf{Predictor} & \textbf{McFadden $R^2$} & \textbf{Tjur $R^2$} & \textbf{CV AUC} & \textbf{LRT $p$} \\ \midrule,
   late after line=\\,
   table foot=\bottomrule
-]{../figures/paper1/SI_table_predictors_structural_integrity.csv}
-{predictor=\pred,type=\typ,n=\n,mcfadden_r2=\mcfad,tjur_r2=\tjur,cv_auc=\cvauc,lrt_p=\lrtp}
-{\pred & \typ & \n & \mcfad & \tjur & \cvauc & \lrtp}
+]{../figures/paper1/SI_table_predictors_structural_integrity_clean.csv}
+{predictor=\pred,mcfadden_r2=\mcfad,tjur_r2=\tjur,cv_auc=\cvauc,lrt_p=\lrtp}
+{\pred & \mcfad & \tjur & \cvauc & \lrtp}
 \end{table}
+
+%% SI_FIG_3_START
+\figentry%
+  {Supplementary Figure 3}%
+  {SI\_fig3\_countplots\_by\_outcome\_and\_landform.png}%
+  {2026-03-01 06:29}%
+  {3$\times$3 panel of count plots. Rows: soil development (B horizon vs.\ none), berm length class (short vs.\ long), slope class (shallow vs.\ steep). Columns: vegetation response, structural condition, landform.}%
+  {Fan-terrace berms are overwhelmingly found in B-horizon soils, whereas stream-terrace and flood-plain berms dominate in soils without a B horizon. Berm length and slope class are more evenly distributed across outcomes, though short berms are disproportionately intact and steep-slope berms show a higher proportion of vegetation response.}
+%% SI_FIG_3_END
 
 \end{document}

@@ -1,10 +1,6 @@
-# [Project Name] — AI Agent Instructions (Template)
+# Altar Valley Berms — AI Agent Instructions
 
-> **Purpose:** A reusable template for `.github/copilot-instructions.md`.
-> Copy this file into a new project's `.github/` folder and fill in the
-> project-specific details marked with `[PLACEHOLDER]`.
->
-> **Last updated:** [DATE]
+> **Last updated:** 2025-03-01
 > Read this file at the start of every new chat session.
 > Update this file when new conventions, preferences, or project structure changes are established in chat.
 
@@ -12,7 +8,7 @@
 
 ## 1. Project Overview
 
-[One-paragraph description of the project's goal, domain, and primary outputs.]
+Analysis of earthen berm (detention structure) outcomes in the Altar Valley, Arizona. The project evaluates berm structural integrity (intact vs degraded / breach / flank) and effectiveness across landforms (fan terraces, stream terraces, flood plains), soil textures, slope classes, and other predictors. Primary outputs are publication-ready figures and SI tables for two manuscripts (paper1 = structural integrity paper, paper2 = effectiveness paper).
 
 ### Workspace layout
 
@@ -20,32 +16,37 @@
 project-root/
 ├── .github/copilot-instructions.md   ← THIS FILE
 ├── src/                               ← shared Python modules
-│   ├── __init__.py
-│   └── [shared_module].py            ← shared labels, constants, helpers
+│   ├── constants.py                   ← colour palettes, label dicts, orderings
+│   ├── plotting.py                    ← matplotlib / seaborn helpers
+│   ├── analysis.py                    ← stats helpers, GLM ranking, RF, SI formatters
+│   ├── registry.py                    ← figure registry helpers
+│   └── sda_access.py                  ← USDA SDA API utilities
 ├── notebooks/
-│   ├── [main-notebook].ipynb          ← primary analysis / figures
-│   ├── [secondary-notebook].ipynb     ← data processing / derived columns
+│   ├── berm analysis with API.ipynb   ← primary analysis / figures
 │   └── archive/                       ← old or dated notebooks
 ├── figures/
-│   └── [batch_name]/                  ← one folder per batch / experiment
-│       ├── fig1_*.png                 ← publication figures
-│       ├── figure_registry.txt        ← full registry (auto-generated)
-│       ├── figure_registry_concise.txt← concise registry (auto-generated)
-│       └── scratch/                   ← exploratory figures (never registered)
-├── latex/                             ← auto-generated LaTeX compilations
-│   ├── build_figure_doc.py
-│   ├── watch_registry.sh
-│   └── [batch_name]_figures.tex       ← generated (do not hand-edit)
-└── [other_code]/                      ← legacy or domain-specific modules
+│   ├── paper1/                        ← paper1 publication figures
+│   ├── paper2/                        ← paper2 publication figures
+│   └── scratch/                       ← exploratory figures (never registered)
+├── latex/
+│   ├── figure_report_paper1.tex       ← SI tables + figure list (paper1)
+│   ├── figure_report_paper2.tex       ← SI tables + figure list (paper2)
+│   ├── figure_summary_paper1.tex      ← figures-only summary PDF (paper1)
+│   └── figure_summary_paper2.tex      ← figures-only summary PDF (paper2)
+└── data/
+    ├── merged.csv                     ← primary dataset
+    └── berm_exports/                  ← per-berm exported shapefiles
 ```
 
 ### Key variables
 
 | Python name | Meaning |
 |---|---|
-| `[main_dataframe]` | Primary DataFrame (one row per [unit of analysis]) |
-| `rename` | Column → LaTeX label dict (defined in shared module) |
-| [Add project-specific variables here] |
+| `data` | Primary DataFrame (one row per berm) |
+| `df` | Filtered/derived working copy (varies by cell) |
+| `LBL_EFFECTIVE` | Canonical label for the "effective" berm outcome |
+| `lf_order` | Canonical landform display order |
+| `fail_order` | Canonical Fail_Type display order |
 
 ---
 
@@ -53,20 +54,22 @@ project-root/
 
 ### Imports & sys.path
 
-[Describe how notebooks find shared code — e.g., sys.path manipulation, package installs, etc.]
+Cell 17 (id `95b17bbf`) adds `../src` to `sys.path` and imports all constants. Subsequent cells import from the four modules individually, e.g.:
 
 ```python
-# Example pattern:
 import sys as _sys
-_sys.path.insert(0, "/absolute/path/to/src")
-from [shared_module] import (rename, renameit, FS_LABEL, FS_TITLE, FS_TICK, FS_LEG, VAR_CMAPS, ...)
+_sys.path.insert(0, '../src')
+from constants import (LBL_EFFECTIVE, LF_COLORS, lf_order, ...)
+from analysis import analyze_outcome, rank_predictors, PRETTY_LABELS, ...
+from plotting import _draw_two_cat_panel, _draw_outcome_panel, ...
+from registry import update_figure_registry, register_paper1_figure, ...
 ```
 
 ### Python environment
 
-- Python: `[path or version]`
-- Key packages: [numpy, pandas, matplotlib, seaborn, ...]
-- Virtual env: [describe or "none required"]
+- Python: `/Users/octaviacrompton/anaconda3/bin/python3` (conda `berms` env)
+- Key packages: numpy, pandas, matplotlib, seaborn, scipy, statsmodels, scikit-learn, geopandas
+- Virtual env: `berms` (defined in `environment.yml`)
 
 ### Cell structure preferences
 
@@ -86,36 +89,82 @@ USE_ALTERNATE = False   # When True, overwrite X with Y
 
 ---
 
-## 3. Shared Code — `src/[shared_module].py`
+## 3. Shared Code — `src/`
 
-All display labels, colour maps, and formatting helpers shared between notebooks live in `src/[shared_module].py`. **Do not duplicate these in notebook cells.**
+All reusable functions and constants live in the four modules below. **Do not duplicate these in notebook cells.** Notebooks import them by prepending `../src` to `sys.path` (done in cell 17).
 
-### Exports
+### `src/constants.py`
 
-| Name | Type | Purpose |
+Canonical colour palettes, label strings, and category orderings.
+
+| Export | Type | Purpose |
 |---|---|---|
-| `rename` | dict | Column → LaTeX label mappings |
-| `renameit(name, mapping)` | function | Safe lookup: returns `name` if key missing |
-| `FS_LABEL, FS_TITLE, FS_TICK, FS_LEG` | int | Global matplotlib font sizes |
-| `VAR_CMAPS` | dict | Per-variable canonical matplotlib colormaps |
-| `[CATEGORY]_COLORS` | dict | Canonical hex colours per category |
-| `[CATEGORY]_LABELS` | dict | Display labels per category |
+| `INTACT_COL`, `DEGRADED_COL`, `BREACH_COL`, `FLANK_COL` | str | Hex colours for Fail_Type categories |
+| `LF_COLORS`, `lf_order` | dict, list | Landform colours & display order |
+| `LENGTH_COLORS`, `length_order` | dict, list | Berm length class colours & order |
+| `SLOPE_COLORS`, `slope_order` | dict, list | Slope class colours & order |
+| `CLAY_COLORS`, `clay_order` | dict, list | Clay content class colours & order |
+| `SOILDEV_COLORS`, `soildev_order` | dict, list | Soil development colours & order |
+| `LBL_EFFECTIVE`, `LBL_INEFFECTIVE`, `eff_order` | str, list | Effectiveness labels |
+| `fail_order`, `fail_colors` | list, dict | Failure-type ordering and colours |
 
-### Adding new labels
+When a new categorical variable needs canonical colours, add them here.
 
-When a new column appears in the main DataFrame, add its display label to the shared module's `rename` dict — not in a notebook cell.
+### `src/plotting.py`
 
-### Colourmap assignments
+Matplotlib / seaborn helpers.
 
-Every [parameter/variable] has a fixed colourmap. Always use `VAR_CMAPS.get(var, 'viridis')` when colouring by a variable.
-
-[List the current assignments in a table:]
-
-| Variable | Colourmap |
+| Export | Purpose |
 |---|---|
-| [var1] | [cmap1] |
-| [var2] | [cmap2] |
-| ... | ... |
+| `width` | Module-level bar half-width constant (0.25) |
+| `remove_legend_titles(obj)` | Strip legend titles from Axes / FacetGrid |
+| `add_bar_edges(ax, lw)` | Add black outlines to bar patches |
+| `_sig_stars(p)` | p → `"***"` / `"**"` / `"*"` / `"ns"` |
+| `_fisher_one_sided(c_l, n_l, c_s, n_s)` | One-sided Fisher's exact in direction of observed difference |
+| `_two_cat_metrics(df_sub, group_col, cat_a, cat_b)` | Fisher exact DataFrame for two-category integrity comparison |
+| `_draw_two_cat_panel(ax, m, cat_a, cat_b, ...)` | Grouped-bar panel (two categories) |
+| `_draw_multi_cat_panel(ax, df_sub, group_col, ...)` | Grouped-bar panel (multiple categories, optional pairwise brackets) |
+| `_draw_outcome_panel(ax, result, lf_order, ..., lf_colors)` | Dot-plot with FDR-corrected significance brackets |
+
+### `src/analysis.py`
+
+Statistical analysis helpers.
+
+| Export | Purpose |
+|---|---|
+| `chi2_with_cramers_v(ct)` | Chi-square + Cramér's V from a crosstab |
+| `_two_prop_z(count1, n1, count2, n2)` | Two-proportion z-test |
+| `_bh_adjust(pvals)` | Benjamini–Hochberg FDR correction |
+| `pairwise_by_group(df, group_col, outcome_col, ...)` | All pairwise comparisons with FDR correction |
+| `analyze_outcome(df, group_col, outcome_col, ...)` | Full chi-square + pairwise analysis dict |
+| `_coerce_binary(y)` | Coerce outcome column to 0/1 float |
+| `_collapse_rare_levels(s, ...)` | Collapse rare categories to "Other" |
+| `_is_categorical(series, ...)` | Classify a series as categorical/numeric |
+| `_fit_glm_pseudoR2(df, y, x, ...)` | Binomial GLM → McFadden R², Tjur R², LRT p |
+| `_cv_auc(df, y, x, ...)` | Cross-validated AUC via logistic regression |
+| `rank_predictors(df, y, predictors, ...)` | Rank all predictors by effect size |
+| `fit_rf_binary(df, y, predictors, ...)` | Random Forest with CV metrics + permutation importance |
+| `PRETTY_LABELS` | dict mapping column names → LaTeX-ready labels |
+| `_clean_predictor_name(name, ...)` | Pretty-print a predictor name with fallback |
+| `_format_ranking_for_si(ranked_df, ...)` | Prepare ranking DataFrame for SI CSV export (3 dp, drop type/n) |
+
+### `src/registry.py`
+
+Figure registry helpers.
+
+| Export | Purpose |
+|---|---|
+| `update_figure_registry(fig_id, filename, ...)` | Main entry point — update both txt registries and LaTeX file |
+| `register_paper1_figure(fig_id, filename, ...)` | Wrapper for paper1 figures |
+| `register_paper2_figure(fig_id, filename, ...)` | Wrapper for paper2 figures |
+| `upsert_latex_figentry(tex_path, ...)` | Update a `\figentry{}` block in a .tex file |
+| `_upsert_registry_block(path, fig_id, ...)` | Low-level upsert into plain-text registry |
+
+### Adding new labels or colours
+
+- New column labels → add to `PRETTY_LABELS` in `src/analysis.py`
+- New category colours → add to the appropriate `*_COLORS` dict in `src/constants.py`
+- Never duplicate these assignments inside a notebook cell
 
 ---
 

@@ -191,7 +191,7 @@ Interpretation:
 ### end SI_fig1 ###
 ### Supplementary Figure 1 ###
 File    : SI\_fig1\_fa30\_pointplot\_by\_landform.png
-Updated : 2026-02-28 20:12
+Updated : 2026-03-01 05:51
 ────────────────────────────────────────────────────────────────────────
 Statistical test:
 Point plots show mean $\pm$ 95\% CI of 30\,m flow accumulation (log scale) by landform, grouped by vegetation response (Panel A) and structural condition (Panel B).
@@ -199,3 +199,14 @@ Point plots show mean $\pm$ 95\% CI of 30\,m flow accumulation (log scale) by la
 Interpretation:
 Flood-plain berms experience the highest contributing flow accumulation regardless of outcome, while fan-terrace berms receive the least. Within each landform, effective berms tend to have similar or higher flow accumulation than ineffective berms, and degraded berms tend toward higher values than intact berms, consistent with greater hydraulic stress on degraded structures.
 ### end Supplementary Figure 1 ###
+### Supplementary Figure 3 ###
+File    : SI\_fig3\_countplots\_by\_outcome\_and\_landform.png
+Updated : 2026-03-01 06:29
+────────────────────────────────────────────────────────────────────────
+Statistical test:
+3$\times$3 panel of count plots. Rows: soil development (B horizon vs.\ none), berm length class (short vs.\ long), slope class (shallow vs.\ steep). Columns: vegetation response, structural condition, landform.
+
+Interpretation:
+Fan-terrace berms are overwhelmingly found in B-horizon soils, whereas stream-terrace and flood-plain berms dominate in soils without a B horizon. Berm length and slope class are more evenly distributed across outcomes, though short berms are disproportionately intact and steep-slope berms show a higher proportion of vegetation response.
+### end Supplementary Figure 3 ###
+
