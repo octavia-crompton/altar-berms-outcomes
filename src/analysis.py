@@ -16,22 +16,17 @@ import pandas as pd
 from itertools import combinations
 from scipy.stats import chi2_contingency, fisher_exact, norm, chi2
 
-# Optional sklearn (used for CV AUC and random forest)
-try:
-    from sklearn.model_selection import (
-        StratifiedKFold, train_test_split, cross_validate,
-    )
-    from sklearn.preprocessing import OneHotEncoder, StandardScaler
-    from sklearn.compose import ColumnTransformer
-    from sklearn.pipeline import Pipeline
-    from sklearn.linear_model import LogisticRegression
-    from sklearn.ensemble import RandomForestClassifier
-    from sklearn.impute import SimpleImputer
-    from sklearn.metrics import roc_auc_score
-    from sklearn.inspection import permutation_importance
-    SKLEARN_OK = True
-except Exception:
-    SKLEARN_OK = False
+from sklearn.model_selection import (
+    StratifiedKFold, train_test_split, cross_validate,
+)
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.impute import SimpleImputer
+from sklearn.metrics import roc_auc_score
+from sklearn.inspection import permutation_importance
 
 import statsmodels.api as sm
 
@@ -182,6 +177,7 @@ def _coerce_binary(y):
             "false": 0, "true": 1,
             "no": 0, "yes": 1,
             "ineffective": 0, "effective": 1,
+            "no vegetation response": 0, "vegetation response": 1,
             "intact": 1, "degraded": 0,
         }
         yy = y.astype(str).str.strip().str.lower().map(m)
@@ -291,10 +287,7 @@ def _cv_auc(
     n_splits=5,
     random_state=0,
 ):
-    """Cross-validated AUC using logistic regression. Returns np.nan if sklearn unavailable."""
-    if not SKLEARN_OK:
-        return np.nan
-
+    """Cross-validated AUC via logistic regression."""
     sub = df[[y, x]].dropna().copy()
     sub[y] = _coerce_binary(sub[y])
     sub = sub.dropna(subset=[y])
@@ -367,8 +360,10 @@ def rank_predictors(
 
     Returns
     -------
-    pd.DataFrame sorted by cv_auc (or mcfadden_r2 if sklearn unavailable).
+    pd.DataFrame sorted by cv_auc (descending), then mcfadden_r2.
     """
+    if predictors is None:
+        raise ValueError("predictors must be a list of column names")
     rows = []
     for x in predictors:
         ta = None if treat_as is None else treat_as.get(x, None)
@@ -422,9 +417,6 @@ def fit_rf_binary(
     -------
     (model, metrics_dict, permutation_importance_series)
     """
-    if not SKLEARN_OK:
-        raise ImportError("scikit-learn is required for fit_rf_binary.")
-
     treat_as = treat_as or {}
 
     sub = df[predictors + [y]].copy()
@@ -499,7 +491,7 @@ def fit_rf_binary(
         random_state=random_state,
         n_jobs=-1,
     )
-    pi_series = pd.Series(pi.importances_mean, index=predictors).sort_values(ascending=False)
+    pi_series = pd.Series(pi.importances_mean, index=predictors).sort_values(ascending=False)  # type: ignore[union-attr]
 
     return model, {"n": int(len(X)), "holdout_auc": float(holdout_auc), **cv_summary}, pi_series
 

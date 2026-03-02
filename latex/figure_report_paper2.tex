@@ -75,27 +75,28 @@ registered in \texttt{figures/paper2/figure\_registry.txt}.
 \figentry%
   {Figure 2}%
   {fig2.png}%
-  {2026-02-28 20:34}%
+  {2026-03-02 07:08}%
   {Grouped comparison of berm outcome proportions between Long and Short berm classes, with per-metric 2×2 contingency-table significance tests shown as bracket annotations.}%
   {Outcome proportions differ by length class, and this figure serves as Paper 2 Figure 2 for the breach/flank-focused comparison.}
 %% FIG_2_END
+
 %% SI_TABLE_2_START
 \begin{table}[H]
   \centering
-  \caption{SI Table 2: Berm outcome proportions by length class (threshold = 60\,m). $p$-values from one-sided Fisher exact tests in the direction of the observed difference. Updated 2026-02-28 19:01.}
+  \caption{SI Table 2: Berm outcome proportions by length class (threshold = 60\,m). $\Delta$ = P(Long) $-$ P(Short) as a decimal proportion. $p$-values from one-sided Fisher exact tests in direction of the observed difference. Updated 2026-03-02 07:08.}
   \label{tab:si_table2_length_outcomes}
   \small
-  \begin{tabular}{lrrrrr}
+  \begin{tabular}{lrrrlrl}
     \toprule
-    Outcome & P(Long $>$ 60\,m) & P(Short $\leq$ 60\,m) & $\Delta$ (pp) & $p$ (1-sided) & Sig. \\
+    Outcome & P(Long $>$ 60\,m) & P(Short $\leq$ 60\,m) & $\Delta$ & Direction & $p$ (1-sided) & Sig. \\
     \midrule
-    Intact & 0.4707 & 0.7043 & -23.3516 & 0.0000 & *** \\
-    Any failure & 0.5293 & 0.2957 & 23.3516 & 0.0000 & *** \\
-    Breach & 0.2181 & 0.0802 & 13.7885 & 0.0000 & *** \\
-    Flank & 0.3112 & 0.2155 & 9.5631 & 0.0016 & ** \\
-    Vegetation response & 0.4867 & 0.4637 & 2.3043 & 0.2843 & ns \\
-    Breach | failed & 0.4121 & 0.2712 & 14.0874 & 0.0077 & ** \\
-    Flank | failed & 0.5879 & 0.7288 & -14.0874 & 0.0077 & ** \\
+    Intact & 0.471 & 0.704 & -0.234 & Long < Short & 0.000 & *** \\
+    Any failure & 0.529 & 0.296 & 0.234 & Long > Short & 0.000 & *** \\
+    Breach & 0.218 & 0.080 & 0.138 & Long > Short & 0.000 & *** \\
+    Flank & 0.311 & 0.216 & 0.096 & Long > Short & 0.002 & ** \\
+    Vegetation response & 0.487 & 0.464 & 0.023 & Long > Short & 0.284 & ns \\
+    Breach | failed & 0.412 & 0.271 & 0.141 & Long > Short & 0.008 & ** \\
+    Flank | failed & 0.588 & 0.729 & -0.141 & Long < Short & 0.008 & ** \\
     \bottomrule
   \end{tabular}
 \end{table}

@@ -1,0 +1,8 @@
+,Long (>60 m),Short (<60 m),Delta,direction,p-value (1-sided),Sig
+Intact,0.471,0.704,-0.234,Long < Short,2.6264943936444462e-11,***
+Any failure,0.529,0.296,0.234,Long > Short,2.6264943936444462e-11,***
+Breach,0.218,0.08,0.138,Long > Short,3.7831776768286834e-08,***
+Flank,0.311,0.216,0.096,Long > Short,0.001605825539815615,**
+Vegetation response,0.487,0.464,0.023,Long > Short,0.28432628538981264,ns
+Breach | failed,0.412,0.271,0.141,Long > Short,0.007654862722487893,**
+Flank | failed,0.588,0.729,-0.141,Long < Short,0.007654862722487893,**

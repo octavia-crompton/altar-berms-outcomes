@@ -263,8 +263,8 @@ Each batch folder in `figures/` gets its own auto-generated LaTeX document.
 python3 latex/build_figure_doc.py
 python3 latex/build_figure_doc.py [batch_name]
 
-# Auto-rebuild on registry changes (requires: brew install fswatch)
-./latex/watch_registry.sh
+# Auto-recompile .tex files on change (requires: brew install fswatch)
+./latex/watch_latex.sh
 ```
 
 ### Conventions

@@ -37,10 +37,10 @@ LENGTH_COLORS = {
 }
 length_order = list(LENGTH_COLORS)
 
-# ── Slope-class colours – dusty rose/burgundy family ────────────────────────
+# ── Slope-class colours – earthy browns ─────────────────────────────────────
 SLOPE_COLORS = {
-    "Shallow (≤ 2%)": "#e8d4d6",   # pale dusty rose
-    "Steep (> 2%)":   "#8b4358",   # deep muted burgundy
+    "Shallow (≤ 2%)": "#d8c3ac",   # pale mushroom
+    "Steep (> 2%)":   "#8a5a3c",   # warm chestnut
 }
 slope_order = list(SLOPE_COLORS)
 
@@ -51,17 +51,34 @@ CLAY_COLORS = {
 }
 clay_order = list(CLAY_COLORS)
 
-# ── Soil development colours – olive/sage family ─────────────────────────────
+# ── Soil development colours ──────────────────────────────────────────────────
 SOILDEV_COLORS = {
-    "No B horizon": "#d5d9be",   # pale sage green – weak development
-    "B horizon":    "#5a6b2a",   # deep olive      – stronger development
+    "B horizon":    "#5a9e6f",   # medium sage green – developed soil
+    "No B horizon": "#c4a06b",   # warm tan/khaki    – weakly developed
 }
 soildev_order = list(SOILDEV_COLORS)
 
-# ── Vegetation response display labels ───────────────────────────────────────
+# ── Soil texture colours – earthy browns/tans, finest → coarsest ──────────
+TEXTURE_COLORS = {
+    "Clay loam":        "#7b5e3a",   # rich brown       – finest
+    "Silt loam":        "#a07850",   # medium brown
+    "Loam":             "#b89a6a",   # warm khaki
+    "Sandy clay loam":  "#c9aa80",   # light khaki
+    "Fine sandy loam":  "#d9bf98",   # pale tan
+    "Sandy loam":       "#e8d4a8",   # pale sand
+    "Loamy sand":       "#f0e0bc",   # very pale sand
+    "Loamy coarse sand":"#f5ead0",   # lightest – coarsest
+}
+texture_order = list(TEXTURE_COLORS)
+
+# ── Vegetation response display labels & colours ─────────────────────────────
 LBL_EFFECTIVE   = "Vegetation response"
 LBL_INEFFECTIVE = "No vegetation response"
 eff_order = [LBL_EFFECTIVE, LBL_INEFFECTIVE]
+eff_colors = {
+    LBL_EFFECTIVE:   "#238b45",   # dark green   – vegetation response
+    LBL_INEFFECTIVE: "#bae4b3",   # pale green   – no vegetation response
+}
 
 # ── Failure type ordering & colours ──────────────────────────────────────────
 fail_order  = ["Intact", "Breach", "Flank"]

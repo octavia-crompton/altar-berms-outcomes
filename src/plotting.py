@@ -32,6 +32,7 @@ _draw_outcome_panel(ax, result, lf_order, title, ylabel)
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker as _mticker
 import seaborn as sns
 from scipy.stats import fisher_exact
 from itertools import combinations as _combinations
@@ -172,7 +173,7 @@ def _draw_two_cat_panel(ax, m, cat_a, cat_b, colors, legend_title, title):
     ax.set_ylabel("Proportion of berms")
     ax.set_title(title)
     ax.set_ylim(0, 1.0)
-    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:.0%}"))
+    ax.yaxis.set_major_formatter(_mticker.FuncFormatter(lambda v, _: f"{v:.0%}"))
     ax.legend(title=legend_title, frameon=False, fontsize=11, loc="upper right")
     sns.despine(ax=ax)
 
@@ -206,7 +207,7 @@ def _draw_multi_cat_panel(ax, df_sub, group_col, cat_order, cat_colors, title, p
 
     import pandas as pd
     ct_chi = pd.crosstab(d[group_col], d["_outcome"]).reindex(cats).dropna()
-    _, p_chi, *_ = chi2_contingency(ct_chi)
+    p_chi: float = chi2_contingency(ct_chi)[1]  # type: ignore[index]
     p_str = f"p = {p_chi:.3g}" if p_chi >= 0.001 else "p < 0.001"
 
     for ci, (cat, offset) in enumerate(zip(cats, offsets)):
@@ -276,7 +277,7 @@ def _draw_multi_cat_panel(ax, df_sub, group_col, cat_order, cat_colors, title, p
     ax.set_ylabel("Proportion of berms")
     ax.set_title(f"{title}\n({p_str})", fontsize=12)
     ax.set_ylim(0, 1.0)
-    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:.0%}"))
+    ax.yaxis.set_major_formatter(_mticker.FuncFormatter(lambda v, _: f"{v:.0%}"))
     ax.legend(frameon=False, fontsize=11, loc="upper right")
     sns.despine(ax=ax)
 
@@ -347,5 +348,5 @@ def _draw_outcome_panel(ax, result, lf_order, title, ylabel, lf_colors):
     ax.set_xticklabels(lf_order, rotation=15, ha="right")
     ax.set_ylabel(ylabel)
     ax.set_ylim(0.20, 0.80)
-    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:.0%}"))
+    ax.yaxis.set_major_formatter(_mticker.FuncFormatter(lambda v, _: f"{v:.0%}"))
     sns.despine(ax=ax)

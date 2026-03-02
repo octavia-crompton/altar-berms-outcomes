@@ -1,0 +1,109 @@
+
+Unbalanced effective:
+
+Berm effective Counts :
+effective         False  True 
+Soil_Development              
+B horizon           129    160
+No B horizon        278    208
+
+Proportion  :
+effective         False  True 
+Soil_Development              
+B horizon          0.45   0.55
+No B horizon       0.57   0.43
+
+Unbalanced intact:
+
+Berm intact Counts :
+Intact            False  True 
+Soil_Development              
+B horizon           131    158
+No B horizon        186    300
+
+Proportion  :
+Intact            False  True 
+Soil_Development              
+B horizon          0.45   0.55
+No B horizon       0.38   0.62
+-------
+
+Balanced: Slope_Class
+
+Sample sizes per partition:
+B horizon: 214
+No B horizon: 214
+
+Sample breakdown by group:
+Soil_Development  Slope_Class   
+B horizon         Shallow (≤ 2%)     56
+                  Steep (> 2%)      158
+No B horizon      Shallow (≤ 2%)     56
+                  Steep (> 2%)      158
+
+Berm counts  :
+effective         False  True 
+Soil_Development              
+B horizon            94    120
+No B horizon        111    103
+
+Proportion  :
+effective         False  True 
+Soil_Development              
+B horizon          0.44   0.56
+No B horizon       0.52   0.48
+
+Balanced: Slope_Class
+
+Berm counts  :
+Intact            False  True 
+Soil_Development              
+B horizon            96    118
+No B horizon         92    122
+
+Proportion  :
+Intact            False  True 
+Soil_Development              
+B horizon          0.45   0.55
+No B horizon       0.43   0.57
+-------
+
+Balanced: Slope_Class, Berm_Length_Class
+
+Sample sizes per partition:
+B horizon: 214
+No B horizon: 214
+
+Sample breakdown by group:
+Soil_Development  Slope_Class     Berm_Length_Class
+B horizon         Shallow (≤ 2%)  Long (> 50 m)        32
+                                  Short (≤ 50 m)       24
+                  Steep (> 2%)    Long (> 50 m)        95
+                                  Short (≤ 50 m)       63
+No B horizon      Shallow (≤ 2%)  Long (> 50 m)        32
+                                  Short (≤ 50 m)       24
+                  Steep (> 2%)    Long (> 50 m)        95
+                                  Short (≤ 50 m)       63
+
+
+Berm counts  :
+
+Proportion  :
+effective         False  True 
+Soil_Development              
+B horizon          0.45   0.55
+No B horizon       0.53   0.47
+
+Balanced: Slope_Class, Berm_Length_Class
+
+Berm counts  :
+Intact            False  True 
+Soil_Development              
+B horizon            95    119
+No B horizon         96    118
+
+Proportion  :
+Intact            False  True 
+Soil_Development              
+B horizon          0.44   0.56
+No B horizon       0.45   0.55
