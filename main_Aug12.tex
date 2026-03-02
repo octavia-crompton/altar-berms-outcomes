@@ -1,0 +1,419 @@
+\documentclass[review]{elsarticle}
+\usepackage{lineno,hyperref}
+\usepackage{multirow}
+% \usepacxkage{lineno}
+\modulolinenumbers[1]
+\setlength{\parskip}{0em}
+\usepackage[a4paper, total={6in, 9in}]{geometry}
+\usepackage{amsmath}
+\usepackage{setspace}
+% \onehalfspacing
+\setstretch{1.9}
+
+ \makeatother
+
+% \usepackage{enumitem} 
+% \setlist[enumerate]{
+% before=\let\item\myItem, % use \myItem in enumerate
+% label=\textnormal{(\arabic*)}, % format the label
+% widest=(2') % set the widest label
+% }
+
+\journal{Journal of Soil and Water Conservation}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%% Elsevier bibliography styles
+%%%%%%%%%%%%%%%%%%%%%%%
+%% To change the style, put a % in front of the second line of the current style and
+%% remove the % from the second line of the style you would like to use.
+%%%%%%%%%%%%%%%%%%%%%%%
+%% Numbered
+%\bibliographystyle{model1-num-names}
+
+%% Numbered without titles
+%\bibliographystyle{model1a-num-names}
+
+%% Harvard
+%\bibliographystyle{model2-names.bst}\biboptions{authoryear}
+
+%% Vancouver numbered
+%\usepackage{numcompress}\bibliographystyle{model3-num-names}
+
+%% Vancouver name/year
+% \usepackage{numcompress}\bibliographystyle{model4-names}\biboptions{authoryear}
+
+%% APA style
+% \bibliographystyle{model5-names}\biboptions{authoryear}
+
+%% AMA style
+\usepackage{numcompress}\bibliographystyle{model6-num-names}
+
+%% `Elsevier LaTeX' style
+% \bibliographystyle{elsarticle-num}
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{ Berm structural stability and vegetation response diverge in southwestern US rangelands}
+% Structural Integrity vs. Vegetation Response: contrasting outcomes for berms in southwestern US Rangelands
+
+% ***Other potential titles***: 
+%"Landscape controls on berm stability and vegetation response in semi-arid rangelands of the US Southwest"
+%"Soil and geomorphic controls on berm condition and vegetation response in southwestern US rangelands"
+
+
+%\author[usda,duke]{Octavia Crompton \corref{correspondingauthor}}
+%\cortext[correspondingauthor]{Octavia Crompton}
+%\ead{octavia.crompton@usda.gov}
+%\author[swrc]{Mary Nichols}
+%\author[swrc]{Dana A Lapides}
+
+%\address[usda]{USDA ARS Hydrology and Remote Sensing Lab}
+%\address[swrc]{USDA ARS Southwest Watershed Research Center}
+
+
+\linenumbers
+
+\begin{abstract} 
+Earthen berms are commonly implemented in semi-arid rangelands to control water runoff, increase soil moisture, and mitigate soil erosion. The effectiveness and stability of these berms is influenced by various environmental factors, including geomorphic position, soil properties, and vegetation. 
+
+
+This study examines how berm structural condition relates to physiographic features -- including landform, parent material, soil development, and berm morphology -- using statistical analyses, using, as a case study, 550 berms in the Altar Valley, southern Arizona.
+We also quantify berm impacts on proximal vegetation, using remotely-sensed vegetation greenness (specifically, the Soil Adjusted Vegetation Index, SAVI), 
+use diffeence in greenness between upslope and downslope to define berm `effectiveness' (differences in vegetation greenness between upslope and downslope positions)
+
+The results indicate that berms on fan terraces, and in areas with stronger soil development, exhibit greater stability and enhanced upslope vegetation greenness.
+In contrast, berms on flood plains -- where soils are less developed and more erosion-prone -- exhibit minimal upslope–downslope differences in vegetation greenness and a higher failure incidence.
+
+
+Factors such as parent material, surface slope, and berm length significantly affect berm structural condition.
+These findings highlight the importance of incorporating site-specific landscape features when planning and managing berms for erosion control and vegetation restoration in semi-arid regions.
+\end{abstract}
+
+\begin{highlights}
+\item{Across the US Southwest, water spreader and contour berms were originally constructed to capture hillslope runoff and increase infiltration upslope}  
+\item{Remote sensing and soil survey data are used to quantify soil-geomorphic impacts on berms and vegetation responses in the Altar Valley, southern Arizona} 
+\item{Landform, parent material, and soil development interact to influence berm structural condition and impact on surrounding vegetation} 
+\end{highlights}
+
+\begin{keyword}
+Water spreader and contour berms, fan terrace--stream terrace--floodplain catena, berm upslope--downslope vegetation patterns, landscape management  
+\end{keyword}
+
+\end{frontmatter}
+
+\linenumbers
+
+\section*{Plain language summary}
+Earthworks like berms are used across rangelands in the southwestern United States to help control water runoff and prevent soil erosion. These berms work by slowing down rainwater, allowing it to soak into the ground, which helps improve soil moisture and supports vegetation growth. However, over time, berms can break or wear out, which reduces their effectiveness. In this study, we looked at how different environmental factors—like soil type, slope, and the landform where berms are built—affect how well berms function and whether they remain intact.
+
+We studied 550 berms in the Altar Valley, Arizona, and measured their impact on nearby vegetation using a satellite-based method called the Soil Adjusted Vegetation Index (SAVI). We found that berms built on fan terraces and in areas with stronger, more developed soils were more likely to stay intact and led to increased vegetation growth upslope of the berms. In contrast, berms on floodplains, where soils are less developed and more prone to erosion, were more likely to fail and showed little difference in berm upslope-downslope vegetation. Stream terraces showed intermediate results, acting like a transition zone—they shared some characteristics of both the more stable fan terraces and the more erosion-prone floodplains.
+
+Other factors like the type of parent material, the steepness of the slope, and the length of the berm also played a role in how likely a berm was to fail and how much it helped vegetation. 
+
+This study helps us understand which conditions make berms more effective and long-lasting. It also shows that considering the specific characteristics of the landscape can help land managers make better decisions about where to place and maintain berms for erosion control and vegetation growth in dryland areas.
+
+\section{Introduction}
+
+Earthworks, including water spreaders, contour berms, and erosion control berms, are ubiquitous across southwestern US rangelands to control surface runoff and eroding soil. Because most surface runoff in this region is generated in response to high intensity rainfall, flash floods are common. Earthen berms constructed perpendicular to the flow direction reduce flow velocities allowing time for runoff to infiltrate and increase soil moisture, which is critical for supporting vegetation. In addition, earthen berms can capture sediment and prevent runoff from causing gully erosion. Because of their influence on water distribution and sediment movement, earthworks were often integral components of efforts to restore degraded rangelands.
+
+Earthen berms have a finite lifespan and are subject to failure over time. Although many intact berms continue to function as intended, many rangeland berms have been breached (a break through a berm) or flanked (concentrated runoff around the end of a berm). Even with ongoing monitoring and maintenance, berms can fail. Although recent research has focused on the impacts of rangeland berms on geomorphic evolution (Nichols et al.,     ) and the ecological impact of berms on vegetation patterns (         ), there has been little attention in the literature on the relation of berm condition and vegetation impacts influenced by watershed physical properties such as geomorphic position, soils, and local topography.
+
+To address outstanding gaps in knowledge, this work examines the condition of water and erosion control structures and their impact on vegetation in their vicinity. Specifically, the study focuses on the prediction of berm structural condition (intact, breached, or flanked) and SAVI-derived, $\Delta S$, (difference between upslope and downslope vegetation greenness) as a function of landform, parent material, and soil information, LiDAR-derived surface morphology, and other land use/land cover and berm features. The ability to predict berm structural condition and $\Delta S$ as a function of site-specific physical properties will allow land managers to understand the likely evolution of vegetation patterns and identify those locations where berms are at higher risk for failure. 
+
+% Add citations to the section above
+
+\section{Methods}
+\subsection{Site description: Altar Valley}
+\label{sec:Altar}
+In this study, we focus on water spreader berms that were originally constructed to capture hillslope runoff and increase infiltration upslope from these structures. We use an inventory of mapped berms in the semi-arid, 247,000 ha Altar Valley of southern Arizona, USA \cite{nichols2021landscape}.  \citet{nichols2021landscape} dataset of mapped berm locations that have been classified as intact, breached, or flanked, based on a combination of satellite imagery and aerial LiDAR data (2011 and 2016; Pima County Regional Flood Control District). This study focuses on a subset of 550 berms distributed across a variety of landforms in the Altar Valley (map figure).  
+
+\subsection{Statistical analysis}
+We hypothesize that berm structural condition and vegetative response to berms are related to watershed physical features. Chi-square ($\chi^2$) tests of independence were used to test the hypothesis that berm condition and vegetative impacts (response variables) are related to geomorphic landform, parent material, soil characteristics, berm length, and surface slope (predictor variables) (Table~\ref{tab:variables}). 
+Response variables and predictor variables were organized as categorical data. 
+Berm structural condition is described as 1 of 3 categories (intact, breached, or flanked). Landform is described as 1 of 3 categories (flood plains, stream terraces, or fan terraces, hills). Parent material is described as 1 of 3 categories (moderately fine/coarse textured alluvium, mixed alluvium, or alluvium derived from granite and/or schist, mixed alluvium).
+For each berm, local clay content, sand content, status of soil profile development, berm length, and local topographic slope were categorized as binary variables as summarized in Table~\ref{tab:variables}, with additional description in sections that follow. Pairwise $\chi^2$ tests were performed between all categorical pairs to explore relationships. A Bonferroni correction was applied to adjust $p$-values for multiple comparisons (add citation).
+
+\begin{table}[htb!]
+\centering
+\caption{\normalsize Variable categories and corresponding number of berms (N).}
+\small
+\begin{tabular}{llc}
+\hline
+& \\[\dimexpr-\normalbaselineskip+2pt]
+\textbf{Variable} & \textbf{Category} & \textbf{N} \\
+& \\[\dimexpr-\normalbaselineskip+2pt]
+\hline
+& \\[\dimexpr-\normalbaselineskip+2pt]
+\multicolumn{3}{p{10cm}}{\textit{Response variables}}\\
+\hline
+& \\[\dimexpr-\normalbaselineskip+2pt]
+Berm structural condition & Intact & 291\\
+& Breached & 88\\
+& Flanked & 155\\
+Berm $\Delta S$ & $\leq 10\%$ & 290\\
+& $>$ 10\% & 244\\ 
+& \\[\dimexpr-\normalbaselineskip+2pt]
+\hline
+& \\[\dimexpr-\normalbaselineskip+2pt]
+\multicolumn{3}{p{10cm}}{\textit{Predictor variables}}\\
+\hline
+& \\[\dimexpr-\normalbaselineskip+2pt]
+Landform & Flood plains & 172\\ 
+& Stream terraces & 137\\
+& Fan terraces, hills & 158\\
+Parent material & Moderately fine textured alluvium, & 116\\  
+& Moderately coarse textured alluvium &\\ 
+& Mixed alluvium & 229\\
+& Alluvium derived from granite & 122\\ 
+& and/or schist, Mixed alluvium &\\
+Clay content & $\leq$ 25\% & 305\\
+& $>$ 25\% & 229\\
+Sand content & $\leq$ 50\% & 247\\  
+& $>$ 50\% & 287\\
+Typical profile & Weak soil development & 296\\ 
+& Strong soil development & 171\\
+Berm length & $\leq 50$ m & 210\\ 
+& $> 50$ m & 324\\
+Slope & $\leq$ 2\% & 271\\
+& $>$ 2\% & 263\\
+\hline
+\end{tabular}
+\label{tab:variables}
+\end{table}
+
+\subsection{Berm variables}
+
+For the Altar Valley subset, we characterize and predict berm structural condition (e.g., intact, breach, flank) and vegetation response as a function of landform, parent material, soil information, berm length, and LiDAR-derived surface slope. Information on berm structural condition and other features were obtained from the \citet{nichols2021landscape} dataset. Sentinel-2 data products (10 m resolution; 2016-2024; \cite{drusch2012sentinel}) were used to compute soil adjusted vegetation index (SAVI)-derived metrics of berm impact on surrounding vegetation. First, SAVI is computed as:
+
+\begin{equation}
+ S = \frac{(NIR - RED)}{(NIR + RED + L)} \times (1 + L)
+\end{equation}
+
+\noindent where $S$ represents SAVI, $NIR$ is the near-infrared reflectance, $RED$ is the red reflectance, and $L$ is the soil brightness correction factor (typically set to 0.5) (add citation). Following the approach outlined in Crompton et al., 2024, we quantified the difference in vegetation activity between the areas immediately upslope (15$-$60 m) and downslope (15$-$60 m) of berms (compared to areas without berms). To evaluate the differences between upslope and downslope areas, we calculated the percent change in SAVI as follows:
+
+\begin{equation}
+\Delta S(U\!D_{L,m,j}) = \frac{S(U_{L,m,j}) - S(D_{L,m,j})}{S(B_{m,j})} \times 100
+\end{equation}
+
+\noindent where \(\Delta S(U\!D_{L,m,j})\) is the percent difference in SAVI, \(S(U_{L,m,j})\) represents the SAVI value in the upslope area, \(S(D_{L,m,j})\) denotes the SAVI value in the downslope area, and \(S(B_{m,j})\) is the SAVI value of a background area without berms. For each berm, we computed the monthly median SAVI for Augusts and Septembers across 2016-2024, yielding: $S(U_{L, m, j})$, $S(D_{L, m, j})$, and $S(B_{m,j})$, where $L$ represents the assessment length, $m$ the month, and $j$ the berm location. For example, $S(U_{45, m, j})$ is the monthly median SAVI 15$-$60 m upslope over Augusts and Septembers of 2016-2024 for the $j$th berm. To simplify interpretation, we use percent difference since typical SAVI values are small and range from 0.05 to 0.2 in the Altar Valley (Crompton et al., 2024). 
+
+\subsection{Landscape variables}
+
+Predictor variables representing landform, parent material, and soil development -- derived from USDA Natural Resources Conservation Service (NRCS) soil survey data -- provide key inputs for understanding berm structural condition and vegetation patterns.
+% (as measured by the SAVI-derived vegetation index, $\Delta S(U\!D_{L,m,j})$; Eq. 2). 
+Landform information provides insights into the topographical and geomorphological context of a site, influencing water flow, erosion potential, and sediment deposition, all of which directly affect berm stability and surrounding vegetation. Parent material represents the geological substrate, determining the inherent physical and chemical properties of the soil, including texture, drainage capacity, and susceptibility to erosion$-$factors that impact berm integrity over time. Soil development, which reflects the degree of soil maturity and horizon differentiation, captures processes like organic matter accumulation, nutrient cycling, and structural stability, further influencing berm efficacy in retaining water and mitigating sediment loss.
+
+In this study, our dataset included berm locations occurring on three landform types: flood plains, stream terraces, and fan terraces, hills. Parent material was categorized into three predominant types: (1) moderately fine textured alluvium, moderately coarse textured alluvium; (2) mixed alluvium; and (3) alluvium derived from granite and/or schist, mixed alluvium. Soil development was defined as ``weak" if the typical soil profile consisted of an A-C horizon, reflecting limited horizon differentiation and minimal soil-forming processes. In contrast, soil development was categorized as ``strong" if the typical profile contained a Bt or Bk horizon, indicating illuvial accumulation of silicate clays (``t") and/or pedogenic carbonate (``k"). These distinctions reflect variations in soil structure, nutrient retention, and water infiltration, which directly influence surrounding vegetation and berm structural condition. In addition, surface clay and sand content (Hengl, 2018), berm length \citep{nichols2021landscape}, and surface slope provide ancillary information as predictor variables.            
+
+\section{Results}
+
+\subsection{Controls on berm structural condition}
+
+A balanced comparison of berm structural condition between stable and unstable landforms, stratified by parent material composition and cohesion, showed marked differences in the performance of berms. 
+For stable landforms (fan terraces and stream terraces), 13\% of berms were breached, 37\% were flanked, and 49\% remained intact. 
+In contrast, unstable landforms (flood plains) exhibited higher breach rates, with 24\% of berms breached, 20\% flanked, and 56\% intact. The difference between stable and unstable landforms was statistically significant, with a chi-square value of $\chi^2 = 14.23$ and a p-value of 0.0008, highlighting the impact of landform stability on berm structural condition (Table~\ref{tab:stability_parentmat_chi}).
+
+\begin{table}[h!]
+\centering
+\caption{\normalsize Balanced comparison of berm structural condition between stable and unstable landforms, stratified by parent material composition and cohesion. Fan terraces and stream terraces are categorized as stable and flood plains as unstable. Parent materials classified as ``Mixed alluvium'' are categorized as heterogeneous/strongly cohesive, while all others are grouped as homogeneous/weakly cohesive.}
+\small
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\textbf{Landform} & \textbf{n} & \textbf{Breach} & \textbf{Flank} & \textbf{Intact} & \textbf{$\chi^2$} & \textbf{$p$-value} \\
+\hline
+\textbf{Stable} fan terraces and stream terraces & 172 & 23 (13\%) & 64 (37\%) & 85 (49\%) & 14.23 & \textbf{0.0008} \\
+\hline
+\textbf{Unstable} flood plains & 172 & 41 (24\%) & 35 (20\%) & 96 (56\%) & & \\
+\hline
+\hline
+\textbf{Homogeneous}/weakly cohesive & & & & & & \\
+\hline
+\textbf{Stable} fan terraces and stream terraces & 116 & 17 (15\%) & 55 (47\%) & 44 (38\%) & 31.31 & \textbf{$<$ 0.0001} \\
+\hline
+\textbf{Unstable} flood plains & 116 & 33 (28\%) & 16 (14\%) & 67 (58\%) & & \\
+\hline
+\hline
+\textbf{Heterogeneous}/strongly cohesive & & & & & & \\
+\hline
+\textbf{Stable} fan terraces and stream terraces & 56 & 6 (11\%) & 9 (16\%) & 41 (73\%) & 5.91 & 0.0520 \\
+\hline
+\textbf{Unstable} flood plains & 56 & 8 (14\%) & 19 (34\%) & 29 (52\%) & & \\
+\hline
+\end{tabular}
+\label{tab:stability_parentmat_chi}
+\end{table}
+
+When examining berm structural condition by parent material composition and cohesion, further contrasts were observed. For homogeneous/weakly cohesive parent materials, berms on stable landforms (fan terraces and stream terraces) had 15\% breaches, 47\% flanks, and 38\% intact, while berms on unstable landforms (flood plains) had 28\% breaches, 14\% flanks, and 58\% intact. The difference in performance between stable and unstable landforms was highly significant, with a chi-square value of $\chi^2 = 31.31$ and a p-value of $<$ 0.0001, indicating that landform stability plays a major role in berm structural condition when using homogeneous/weakly cohesive materials (Table~\ref{tab:stability_parentmat_chi}).
+
+For heterogeneous/strongly cohesive parent materials, berms on stable landforms had 11\% breaches, 16\% flanks, and 73\% intact, while berms on unstable landforms had 14\% breaches, 34\% flanks, and 52\% intact. The difference between stable and unstable landforms in this category was not statistically significant, as evidenced by a chi-square value of $\chi^2 = 5.91$ and a p-value of 0.0520, suggesting a weaker impact of landform stability on berm structural condition when cohesive materials are used (Table~\ref{tab:stability_parentmat_chi}).
+
+Slope class also played a significant role in berm structural condition. For shallow slopes ($\leq$ 2\%), berms on stable fan terraces and stream terraces exhibited 11\% breaches, 23\% flanks, and 65\% intact, while unstable flood plains on shallow slopes showed a higher proportion of breached berms at 27\%, with 19\% flanked and 54\% intact. A chi-square test yielded a value of $\chi^2 = 11.14$ and a p-value of 0.0038, indicating that berms on shallow slopes on stable landforms perform significantly better than those on unstable landforms. On steep slopes ($>$ 2\%), the performance of berms was less distinct, with stable landforms exhibiting 16\% breaches, 40\% flanks, and 44\% intact, while unstable flood plains had 12\% breaches, 26\% flanks, and 63\% intact. The difference in berm structural condition on steep slopes was not statistically significant, with a chi-square value of $\chi^2 = 3.01$ and a p-value of 0.2220 (Table~\ref{tab:stability_slope_chi}).
+
+% \begin{table}[h!]
+% \centering
+% \caption{\normalsize Balanced comparison of berm structural condition between stable and unstable landforms, stratified by slope class. Landforms of fan terraces and stream terraces are categorized as stable and flood plains are categorized as unstable. Slope is grouped into shallow ($\leq$ 2\%) and steep ($>$ 2\%) slope classes.}
+% \small
+% \begin{tabular}{|l|c|c|c|c|c|c|}
+% \hline
+% \textbf{Landform} & \textbf{n} & \textbf{Breach} & \textbf{Flank} & \textbf{Intact} & \textbf{$\chi^2$} & \textbf{$p$-value} \\
+% \hline
+% \textbf{Stable} fan terraces and stream terraces & 171 & 21 (12\%) & 47 (27\%) & 103 (60\%) & 7.92 & \textbf{0.0191} \\
+% \hline
+% \textbf{Unstable} flood plains & 171 & 40 (23\%) & 35 (20\%) & 96 (56\%) & & \\
+% \hline
+% \hline
+% \textbf{Shallow} slope ($\leq$ 2\%) & & & & & & \\
+% \hline
+% \textbf{Stable} fan terraces and stream terraces & 128 & 14 (11\%) & 30 (23\%) & 84 (65\%) & 11.14 & \textbf{0.0038} \\
+% \hline
+% \textbf{Unstable} flood plains & 128 & 35 (27\%) & 24 (19\%) & 69 (54\%) & & \\
+% \hline
+% \hline
+% \textbf{Steep} slope ($>$ 2\%) & & & & & & \\
+% \hline
+% \textbf{Stable} fan terraces and stream terraces & 43 & 7 (16\%) & 17 (40\%) & 19 (44\%) & 3.01 & 0.2220 \\
+% \hline
+% \textbf{Unstable} flood plains & 43 & 5 (12\%) & 11 (26\%) & 27 (63\%) & & \\
+% \hline
+% \end{tabular}
+% \label{tab:stability_slope_chi}
+% \end{table}
+
+The comparison of berm structural condition between parent material cohesion classes stratified by slope class again revealed distinct differences in performance. On shallow slopes, berms constructed on homogeneous/weakly cohesive materials showed 29\% breaches, 16\% flanks, and 55\% intact, while berms on heterogeneous/strongly cohesive materials had 12\% breaches, 23\% flanks, and 64\% intact. A chi-square value of $\chi^2 = 9.67$ and a p-value of 0.0080 confirmed that berms on heterogeneous/strongly cohesive materials performed significantly better than those on homogeneous/weakly cohesive materials. On steep slopes, berm structural condition was also distinct, with berms on homogeneous/weakly cohesive materials showing 8\% breaches, 47\% flanks, and 46\% intact, while those on heterogeneous/strongly cohesive materials exhibited 14\% breaches, 27\% flanks, and 59\% intact. The chi-square test for steep slopes produced a value of $\chi^2 = 7.34$ and a p-value of 0.0254, further suggesting the impact of cohesive material in stabilizing berms in steeper terrains (Table~\ref{tab:parentmat_slope_chi}).
+
+% \begin{table}[h!]
+% \centering
+% \caption{\normalsize Balanced comparison of berm structural condition between parent material composition and cohesion classes, stratified by slope class. ``Mixed alluvium'' is classified as heterogeneous/strongly cohesive, while all other parent material categories are grouped as homogeneous/weakly cohesive. Slope is binned into shallow ($\leq$ 2\%) and steep ($>$ 2\%) slope classes.}
+% \small
+% \begin{tabular}{|l|c|c|c|c|c|c|}
+% \hline
+% \textbf{Parent material composition/cohesion} & \textbf{n} & \textbf{Breach} & \textbf{Flank} & \textbf{Intact} & \textbf{$\chi^2$} & \textbf{$p$-value} \\
+% \hline
+% \textbf{Homogeneous}/weakly cohesive & 186 & 37 (20\%) & 54 (29\%) & 95 (51\%) & 5.50 & 0.0639\\
+% \hline
+% \textbf{Heterogeneous}/strongly cohesive & 186 & 24 (13\%) & 46 (25\%) & 116 (62\%) &  &\\
+% \hline
+% \hline
+% \textbf{Shallow} slope ($\leq$ 2\%) & & & & & & \\
+% \hline
+% \textbf{Homogeneous}/weakly cohesive & 107 & 31 (29\%) & 17 (16\%) & 59 (55\%) & 9.67 & \textbf{0.0080} \\
+% \hline
+% \textbf{Heterogeneous}/strongly cohesive & 107 & 13 (12\%) & 25 (23\%) & 69 (64\%) &  & \\
+% \hline
+% \hline
+% \textbf{Steep} slope ($>$ 2\%) & & & & & & \\
+% \hline
+% \textbf{Homogeneous}/weakly cohesive & 79 & 6 (8\%) & 37 (47\%) & 36 (46\%) & 7.34 & \textbf{0.0254}\\
+% \hline
+% \textbf{Heterogeneous}/strongly cohesive & 79 & 11 (14\%) & 21 (27\%) & 47 (59\%) &  &  \\
+% \hline
+% \end{tabular}
+% \label{tab:parentmat_slope_chi}
+% \end{table}
+
+Finally, when stratified by soil development class, berm structural condition continued to show differences based on the composition and cohesiveness of the parent material. On weak soil development sites, berms on homogeneous/weakly cohesive materials exhibited 28\% breaches, 14\% flanks, and 58\% intact, while berms on heterogeneous/strongly cohesive materials showed 9\% breaches, 25\% flanks, and 66\% intact. A chi-square value of $\chi^2 = 15.32$ and a p-value of 0.0005 indicated that berms on heterogeneous/strongly cohesive materials performed significantly better on weakly developed soils. In contrast, on strong soil development sites, berms on homogeneous/weakly cohesive materials had 16\% breaches, 43\% flanks, and 41\% intact, while those on heterogeneous/strongly cohesive materials had 10\% breaches, 33\% flanks, and 57\% intact. The chi-square test for strong soil development sites produced a value of $\chi^2 = 2.70$ and a p-value of 0.2591, suggesting no significant difference between material types on strongly developed soils (Table~\ref{tab:parentmat_soildev_chi}).
+
+% \begin{table}[h!]
+% \centering
+% \caption{\normalsize Balanced comparison of berm structural condition between parent material composition and cohesion classes, stratified by soil development class. Parent materials classified as ``Mixed alluvium'' are categorized as heterogeneous/strongly cohesive, while all others are grouped as homogeneous/weakly cohesive. Soil development is considered strong if a Bt and/or Bk horizon is present and weak if absent.}
+% \small
+% \begin{tabular}{|l|c|c|c|c|c|c|}
+% \hline
+% \textbf{Parent material composition/cohesion} & \textbf{n} & \textbf{Breach} & \textbf{Flank} & \textbf{Intact} & \textbf{$\chi^2$} & \textbf{$p$-value} \\
+% \hline
+% \textbf{Homogeneous}/weakly cohesive & 165 & 41 (25\%) & 37 (22\%) & 87 (53\%) & 13.26 & \textbf{0.0013}\\
+% \hline
+% \textbf{Heterogeneous}/strongly cohesive & 165 & 16 (10\%) & 45 (27\%) & 104 (63\%) &  &\\
+% \hline
+% \hline
+% \textbf{Weak} soil development & & & & & & \\
+% \hline
+% \textbf{Homogeneous}/weakly cohesive & 116 & 33 (28\%) & 16 (14\%) & 67 (58\%) & 15.32 & \textbf{0.0005} \\
+% \hline
+% \textbf{Heterogeneous}/strongly cohesive & 116 & 11 (9\%) & 29 (25\%) & 76 (66\%) &  & \\
+% \hline
+% \hline
+% \textbf{Strong} soil development & & & & & & \\
+% \hline
+% \textbf{Homogeneous}/weakly cohesive & 49 & 8 (16\%) & 21 (43\%) & 20 (41\%) & 2.70 & 0.2591\\
+% \hline
+% \textbf{Heterogeneous}/strongly cohesive & 49 & 5 (10\%) & 16 (33\%) & 28 (57\%) &  &  \\
+% \hline
+% \end{tabular}
+% \label{tab:parentmat_soildev_chi}
+% \end{table}
+
+%Strategic placement of berms on heterogeneous and cohesive, well-developed soils on stable, gently sloping landforms can significantly reduce the likelihood of breaching and flanking and enhance long-term performance.
+
+\subsection{Controls on vegetation response}
+
+
+
+\section{Discussion}
+
+\begin{table}[h!]
+\centering
+\caption{\normalsize Deviations from ideal conditions for berm structural stability, and associated berm structural outcomes}
+\small
+\begin{tabular}{|p{3 cm}|p{3.5cm}|p{3.5cm}|p{4cm}|}
+\hline
+\textbf{Category} & \textbf{Ideal condition} & \textbf{Change} & \textbf{Structural outcome } \\
+\hline
+\textbf{Landform} & Stable surface (e.g., older fan terrace or older stream terrace) & To flood plain & More breaching, due to pooling, saturation slumping, and/or rill and gully formation on the berm slope\\
+\cline{3-4}
+ & & To steep fan terrace & More flanking, due to lateral flow \\
+\hline
+\textbf{Parent material} & Heterogeneous/cohesive (e.g., mixed alluvium) & To unconsolidated fine textured alluvium or granite-schist alluvium & More breaching and flanking, due to more homogeneous and less cohesive material \\
+\hline
+\textbf{Soil development} & Well-developed profile (e.g., Bt and/or Bk horizons) & To weakly developed soils (e.g., A-C profiles) & More breaching and flanking, due to a less stable surface and more easily erodible soils \\
+\hline
+\textbf{Berm length} & Shorter berms ($\leq$ 50 m) & Increase berm length & More breaching and flanking, due to greater stress and flow concentration \\
+\hline
+\textbf{Slope} & Shallow slope ($\leq$ 2\%) & Increase slope & More breaching and flanking, due to higher runoff energy \\
+\hline
+\end{tabular}
+\label{tab:berm_outcomes}
+\end{table}
+
+This study demonstrates that berm structural condition and vegetation response are shaped by a range of site-specific geomorphic and environmental factors, but these two outcomes are not always directly aligned. While berms in certain settings remain structurally intact, they do not always yield strong vegetation responses, and vice versa. This decoupling underscores the importance of evaluating both structural and ecological performance when assessing the effectiveness of rangeland berms.
+
+Several variables—including landform, parent material, soil development, berm length, and slope—significantly influenced berm condition. Berms were more frequently intact in areas with strongly developed soils and lower slopes, especially on stable landforms such as fan terraces and older stream terraces. In contrast, berms located on steeper slopes and constructed from less cohesive parent materials (e.g., granite- and schist-derived alluvium) were more prone to breaching and flanking. Berm length also emerged as a key factor: longer berms ($>$50 m) showed higher rates of failure, likely due to greater structural stress and increased opportunities for concentrated flow paths to develop around or through the berm.
+
+Stream terraces exhibited intermediate behavior, reinforcing their role as a transitional landform. While fan terraces were generally associated with greater berm stability and floodplains with higher rates of failure, stream terraces reflected characteristics of both. This suggests that landform classification alone may not be sufficient to predict berm outcomes; rather, it must be interpreted in conjunction with factors such as soil development, slope, and parent material.
+
+Soil development was a strong cross-cutting control. Berms located in soils with well-developed profiles (e.g., presence of Bt or Bk horizons) were more likely to be intact and also associated with greater vegetation response. These soils likely provide improved structural integrity and hydrologic properties—such as higher infiltration and water retention—that promote both berm persistence and plant growth. In contrast, weakly developed soils corresponded to higher failure rates and lower $\Delta S$, reflecting less favorable conditions for both stability and vegetation establishment.
+
+Vegetation response, as measured by the $\Delta S$ index, was significantly influenced by landform, soil development, slope, and parent material. Similar to berm condition, stronger soil development and more cohesive parent materials (e.g., mixed alluvium) supported greater vegetation greenness upslope of berms. However, berm structural condition itself was not significantly associated with $\Delta S$, suggesting that intactness does not guarantee vegetation success. This may reflect time lags in vegetation response, legacy effects from previous disturbance, or other site-level hydrologic processes not fully captured by structural condition alone.
+
+Slope played a nuanced role. Berms on steeper slopes were more likely to fail structurally but exhibited higher vegetation response. This may indicate that while steeper slopes enhance the potential for runoff redistribution—benefiting upslope vegetation—they also increase erosive forces that compromise berm stability. These contrasting effects highlight the tradeoffs involved in placing berms on steep terrain.
+
+Sand content also influenced vegetation response: berms in sandier soils ($>$50\% sand) were associated with lower $\Delta S$, possibly due to limited water-holding capacity. In contrast, clay content did not significantly affect berm performance, reinforcing the importance of considering soil development and overall structure rather than texture alone.
+
+Taken together, these results suggest that berm effectiveness is shaped by a complex interplay of structural and environmental controls. Strategic berm placement in areas with stronger soils, lower slopes, and cohesive substrates can enhance both structural longevity and ecological benefit. In addition, recognizing the transitional nature of stream terraces and the limits of structural condition as a sole indicator of function may help refine conservation planning. Future restoration and monitoring efforts should continue to integrate soil-geomorphic, hydrologic, and ecological data to optimize berm performance in semi-arid rangelands.
+
+\section{Conclusion}
+
+This study demonstrates that integrating geomorphic and soil information is essential for understanding and predicting the performance of water and erosion control berms in semi-arid rangelands. We found that berms situated on more stable landforms, particularly fan terraces and older stream terraces, and underlain by strongly developed soils, were more likely to remain intact. These structurally stable berms also tended to support greater vegetation greenness upslope, as indicated by higher values of $\Delta S$. In contrast, berms on floodplains, steeper slopes, or in areas with weak soil development and less cohesive parent material were more susceptible to breaching and flanking, reducing their effectiveness in runoff retention and vegetation restoration.
+
+Importantly, berm structural condition did not consistently predict vegetation response, highlighting the need to assess both physical integrity and ecological function independently. Some landforms, such as stream terraces, exhibited intermediate characteristics, underscoring the importance of evaluating site-specific combinations of slope, soil development, and parent material in berm planning.
+
+By combining terrain, soil, and vegetation data, land managers can better anticipate berm performance and prioritize maintenance or restoration efforts in areas at higher risk of failure. The use of satellite-derived vegetation indices like SAVI offers a scalable and effective approach for monitoring berm impact on rangeland vegetation over time. Collectively, these findings support a more nuanced, landscape-informed approach to the design, evaluation, and management of earthworks aimed at improving water retention and vegetation outcomes in dryland ecosystems.
+
+Future research should continue to refine predictive models by integrating additional environmental variables, long-term monitoring, and hydrologic data to strengthen decision-support tools for rangeland restoration and conservation planning.
+
+\section*{Funding}
+
+ 
+
+\section*{Disclosure of interest}
+
+There are no relevant financial or non-financial competing interests to report.
+
+
+\bibliography{local.bib}
+\end{document}
+
+
