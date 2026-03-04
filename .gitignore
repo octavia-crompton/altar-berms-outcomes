@@ -30,6 +30,18 @@ latex/*.toc
 *.zip
 *.pptx
 
+# ── Overleaf manuscript (tracked separately via overleaf remote) ─────────────
+main.tex
+main_Aug12.tex
+main_Jan12.tex
+elsarticle-num.bst
+model6-num-names.bst
+numcompress.sty
+local.bib
+references.bib
+Figures/
+Altar berm manuscript drafts/
+
 # ── Legacy / unused ─────────────────────────────────────────
 berm-regression/
 manuscript/

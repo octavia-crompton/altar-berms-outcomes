@@ -6,24 +6,24 @@ Analysis of earthen berm structural condition and vegetation response across the
 
 ## Background
 
-Earthen berms are widely used across rangelands in the southwestern United States to slow surface runoff, increase infiltration, reduce erosion, and support vegetation recovery. However, berms degrade over time — they can be **breached** (a break through the structure) or **flanked** (concentrated flow around the end of the berm) — and their effectiveness varies considerably across the landscape.
+Earthen berms are widely used across rangelands in the southwestern United States to slow surface runoff, increase infiltration, reduce erosion, and support vegetation recovery. However, berms degrade over time — they can be *breached* (a break through the structure) or *flanked* (concentrated flow around the end of the berm) — and their effectiveness varies considerably across the landscape.
 
-This project investigates how **geomorphic position**, **soil properties**, **slope**, and **berm geometry** influence:
-1. **Structural condition** — whether a berm remains intact, is breached, or is flanked
-2. **Vegetation response** — the upslope–downslope difference in satellite-derived vegetation greenness (SAVI) near each berm
+This project investigates how *geomorphic position*, *soil properties*, *slope*, and *berm geometry* influence:
+1. *Structural condition* — whether a berm remains intact, is breached, or is flanked
+2. *Vegetation response* — the upslope–downslope difference in satellite-derived vegetation greenness (SAVI) near each berm
 
-The study area is the **Altar Valley**, a 247,000 ha semi-arid watershed in southern Arizona, USA.
+The study area is the *Altar Valley*, a 247,000 ha semi-arid watershed in southern Arizona, USA.
 
 ---
 
 ## Key Findings
 
-- Berms on **fan terraces** with well-developed soils (Bt/Bk horizons) are significantly more likely to remain intact and show greater upslope vegetation greenness
-- Berms on **flood plains** have higher breach rates and show smaller upslope–downslope vegetation differences
-- **Stream terraces** exhibit intermediate behavior, reflecting their transitional geomorphic position
-- **Longer berms** (> 50 m) and **steeper slopes** (> 2%) are associated with higher failure rates
-- Berm structural condition and vegetation response are **not tightly coupled** — intact berms do not always produce strong vegetation responses, and vice versa
-- **Soil development** (presence of B horizons) is a consistent cross-cutting predictor of both berm stability and vegetation response
+- Berms on *fan terraces* with well-developed soils (Bt/Bk horizons) are significantly more likely to remain intact and show greater upslope vegetation greenness
+- Berms on *flood plains* have higher breach rates and show smaller upslope–downslope vegetation differences
+- *Stream terraces* exhibit intermediate behavior, reflecting their transitional geomorphic position
+- *Longer berms* (> 50 m) and *steeper slopes* (> 2%) are associated with higher failure rates
+- Berm structural condition and vegetation response are *not tightly coupled* — intact berms do not always produce strong vegetation responses, and vice versa
+- *Soil development* (presence of B horizons) is a consistent cross-cutting predictor of both berm stability and vegetation response
 
 ---
 

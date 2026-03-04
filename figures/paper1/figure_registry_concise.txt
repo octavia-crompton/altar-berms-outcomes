@@ -25,11 +25,15 @@ Interpretation: Berm condition is strongly associated with berm length — short
 
 ### fig4 ###
 File    : fig4_vegetation_response.png
-Updated : 2026-03-02 15:29
+Updated : 2026-03-03 20:06
 ────────────────────────────────────────────────────────────────────────
 Stats   : Two-category panels (length, slope) use a one-sided Fisher's exact test; multi-category panels (landform, texture) use pairwise Fisher's exact tests with the overall chi-squared p-value shown in the panel title.
 Interpretation: Vegetation response is significantly associated with slope class (p < 0.001), landform (p < 0.001), and soil texture (p < 0.001), but not with berm length alone. Steep-slope berms and flood-plain berms show the highest rates of vegetation response.
 ### end fig4 ###
+
+
+
+
 
 
 
@@ -58,7 +62,7 @@ Interpretation: Predictors are non-randomly distributed across landforms — hig
 ### end SI_fig1 ###
 ### Supplementary Figure 1 ###
 File    : SI\_fig1\_fa30\_pointplot\_by\_landform.png
-Updated : 2026-03-02 15:29
+Updated : 2026-03-03 20:06
 ────────────────────────────────────────────────────────────────────────
 Stats   : Point plots show mean $\pm$ 95\% CI of 30\,m flow accumulation (log scale) by landform, grouped by vegetation response (Panel A) and structural condition (Panel B).
 Interpretation: Flood-plain berms experience the highest contributing flow accumulation regardless of outcome, while fan-terrace berms receive the least. Within each landform, effective berms tend to have similar or higher flow accumulation than ineffective berms, and degraded berms tend toward higher values than intact berms, consistent with greater hydraulic stress on degraded structures.
@@ -77,31 +81,41 @@ Interpretation: Flood-plain berms experience the highest contributing flow accum
 
 
 
+
+
+
+
 ### Supplementary Figure 3 ###
 File    : SI\_fig3\_countplots\_by\_outcome\_and\_landform.png
-Updated : 2026-03-02 15:29
+Updated : 2026-03-03 20:06
 ────────────────────────────────────────────────────────────────────────
 Stats   : 3$\times$3 panel of count plots. Rows: soil development (B horizon vs.\ none), berm length class (short vs.\ long), slope class (shallow vs.\ steep). Columns: vegetation response, structural condition, landform.
 Interpretation: Fan-terrace berms are overwhelmingly found in B-horizon soils, whereas stream-terrace and flood-plain berms dominate in soils without a B horizon. Berm length and slope class are more evenly distributed across outcomes, though short berms are disproportionately intact and steep-slope berms show a higher proportion of vegetation response.
 ### end Supplementary Figure 3 ###
 
 
+
+
+
+
 ### fig1 ###
 File    : fig1_rf_permutation_importance.png
-Updated : 2026-03-02 15:31
+Updated : 2026-03-02 18:43
 ────────────────────────────────────────────────────────────────────────
 Stats   : Random Forest (n_estimators=300, class_weight='balanced'), 5-fold stratified CV. Permutation importance = mean decrease in holdout AUC from shuffling each predictor (30 repeats). Top 5 predictors shown for each outcome. CV AUC (condition) = 0.73 ± 0.01 (n=743). CV AUC (vegetation response) = 0.65 ± 0.04 (n=743).
 Interpretation: Flow accumulation and berm length dominate condition prediction. Hillslope gradient and soil properties (texture, typical profile) are more important for vegetation response than for condition, reflecting different mechanisms.
 ### end fig1 ###
 
 
+
 ### fig1_alt ###
 File    : fig1_alt.png
-Updated : 2026-03-02 15:32
+Updated : 2026-03-02 18:44
 ────────────────────────────────────────────────────────────────────────
 Stats   : Drop-column (leave-one-out) importance: Random Forest (n_estimators=300, class_weight='balanced'), 5-fold stratified CV. Importance = decrease in mean CV AUC when predictor is removed from the full model. Top 5 predictors shown per outcome. Full-model CV AUC: condition = 0.73 ± 0.01, vegetation response = 0.65 ± 0.04.
 Interpretation: Drop-column importances corroborate permutation importance rankings. Removing flow accumulation or berm length produces the largest AUC drop for condition; soil properties and landform show the largest effect for vegetation response.
 ### end fig1_alt ###
+
 
 
 

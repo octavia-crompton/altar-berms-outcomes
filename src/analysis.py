@@ -25,7 +25,12 @@ from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import (
+    roc_auc_score, confusion_matrix, matthews_corrcoef,
+    brier_score_loss, log_loss, average_precision_score,
+    accuracy_score, balanced_accuracy_score, precision_score,
+    recall_score, f1_score
+)
 from sklearn.inspection import permutation_importance
 
 import statsmodels.api as sm
@@ -400,6 +405,56 @@ def rank_predictors(
 # 3. Random-forest fitting
 # ============================================================================
 
+# ── Scoring helpers ────────────────────────────────────────────────────────
+def _specificity(y_true, y_pred):
+    """Calculate specificity (True Negative Rate)."""
+    tn, fp, fn, tp = confusion_matrix(y_true, y_pred, labels=[0, 1]).ravel()
+    return tn / (tn + fp) if (tn + fp) else np.nan
+
+
+def spec_scorer(estimator, X, y):
+    """Scorer: specificity."""
+    return _specificity(y, estimator.predict(X))
+
+
+def mcc_scorer(estimator, X, y):
+    """Scorer: Matthews Correlation Coefficient."""
+    return matthews_corrcoef(y, estimator.predict(X))
+
+
+def neg_brier_scorer(estimator, X, y):
+    """Scorer: negative Brier score (higher is better)."""
+    p = estimator.predict_proba(X)[:, 1]
+    return -brier_score_loss(y, p)
+
+
+def neg_logloss_scorer(estimator, X, y):
+    """Scorer: negative log-loss (higher is better)."""
+    p2 = estimator.predict_proba(X)  # (n,2)
+    return -log_loss(y, p2, labels=[0, 1])
+
+
+# ── Helper functions ──────────────────────────────────────────────────────
+def _is_cat_col(series, treat_as_val=None, max_unique=20):
+    """Local helper: True if series should be treated as categorical."""
+    if treat_as_val == "categorical":
+        return True
+    if treat_as_val == "numeric":
+        return False
+    return series.dtype == object or series.dtype.name == "category" or series.nunique() <= max_unique
+
+
+def _unique_preserve(lst):
+    """Remove duplicates from a list while preserving order."""
+    seen = set()
+    out = []
+    for x in lst:
+        if x not in seen:
+            seen.add(x)
+            out.append(x)
+    return out
+
+
 def fit_rf_binary(
     df,
     y,
@@ -493,7 +548,12 @@ def fit_rf_binary(
     )
     pi_series = pd.Series(pi.importances_mean, index=predictors).sort_values(ascending=False)  # type: ignore[union-attr]
 
-    return model, {"n": int(len(X)), "holdout_auc": float(holdout_auc), **cv_summary}, pi_series
+    metrics = {
+        "cv": cv_summary,
+        "holdout": {"auc": float(holdout_auc)},
+        "n": int(len(X)),
+    }
+    return model, metrics, pi_series
 
 
 # ============================================================================
