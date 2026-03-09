@@ -129,7 +129,7 @@ statistical test applied, and a brief interpretation of the key result.
 \figentry%
   {fig4}%
   {fig4_vegetation_response.png}%
-  {2026-03-03 20:06}%
+  {2026-03-08 19:48}%
   {Two-category panels (length, slope) use a one-sided Fisher's exact test; multi-category panels (landform, texture) use pairwise Fisher's exact tests with the overall chi-squared p-value shown in the panel title.}%
   {Vegetation response is significantly associated with slope class (p < 0.001), landform (p < 0.001), and soil texture (p < 0.001), but not with berm length alone. Steep-slope berms and flood-plain berms show the highest rates of vegetation response.}
 %% FIG_4_END
@@ -139,7 +139,7 @@ statistical test applied, and a brief interpretation of the key result.
 \figentry%
   {Supplementary Figure 1}%
   {SI\_fig1\_fa30\_pointplot\_by\_landform.png}%
-  {2026-03-03 20:06}%
+  {2026-03-08 19:48}%
   {Point plots show mean $\pm$ 95\% CI of 30\,m flow accumulation (log scale) by landform, grouped by vegetation response (Panel A) and structural condition (Panel B).}%
   {Flood-plain berms experience the highest contributing flow accumulation regardless of outcome, while fan-terrace berms receive the least. Within each landform, effective berms tend to have similar or higher flow accumulation than ineffective berms, and degraded berms tend toward higher values than intact berms, consistent with greater hydraulic stress on degraded structures.}
 %% SI_FIG_1_END
@@ -213,9 +213,66 @@ These univariate rankings complement the multivariate Random Forest analysis (Fi
 \figentry%
   {Supplementary Figure 3}%
   {SI\_fig3\_countplots\_by\_outcome\_and\_landform.png}%
-  {2026-03-03 20:06}%
+  {2026-03-08 19:48}%
   {3$\times$3 panel of count plots. Rows: soil development (B horizon vs.\ none), berm length class (short vs.\ long), slope class (shallow vs.\ steep). Columns: vegetation response, structural condition, landform.}%
   {Fan-terrace berms are overwhelmingly found in B-horizon soils, whereas stream-terrace and flood-plain berms dominate in soils without a B horizon. Berm length and slope class are more evenly distributed across outcomes, though short berms are disproportionately intact and steep-slope berms show a higher proportion of vegetation response.}
 %% SI_FIG_3_END
+
+
+%% fig_rf_comparison_START
+\figentry%
+  {RF Full vs Binary}%
+  {fig_rf_full_vs_binary_comparison.png}%
+  {2026-03-08 09:54}%
+  {Random Forest feature importance comparison: Full vs Binary predictor sets for Condition (Intact) and Vegetation Response (Effective) outcomes.
+
+Full model (8 predictors, continuous + categorical): Condition CV AUC = 0.728, Veg response CV AUC = 0.652.
+Binary model (5 predictors, simplified binary/categorical — high/low slope, long/short berm, landform, soil development, texture): Condition CV AUC = 0.614, Veg response CV AUC = 0.635.
+
+AUC loss from simplification: Condition delta = 0.113, Veg response delta = 0.016.
+Negative permutation importances indicate features that add noise rather than signal after the model has been fit (common for correlated or irrelevant features).}%
+  {Feature importance grouped by model type (full / binary), with Condition and Veg-response bars overlaid per predictor. Full model AUC: Condition 0.728, Veg response 0.652; Binary model AUC: 0.614 / 0.635. AUC loss from simplification is small (0.113 / 0.016).}
+%% fig_rf_comparison_END
+
+
+%% fig_rf_performance_START
+\figentry%
+  {RF Performance Comparison}%
+  {fig_rf_performance_comparison.png}%
+  {2026-03-08 19:49}%
+  {Bar chart comparison of model performance (CV AUC and Holdout AUC) for Full vs Binary random forest models on Intact and Effective outcomes.
+
+Full model (n=8 predictors): Intact CV AUC = 0.728, Effective CV AUC = 0.652
+Binary model (n=5 predictors): Intact CV AUC = 0.614, Effective CV AUC = 0.635
+
+Performance difference is minimal (max delta = 0.113 AUC), indicating that simplified binary predictors capture most of the signal. This validates using binary predictors for interpretability without substantial performance loss.}%
+  {Model performance comparison showing Full vs Binary RF models achieve similar AUC scores (max delta = 0.113). Binary model provides interpretable results with minimal performance sacrifice.}
+%% fig_rf_performance_END
+
+
+%% fig_rf_full_importance_START
+\figentry%
+  {RF Full — feature importance}%
+  {fig_rf_full_importance.png}%
+  {2026-03-08 19:49}%
+  {Full random forest model (8 predictors) feature importance for Condition (Intact) and Veg response (Effective) outcomes side by side.
+Condition CV AUC = 0.728; top predictors: FA_30_max, Shape_Leng, slope_200.
+Veg response CV AUC = 0.652; top predictors: slope_200, Berm_Length_Class, Texture.
+Negative importances indicate features that add no signal beyond correlated predictors (effectively zero importance).}%
+  {Full model (8 predictors) permutation importance: Condition CV AUC 0.728, Veg response CV AUC 0.652. FA_30_max and Shape_Leng dominate for Condition; slope_200 dominates for Veg response.}
+%% fig_rf_full_importance_END
+
+
+%% fig_rf_binary_importance_START
+\figentry%
+  {RF Binary — feature importance}%
+  {fig_rf_binary_importance.png}%
+  {2026-03-08 19:49}%
+  {Binary random forest model (5 simplified predictors) feature importance for Condition (Intact) and Veg response (Effective) outcomes side by side.
+Condition CV AUC = 0.614; top predictors: Long_Berm, Texture, Soil_Development.
+Veg response CV AUC = 0.635; top predictors: High_Slope, Texture, Soil_Development.
+AUC loss vs full model: Condition 0.113, Veg response 0.016.}%
+  {Binary model (5 predictors) permutation importance: Condition CV AUC 0.614, Veg response CV AUC 0.635. Long_Berm and Texture lead for Condition; High_Slope dominates for Veg response.}
+%% fig_rf_binary_importance_END
 
 \end{document}

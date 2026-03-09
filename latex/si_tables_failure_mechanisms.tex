@@ -25,7 +25,7 @@
 \begin{table}[H]
   \centering
   \caption{Single-predictor ranking for Effective outcome (GLM pseudo-$R^2$, Tjur $R^2$, LRT, CV AUC).}
-  \label{tab:si_ranked_effective}
+  \label{tab:si\_ranked\_effective}
   \small
   \begin{tabular}{lrrrrrrr}
     \toprule
@@ -35,11 +35,18 @@
     Hillslope gradient (100 m) & -- & 0.014 & 0.019 & 0.0 & 1017.916 & 1.0 & 0.611 \\
     Parent material & 4.0 & 0.025 & 0.034 & 0.0 & 846.863 & 3.0 & 0.585 \\
     Typical soil profile & 18.0 & 0.049 & 0.062 & 0.0 & 1014.165 & 17.0 & 0.577 \\
+    Clay content (r-horizon, %) & -- & 0.012 & 0.016 & 0.001 & 1020.292 & 1.0 & 0.574 \\
+    Channel distance (1000 m) & -- & 0.013 & 0.018 & 0.0 & 1019.096 & 1.0 & 0.574 \\
     Soil texture & 8.0 & 0.027 & 0.037 & 0.0 & 1016.549 & 7.0 & 0.573 \\
+    High clay & 2.0 & 0.015 & 0.02 & 0.0 & 1017.263 & 1.0 & 0.57 \\
     Landform & 3.0 & 0.015 & 0.02 & 0.001 & 1019.264 & 2.0 & 0.563 \\
+    Channel distance (500 m) & -- & 0.008 & 0.011 & 0.004 & 1023.847 & 1.0 & 0.562 \\
     Soil development & 2.0 & 0.009 & 0.013 & 0.002 & 1022.563 & 1.0 & 0.555 \\
+    Channel distance (200 m) & -- & 0.001 & 0.001 & 0.361 & 1031.338 & 1.0 & 0.546 \\
     Flow accumulation (30 m) & -- & 0.008 & 0.01 & 0.005 & 1024.22 & 1.0 & 0.533 \\
+    Sand content (r-horizon, %) & -- & 0.002 & 0.003 & 0.13 & 1029.88 & 1.0 & 0.511 \\
     Berm length class & 2.0 & 0.0 & 0.0 & 0.613 & 1031.918 & 1.0 & 0.509 \\
+    Silt content (r-horizon, %) & -- & 0.0 & 0.0 & 0.854 & 1032.14 & 1.0 & 0.477 \\
     Berm length & -- & 0.0 & 0.0 & 0.6 & 1031.898 & 1.0 & 0.476 \\
     \bottomrule
   \end{tabular}
@@ -50,7 +57,7 @@
 \begin{table}[H]
   \centering
   \caption{Single-predictor ranking for Intact outcome (GLM pseudo-$R^2$, Tjur $R^2$, LRT, CV AUC).}
-  \label{tab:si_ranked_intact}
+  \label{tab:si\_ranked\_intact}
   \small
   \begin{tabular}{lrrrrrrr}
     \toprule
@@ -61,9 +68,16 @@
     Typical soil profile & 18.0 & 0.072 & 0.091 & 0.0 & 973.757 & 17.0 & 0.629 \\
     Berm length class & 2.0 & 0.037 & 0.049 & 0.0 & 976.687 & 1.0 & 0.61 \\
     Soil texture & 8.0 & 0.031 & 0.041 & 0.0 & 994.409 & 7.0 & 0.596 \\
+    Clay content (r-horizon, %) & -- & 0.013 & 0.017 & 0.0 & 1001.395 & 1.0 & 0.579 \\
+    Sand content (r-horizon, %) & -- & 0.012 & 0.017 & 0.0 & 1001.738 & 1.0 & 0.562 \\
+    High clay & 2.0 & 0.008 & 0.011 & 0.005 & 1006.238 & 1.0 & 0.552 \\
     Parent material & 4.0 & 0.029 & 0.04 & 0.0 & 834.534 & 3.0 & 0.548 \\
+    Channel distance (1000 m) & -- & 0.005 & 0.006 & 0.032 & 1009.619 & 1.0 & 0.547 \\
+    Silt content (r-horizon, %) & -- & 0.008 & 0.01 & 0.006 & 1006.622 & 1.0 & 0.547 \\
+    Channel distance (200 m) & -- & 0.003 & 0.004 & 0.073 & 1011.001 & 1.0 & 0.543 \\
     Soil development & 2.0 & 0.005 & 0.006 & 0.031 & 1009.566 & 1.0 & 0.539 \\
     Landform & 3.0 & 0.004 & 0.005 & 0.16 & 1012.559 & 2.0 & 0.538 \\
+    Channel distance (500 m) & -- & 0.003 & 0.004 & 0.069 & 1010.912 & 1.0 & 0.536 \\
     Hillslope gradient (100 m) & -- & 0.0 & 0.0 & 0.917 & 1014.213 & 1.0 & 0.484 \\
     Hillslope gradient (200 m) & -- & 0.0 & 0.0 & 0.911 & 1014.211 & 1.0 & 0.457 \\
     \bottomrule
@@ -75,22 +89,22 @@
 \begin{table}[H]
   \centering
   \caption{Random-forest scenario summary (5-fold stratified CV).}
-  \label{tab:si_scenario_summary}
+  \label{tab:si\_scenario\_summary}
   \small
   \begin{tabular}{lrrrrrrrrr}
     \toprule
     Scenario & Target & Cv Auc Mean & Cv Auc Sd & Holdout Auc & Cv Bal Acc Mean & Cv F1 Mean & Top 3 Predictors & N & N Predictors \\
     \midrule
-    landscape_geomorphology_only & Intact & 0.651 & 0.02 & 0.675 & 0.589 & 0.663 & Flow accumulation (30 m), Hillslope gradient (200 m), Landform & 743 & 3 \\
-    landscape_geomorphology_only & Effective & 0.612 & 0.039 & 0.68 & 0.585 & 0.564 & Hillslope gradient (200 m), Flow accumulation (30 m), Landform & 743 & 3 \\
-    soil_only & Intact & 0.624 & 0.029 & 0.621 & 0.588 & 0.695 & Typical soil profile, Soil texture, Soil development & 743 & 3 \\
-    soil_only & Effective & 0.575 & 0.032 & 0.62 & 0.574 & 0.541 & Typical soil profile, Soil texture, Soil development & 743 & 3 \\
-    shape_length_only & Intact & 0.565 & 0.02 & 0.641 & 0.541 & 0.623 & Berm length, Berm length class & 743 & 2 \\
-    shape_length_only & Effective & 0.562 & 0.034 & 0.501 & 0.541 & 0.51 & Berm length, Berm length class & 743 & 2 \\
-    all_predictors & Intact & 0.729 & 0.012 & 0.774 & 0.661 & 0.709 & Flow accumulation (30 m), Berm length, Hillslope gradient (200 m) & 743 & 8 \\
-    all_predictors & Effective & 0.647 & 0.041 & 0.655 & 0.6 & 0.574 & Hillslope gradient (200 m), Flow accumulation (30 m), Berm length & 743 & 8 \\
-    all_predictors + effect_percent & Intact & 0.724 & 0.019 & 0.773 & 0.667 & 0.717 & Flow accumulation (30 m), Berm length, Hillslope gradient (200 m) & 743 & 9 \\
-    all_predictors + Intact & Effective & 0.654 & 0.036 & 0.647 & 0.606 & 0.578 & Hillslope gradient (200 m), Flow accumulation (30 m), Berm length & 743 & 9 \\
+    landscape\_geomorphology\_only & Intact & 0.656 & 0.017 & 0.68 & 0.592 & 0.669 & Flow accumulation (30 m), Hillslope gradient (200 m), Landform & 743 & 3 \\
+    landscape\_geomorphology\_only & Effective & 0.612 & 0.043 & 0.68 & 0.59 & 0.571 & Hillslope gradient (200 m), Landform, Flow accumulation (30 m) & 743 & 3 \\
+    soil\_only & Intact & 0.628 & 0.034 & 0.618 & 0.585 & 0.696 & Typical soil profile, Soil texture, Soil development & 743 & 3 \\
+    soil\_only & Effective & 0.579 & 0.03 & 0.621 & 0.577 & 0.542 & Typical soil profile, Soil texture, Soil development & 743 & 3 \\
+    shape\_length\_only & Intact & 0.564 & 0.018 & 0.641 & 0.542 & 0.621 & Berm length, Berm length class & 743 & 2 \\
+    shape\_length\_only & Effective & 0.558 & 0.036 & 0.497 & 0.533 & 0.499 & Berm length class, Berm length & 743 & 2 \\
+    all\_predictors & Intact & 0.728 & 0.011 & 0.772 & 0.656 & 0.707 & Flow accumulation (30 m), Berm length, Hillslope gradient (200 m) & 743 & 8 \\
+    all\_predictors & Effective & 0.652 & 0.044 & 0.646 & 0.609 & 0.582 & Hillslope gradient (200 m), Berm length class, Soil texture & 743 & 8 \\
+    all\_predictors + effect\_percent & Intact & 0.721 & 0.019 & 0.77 & 0.657 & 0.715 & Flow accumulation (30 m), Berm length, Hillslope gradient (200 m) & 743 & 9 \\
+    all\_predictors + Intact & Effective & 0.649 & 0.036 & 0.649 & 0.61 & 0.58 & Hillslope gradient (200 m), Berm length class, Soil development & 743 & 9 \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -100,18 +114,14 @@
 \begin{table}[H]
   \centering
   \caption{Conditional outcome probabilities by berm length class (threshold = 60 m). Proportions are shown for long ($>$60 m) and short ($<$60 m) berms; conditional rows (Breach $|$ failed, Flank $|$ failed) are restricted to failed berms only. $\Delta$ is the difference in percentage points (long minus short).}
-  \label{tab:si_length_outcome_probs}
+  \label{tab:si\_length\_outcome\_probs}
   \small
-  \begin{tabular}{lrrrrrr}
+  \begin{tabular}{lrr}
     \toprule
-    Metric & Among & Long (>60 m) k/n & Long (>60 m) % & Short (<60 m) k/n & Short (<60 m) % & Δ \\
+    Long (> 50 m) & Short (\\(\\le\\) 50 m) & sig \\
     \midrule
-    Any failure & All & 199/376 & 52.9% & 118/399 & 29.6% & +0.234 \\
-    Breach & All & 82/376 & 21.8% & 32/399 & 8.0% & +0.138 \\
-    Flank & All & 117/376 & 31.1% & 86/399 & 21.6% & +0.096 \\
-    Intact & All & 177/376 & 47.1% & 281/399 & 70.4% & -0.234 \\
-    Breach | failed & Failed only & 82/199 & 41.2% & 32/118 & 27.1% & +0.141 \\
-    Flank  | failed & Failed only & 117/199 & 58.8% & 86/118 & 72.9% & -0.141 \\
+    0.46651785714285715 & 0.48623853211009177 & ns \\
+    0.5334821428571429 & 0.5137614678899083 & ns \\
     \bottomrule
   \end{tabular}
 \end{table}

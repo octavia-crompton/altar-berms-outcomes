@@ -1,6 +1,6 @@
 # Altar Valley Berms — AI Agent Instructions
 
-> **Last updated:** 2025-03-01
+> **Last updated:** 2026-03-06
 > Read this file at the start of every new chat session.
 > Update this file when new conventions, preferences, or project structure changes are established in chat.
 
@@ -8,7 +8,7 @@
 
 ## 1. Project Overview
 
-Analysis of earthen berm (detention structure) outcomes in the Altar Valley, Arizona. The project evaluates berm structural integrity (intact vs degraded / breach / flank) and effectiveness across landforms (fan terraces, stream terraces, flood plains), soil textures, slope classes, and other predictors. Primary outputs are publication-ready figures and SI tables for two manuscripts (paper1 = structural integrity paper, paper2 = effectiveness paper).
+Analysis of earthen berm (detention structure) outcomes in the Altar Valley, Arizona. The project evaluates berm structural integrity (intact vs degraded / breach / flank) and effectiveness across landforms (fan terraces, stream terraces, flood plains), soil textures, slope classes, and other predictors. Primary outputs are publication-ready figures and SI tables for two manuscripts (outcomes = structural integrity & vegetation response paper, failure_mechanisms = flanks & breaches paper).
 
 ### Workspace layout
 
@@ -25,14 +25,14 @@ project-root/
 │   ├── berm analysis with API.ipynb   ← primary analysis / figures
 │   └── archive/                       ← old or dated notebooks
 ├── figures/
-│   ├── paper1/                        ← paper1 publication figures
-│   ├── paper2/                        ← paper2 publication figures
+│   ├── outcomes/                      ← outcomes paper publication figures
+│   ├── failure_mechanisms/            ← failure mechanisms paper publication figures
 │   └── scratch/                       ← exploratory figures (never registered)
 ├── latex/
-│   ├── figure_report_paper1.tex       ← SI tables + figure list (paper1)
-│   ├── figure_report_paper2.tex       ← SI tables + figure list (paper2)
-│   ├── figure_summary_paper1.tex      ← figures-only summary PDF (paper1)
-│   └── figure_summary_paper2.tex      ← figures-only summary PDF (paper2)
+│   ├── figure_report_outcomes.tex     ← SI tables + figure list (outcomes)
+│   ├── figure_report_failure_mechanisms.tex ← SI tables + figure list (failure mechanisms)
+│   ├── figure_summary_outcomes.tex    ← figures-only summary PDF (outcomes)
+│   └── figure_summary_failure_mechanisms.tex ← figures-only summary PDF (failure mechanisms)
 └── data/
     ├── merged.csv                     ← primary dataset
     └── berm_exports/                  ← per-berm exported shapefiles
@@ -62,7 +62,7 @@ _sys.path.insert(0, '../src')
 from constants import (LBL_EFFECTIVE, LF_COLORS, lf_order, ...)
 from analysis import analyze_outcome, rank_predictors, PRETTY_LABELS, ...
 from plotting import _draw_two_cat_panel, _draw_outcome_panel, ...
-from registry import update_figure_registry, register_paper1_figure, ...
+from registry import update_figure_registry, register_outcomes_figure, ...
 ```
 
 ### Python environment
@@ -107,6 +107,7 @@ Canonical colour palettes, label strings, and category orderings.
 | `SOILDEV_COLORS`, `soildev_order` | dict, list | Soil development colours & order |
 | `LBL_EFFECTIVE`, `LBL_INEFFECTIVE`, `eff_order` | str, list | Effectiveness labels |
 | `fail_order`, `fail_colors` | list, dict | Failure-type ordering and colours |
+| `MODEL_CLR_CONDITION`, `MODEL_CLR_VEGRESPONSE`, `MODEL_CLR_CHANCE` | str | Model-outcome panel colours (condition vs veg response figures) |
 
 When a new categorical variable needs canonical colours, add them here.
 
@@ -155,8 +156,8 @@ Figure registry helpers.
 | Export | Purpose |
 |---|---|
 | `update_figure_registry(fig_id, filename, ...)` | Main entry point — update both txt registries and LaTeX file |
-| `register_paper1_figure(fig_id, filename, ...)` | Wrapper for paper1 figures |
-| `register_paper2_figure(fig_id, filename, ...)` | Wrapper for paper2 figures |
+| `register_outcomes_figure(fig_id, filename, ...)` | Wrapper for outcomes paper figures |
+| `register_failure_mechanisms_figure(fig_id, filename, ...)` | Wrapper for failure mechanisms paper figures |
 | `upsert_latex_figentry(tex_path, ...)` | Update a `\figentry{}` block in a .tex file |
 | `_upsert_registry_block(path, fig_id, ...)` | Low-level upsert into plain-text registry |
 

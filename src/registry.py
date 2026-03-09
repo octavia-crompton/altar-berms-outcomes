@@ -7,8 +7,8 @@ Figure registry helpers for idempotent updating of:
 
 Import with:
     from registry import (
-        register_paper1_figure,
-        register_paper2_figure,
+        register_outcomes_figure,
+        register_failure_mechanisms_figure,
         upsert_latex_figentry,
         update_figure_registry,
     )
@@ -21,8 +21,12 @@ import re
 # ── Paths to the LaTeX report files ──────────────────────────────────────────
 # These are relative to the project root; at notebook runtime they are resolved
 # relative to the notebooks/ folder so we prepend ../
-PAPER1_TEX = Path("../latex/figure_report_paper1.tex")
-PAPER2_TEX = Path("../latex/figure_report_paper2.tex")
+OUTCOMES_TEX = Path("../latex/figure_report_outcomes.tex")
+FAILURE_MECHANISMS_TEX = Path("../latex/figure_report_failure_mechanisms.tex")
+
+# Backward-compatible aliases
+PAPER1_TEX = OUTCOMES_TEX
+PAPER2_TEX = FAILURE_MECHANISMS_TEX
 
 
 # ── Plain-text registry ───────────────────────────────────────────────────────
@@ -148,34 +152,40 @@ def upsert_latex_figentry(
 
 # ── Paper-specific convenience wrappers ──────────────────────────────────────
 
-def register_paper1_figure(tag, label, file_name, stats_text, interpretation_text, updated=None):
-    """Register/update a figure in the Paper 1 LaTeX report + .txt registries."""
+def register_outcomes_figure(tag, label, file_name, stats_text, interpretation_text, updated=None):
+    """Register/update a figure in the Outcomes paper LaTeX report + .txt registries."""
     updated = updated or datetime.now().strftime("%Y-%m-%d %H:%M")
-    upsert_latex_figentry(PAPER1_TEX, tag, label, file_name, updated, stats_text, interpretation_text)
-    _update_txt_registries("../figures/paper1", label, file_name, updated, stats_text, interpretation_text)
+    upsert_latex_figentry(OUTCOMES_TEX, tag, label, file_name, updated, stats_text, interpretation_text)
+    _update_txt_registries("../figures/outcomes", label, file_name, updated, stats_text, interpretation_text)
+
+# Backward-compatible alias
+register_paper1_figure = register_outcomes_figure
 
 
-def register_paper2_figure(label, file_name, stats_text, interpretation_text, updated=None):
-    """Register/update a figure in the Paper 2 LaTeX report + .txt registries."""
+def register_failure_mechanisms_figure(label, file_name, stats_text, interpretation_text, updated=None):
+    """Register/update a figure in the Failure Mechanisms paper LaTeX report + .txt registries."""
     updated = updated or datetime.now().strftime("%Y-%m-%d %H:%M")
 
     m = re.match(r"fig(\d+)", label)
     tag = f"FIG_{m.group(1)}" if m else label.upper().replace(" ", "_")
 
     upsert_latex_figentry(
-        PAPER2_TEX, tag,
+        FAILURE_MECHANISMS_TEX, tag,
         f"Figure {m.group(1)}" if m else label,
         file_name, updated, stats_text, interpretation_text,
     )
-    _update_txt_registries("../figures/paper2", label, file_name, updated, stats_text, interpretation_text)
-    print(f"Updated: ../figures/paper2/figure_registry.txt")
-    print(f"Updated: ../figures/paper2/figure_registry_concise.txt")
+    _update_txt_registries("../figures/failure_mechanisms", label, file_name, updated, stats_text, interpretation_text)
+    print(f"Updated: ../figures/failure_mechanisms/figure_registry.txt")
+    print(f"Updated: ../figures/failure_mechanisms/figure_registry_concise.txt")
+
+# Backward-compatible alias
+register_paper2_figure = register_failure_mechanisms_figure
 
 
 # ── Generic per-paper registry helper used by older cells ────────────────────
 
 def update_figure_registry(fig_id, filename, description, concise,
-                            paper_dir="../figures/paper2",
+                            paper_dir="../figures/failure_mechanisms",
                             notebook="notebooks/ berm analysis with API.ipynb"):
     """Legacy helper kept for backward compatibility."""
     updated = datetime.now().strftime("%Y-%m-%d %H:%M")

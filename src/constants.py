@@ -87,3 +87,8 @@ fail_colors = {
     "Breach": BREACH_COL,
     "Flank":  FLANK_COL,
 }
+
+# ── Model-outcome panel colours (for figures comparing condition vs veg response models) ─
+MODEL_CLR_CONDITION = "#4285bf"   # blue         – predicting berm condition
+MODEL_CLR_VEGRESPONSE = "#72ab8d" # sage green   – predicting vegetation response
+MODEL_CLR_CHANCE = "#aaaaaa"      # grey dashed  – chance baseline (AUC = 0.5)
