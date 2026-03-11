@@ -20,6 +20,7 @@ from sklearn.model_selection import (
     StratifiedKFold, train_test_split, cross_validate,
 )
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.cross_decomposition import PLSRegression
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
@@ -401,6 +402,127 @@ def rank_predictors(
     return out
 
 
+def prepare_pls_inputs(
+    df,
+    num_predictors,
+    cat_predictors,
+    target_mode="intact",
+    top_n_textures=3,
+    texture_col="Texture",
+    pretty_labels=None,
+):
+    """
+    Prepare standardized X, binary y, and display labels for PLS workflows.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+    num_predictors : list[str]
+    cat_predictors : list[str]
+    target_mode : {'intact', 'effective'}
+        - 'intact' uses Intact as binary outcome.
+        - 'effective' uses effect_percent > 7 as binary outcome.
+    top_n_textures : int
+        Keep only the top-N most frequent texture categories.
+    texture_col : str
+    pretty_labels : dict, optional
+
+    Returns
+    -------
+    dict
+        Keys: X_scaled, y, feat_labels, n, p, top_textures,
+        target_label, target_note
+    """
+    if pretty_labels is None:
+        pretty_labels = PRETTY_LABELS
+
+    pls_cols = list(num_predictors) + list(cat_predictors)
+
+    if target_mode == "intact":
+        work = df.dropna(subset=pls_cols + ["Intact"]).copy()
+        y = work["Intact"].astype(float).values
+        target_label = "Condition (Intactness)"
+        target_note = None
+    elif target_mode == "effective":
+        work = df.dropna(subset=pls_cols + ["effect_percent"]).copy()
+        y = (work["effect_percent"] > 7).astype(float).values
+        target_label = "Vegetation response"
+        target_note = f"Effective = effect_percent > 7% ({int(y.sum())} / {len(y)} berms)"
+    else:
+        raise ValueError(f"Unknown target_mode: {target_mode}")
+
+    tex_counts = work[texture_col].value_counts()
+    top_textures = tex_counts.nlargest(top_n_textures).index.tolist()
+    work = work[work[texture_col].isin(top_textures)].copy()
+
+    if target_mode == "intact":
+        y = work["Intact"].astype(float).values
+    else:
+        y = (work["effect_percent"] > 7).astype(float).values
+        target_note = f"Effective = effect_percent > 7% ({int(y.sum())} / {len(y)} berms)"
+
+    X_num = work[list(num_predictors)].astype(float)
+    X_cat = pd.get_dummies(work[list(cat_predictors)], drop_first=True).astype(float)
+    X = pd.concat([X_num, X_cat], axis=1).fillna(0)
+    feat_names = list(X.columns)
+
+    feat_labels = []
+    for fn in feat_names:
+        matched = False
+        for prefix in cat_predictors:
+            if fn.startswith(prefix + "_"):
+                cat_val = fn[len(prefix) + 1:]
+                pretty_prefix = pretty_labels.get(prefix, prefix)
+                feat_labels.append(f"{pretty_prefix}: {cat_val}")
+                matched = True
+                break
+        if not matched:
+            feat_labels.append(pretty_labels.get(fn, fn))
+
+    X_scaled = StandardScaler().fit_transform(X)
+    return {
+        "X_scaled": X_scaled,
+        "y": y,
+        "feat_labels": feat_labels,
+        "n": int(X_scaled.shape[0]),
+        "p": int(X_scaled.shape[1]),
+        "top_textures": top_textures,
+        "target_label": target_label,
+        "target_note": target_note,
+    }
+
+
+def fit_pls_vip(X_scaled, y, n_components=2):
+    """
+    Fit PLS and compute VIP scores and standardized coefficients.
+
+    Returns
+    -------
+    dict
+        Keys: vip_sorted, coef_sorted, sort_ord, pls, n_comp
+    """
+    pls = PLSRegression(n_components=n_components, scale=False)
+    pls.fit(X_scaled, y)
+
+    W = pls.x_weights_
+    T = pls.x_scores_
+    Q = pls.y_loadings_
+    p_feat = X_scaled.shape[1]
+
+    SS = np.array([np.sum((T[:, a] * Q[0, a]) ** 2) for a in range(n_components)])
+    vip = np.sqrt(p_feat * np.sum(SS * W**2, axis=1) / np.sum(SS))
+    coefs = pls.coef_.ravel()
+
+    sort_ord = np.argsort(vip)[::-1]
+    return {
+        "vip_sorted": vip[sort_ord],
+        "coef_sorted": coefs[sort_ord],
+        "sort_ord": sort_ord,
+        "pls": pls,
+        "n_comp": int(n_components),
+    }
+
+
 # ============================================================================
 # 3. Random-forest fitting
 # ============================================================================
@@ -561,10 +683,10 @@ def fit_rf_binary(
 # ============================================================================
 
 PRETTY_LABELS = {
-    "slope_200":          "Hillslope gradient (200 m)",
-    "slope_100":          "Hillslope gradient (100 m)",
+    "slope_200":          "Hillslope gradient",
+    "slope_100":          "Hillslope gradient",
     "Shape_Leng":         "Berm length",
-    "FA_30_max":          "Flow accumulation (30 m)",
+    "FA_30_max":          "Flow accumulation",
     "Landform":           "Landform",
     "Texture":            "Soil texture",
     "ParentMaterial":     "Parent material",
