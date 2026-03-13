@@ -1,0 +1,3 @@
+[submodule "gee-scripts"]
+	path = gee-scripts
+	url = https://earthengine.googlesource.com/users/quatratavia/altar-berms

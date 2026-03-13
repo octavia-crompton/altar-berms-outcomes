@@ -33,6 +33,17 @@ latex/*.toc
 *.zip
 *.pptx
 
+# ── draft/local LaTeX build artifacts ───────────────────────────────────────
+draft/local/*.aux
+draft/local/*.bbl
+draft/local/*.blg
+draft/local/*.log
+draft/local/*.out
+draft/local/*.spl
+draft/local/*.synctex.gz
+draft/local/main_diff.tex
+draft/local/main_diff.pdf
+
 # ── Overleaf manuscript (tracked separately via overleaf remote) ─────────────
 main.tex
 main_Aug12.tex
