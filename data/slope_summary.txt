@@ -1,0 +1,115 @@
+
+Unbalanced effective:
+
+Berm effective Counts :
+effective       False  True 
+Slope_Class                 
+Shallow (≤ 2%)    239    145
+Steep (> 2%)      168    223
+
+Proportion  :
+effective       False  True 
+Slope_Class                 
+Shallow (≤ 2%)   0.62   0.38
+Steep (> 2%)     0.43   0.57
+
+Unbalanced intact:
+
+Berm intact Counts :
+Intact          False  True 
+Slope_Class                 
+Shallow (≤ 2%)    141    243
+Steep (> 2%)      176    215
+
+Proportion  :
+Intact          False  True 
+Slope_Class                 
+Shallow (≤ 2%)   0.37   0.63
+Steep (> 2%)     0.45   0.55
+-------
+
+Balanced: Landform
+
+Sample sizes per partition:
+Shallow (≤ 2%): 187
+Steep (> 2%): 187
+
+Sample breakdown by group:
+Slope_Class     Landform       
+Shallow (≤ 2%)  Fan terraces        36
+                Flood plains       120
+                Stream terraces     31
+Steep (> 2%)    Fan terraces        36
+                Flood plains       120
+                Stream terraces     31
+
+Berm counts  :
+effective       False  True 
+Slope_Class                 
+Shallow (≤ 2%)    124     63
+Steep (> 2%)       84    103
+
+Proportion  :
+effective       False  True 
+Slope_Class                 
+Shallow (≤ 2%)   0.66   0.34
+Steep (> 2%)     0.45   0.55
+
+Balanced: Landform
+
+Berm counts  :
+Intact          False  True 
+Slope_Class                 
+Shallow (≤ 2%)     66    121
+Steep (> 2%)       81    106
+
+Proportion  :
+Intact          False  True 
+Slope_Class                 
+Shallow (≤ 2%)   0.35   0.65
+Steep (> 2%)     0.43   0.57
+-------
+
+Balanced: Landform, Berm_Length_Class
+
+Sample sizes per partition:
+Shallow (≤ 2%): 187
+Steep (> 2%): 187
+
+Sample breakdown by group:
+Slope_Class     Landform         Berm_Length_Class
+Shallow (≤ 2%)  Fan terraces     Long (> 50 m)        21
+                                 Short (≤ 50 m)       15
+                Flood plains     Long (> 50 m)        67
+                                 Short (≤ 50 m)       53
+                Stream terraces  Long (> 50 m)        20
+                                 Short (≤ 50 m)       11
+Steep (> 2%)    Fan terraces     Long (> 50 m)        21
+                                 Short (≤ 50 m)       15
+                Flood plains     Long (> 50 m)        67
+                                 Short (≤ 50 m)       53
+                Stream terraces  Long (> 50 m)        20
+                                 Short (≤ 50 m)       11
+
+
+Berm counts  :
+
+Proportion  :
+effective       False  True 
+Slope_Class                 
+Shallow (≤ 2%)   0.66   0.34
+Steep (> 2%)     0.43   0.57
+
+Balanced: Landform, Berm_Length_Class
+
+Berm counts  :
+Intact          False  True 
+Slope_Class                 
+Shallow (≤ 2%)     63    124
+Steep (> 2%)       82    105
+
+Proportion  :
+Intact          False  True 
+Slope_Class                 
+Shallow (≤ 2%)   0.34   0.66
+Steep (> 2%)     0.44   0.56

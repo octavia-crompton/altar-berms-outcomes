@@ -177,7 +177,7 @@ def _coerce_binary(y):
         return y.astype(float)
     if y.dropna().isin([True, False]).all():
         return y.astype(int).astype(float)
-    if y.dtype == object:
+    if y.dtype == object or pd.api.types.is_string_dtype(y):
         m = {
             "0": 0, "1": 1,
             "false": 0, "true": 1,
@@ -206,6 +206,7 @@ def _is_categorical(series, cat_unique_threshold=8):
     """Return True if series should be treated as categorical."""
     return (
         series.dtype == object
+        or pd.api.types.is_string_dtype(series)
         or str(series.dtype).startswith("category")
         or series.nunique(dropna=True) <= cat_unique_threshold
     )

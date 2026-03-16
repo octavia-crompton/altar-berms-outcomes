@@ -135,3 +135,24 @@ Publication figures are saved to `figures/paper1/` and `figures/paper2/` and reg
 ## Funding & Acknowledgements
 
 USDA Agricultural Research Service, Southwest Watershed Research Center. Soil survey data provided by the USDA Natural Resources Conservation Service. LiDAR data provided by the Pima County Regional Flood Control District.
+
+
+### TODO:
+
+
+- simple web app for exploration.
+
+- How many berms do I need to estimate effect size.  (how much does sensitivity depend on )
+
+ ##### Exports 
+ - Find time series scripts in GEE - adapt to python
+ - what if we split by years.
+    - adjust download script to loop over years.
+ - what determined variability, as opposed to just mean response.  Do some berms have a larger response in a wet year... 
+
+
+- check Michelle databases of berms, climate gradient along database
+
+- automate clip imagery around geodatabase berms. 
+
+

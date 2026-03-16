@@ -1,0 +1,1161 @@
+======================================
+Archive notebook run — Fri Mar 13 06:20:23 PDT 2026
+======================================
+
+>>>  berm analysis with API - 2026-02-28 morning.ipynb  (kernel: ee-map)
+    Start: Fri Mar 13 06:20:23 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/ berm analysis with API - 2026-02-28 morning.ipynb to notebook
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+Traceback (most recent call last):
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/bin/jupyter-nbconvert", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/jupyter_core/application.py", line 280, in launch_instance
+    super().launch_instance(argv=argv, **kwargs)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/traitlets/config/application.py", line 992, in launch_instance
+    app.start()
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 420, in start
+    self.convert_notebooks()
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 597, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 563, in convert_single_notebook
+    output, resources = self.export_single_notebook(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 487, in export_single_notebook
+    output, resources = self.exporter.from_filename(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 201, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 220, in from_file
+    return self.from_notebook_node(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/notebook.py", line 36, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 154, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 353, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/preprocessors/base.py", line 48, in __call__
+    return self.preprocess(nb, resources)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 103, in preprocess
+    self.preprocess_cell(cell, resources, index)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 124, in preprocess_cell
+    cell = self.execute_cell(cell, index, store_history=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 173, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+from scipy.stats import fisher_exact, chi2_contingency
+from itertools import combinations as _combinations
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+width = 0.25   # bar half-width for 2-category panels
+
+# ── Helpers (structural integrity versions) ────────────────────────────────
+
+def _sig_stars(p):
+    if p < 0.001: return "***"
+    if p < 0.01:  return "**"
+    if p < 0.05:  return "*"
+    return "ns"
+
+def _two_cat_metrics(df_sub, group_col, cat_a, cat_b):
+    """Fisher exact for intact/degraded rate between two categories."""
+    d = df_sub.dropna(subset=[group_col]).copy()
+    d["_failed"] = d["Fail_Type"].ne("Intact")
+    n_a = (d[group_col] == cat_a).sum()
+    n_b = (d[group_col] == cat_b).sum()
+    rows = {}
+    for metric, is_intact in [("Intact", True), ("Degraded", False)]:
+        mask = d["_failed"].eq(not is_intact)
+        c_a  = mask[d[group_col] == cat_a].sum()
+        c_b  = mask[d[group_col] == cat_b].sum()
+        p_a, p_b = c_a / n_a, c_b / n_b
+        direction = "greater" if p_a >= p_b else "less"
+        _, p_val = fisher_exact([[c_a, n_a - c_a], [c_b, n_b - c_b]], alternative=direction)
+        rows[metric] = {cat_a: p_a, cat_b: p_b, "sig": _sig_stars(p_val)}
+    return pd.DataFrame(rows).T
+
+def _draw_two_cat_panel(ax, m, cat_a, cat_b, colors, legend_title, title):
+    outcomes = ["Intact", "Degraded"]
+    x = np.arange(2)
+    for cat, offset in [(cat_a, -width/2), (cat_b, width/2)]:
+        vals = [m.loc[o, cat] for o in outcomes]
+        ax.bar(x + offset, vals, width, label=cat, color=colors[cat],
+               edgecolor="black", linewidth=0.7)
+    for i, o in enumerate(outcomes):
+        sig = m.loc[o, "sig"]
+        top = max(m.loc[o, cat_a], m.loc[o, cat_b]) + 0.03
+        bh  = 0.015
+        ax.plot([x[i]-width/2, x[i]-width/2, x[i]+width/2, x[i]+width/2],
+                [top, top+bh, top+bh, top], lw=1, color="black")
+        col = "black" if sig != "ns" else "#888888"
+        ax.text(x[i], top+bh+0.005, sig, ha="center", va="bottom",
+                fontsize=13, color=col, fontweight="bold" if sig != "ns" else "normal")
+    ax.set_xticks(x)
+    ax.set_xticklabels(outcomes)
+    ax.set_ylabel("Proportion of berms")
+    ax.set_title(title)
+    ax.set_ylim(0, 1.0)
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:.0%}"))
+    ax.legend(title=legend_title, frameon=False, fontsize=11, loc="upper right")
+    sns.despine(ax=ax)
+
+def _draw_multi_cat_panel(ax, df_sub, group_col, cat_order, cat_colors, title, pairwise=False):
+    """Grouped bars: Intact / Degraded x-axis, one bar per category."""
+    d = df_sub.dropna(subset=[group_col]).copy()
+    d["_outcome"] = d["Fail_Type"].apply(lambda x: "Intact" if x == "Intact" else "Degraded")
+    cats   = [c for c in cat_order if c in d[group_col].unique()]
+    n_cats = len(cats)
+    bar_w  = width
+    _mc_w  = n_cats * bar_w
+    offsets = np.linspace(-_mc_w/2 + bar_w/2, _mc_w/2 - bar_w/2, n_cats)
+    outcomes = ["Intact", "Degraded"]
+    x = np.arange(len(outcomes))
+
+    bars_data = {}
+    ns_cat = {}
+    for cat in cats:
+        sub   = d[d[group_col] == cat]
+        n     = len(sub)
+        ns_cat[cat] = n
+        bars_data[cat] = {
+            "Intact":   (sub["_outcome"] == "Intact").sum() / n,
+            "Degraded": (sub["_outcome"] == "Degraded").sum() / n,
+        }
+
+    ct_chi = pd.crosstab(d[group_col], d["_outcome"]).reindex(cats).dropna()
+    _, p_chi, *_ = chi2_contingency(ct_chi)
+    p_str = f"p = {p_chi:.3g}" if p_chi >= 0.001 else "p < 0.001"
+
+    for ci, (cat, offset) in enumerate(zip(cats, offsets)):
+        for oi, outcome in enumerate(outcomes):
+            ax.bar(x[oi] + offset, bars_data[cat][outcome], bar_w,
+                   color=cat_colors.get(cat, "#aaaaaa"), edgecolor="black", linewidth=0.5,
+                   label=cat if oi == 0 else "_nolegend_")
+
+    bh = 0.015
+
+    if pairwise:
+        pair_list = list(_combinations(range(n_cats), 2))
+        pair_list.sort(key=lambda p: abs(offsets[p[1]] - offsets[p[0]]))
+        global_y_max = 0
+        for oi, outcome in enumerate(outcomes):
+            current_top = max(bars_data[cat][outcome] for cat in cats) + 0.03
+            for ci, cj in pair_list:
+                ca, cb = cats[ci], cats[cj]
+                na, nb = ns_cat[ca], ns_cat[cb]
+                ka = (d[d[group_col]==ca]["_outcome"] == outcome).sum()
+                kb = (d[d[group_col]==cb]["_outcome"] == outcome).sum()
+                p_a, p_b = ka/na, kb/nb
+                direction = "greater" if p_a >= p_b else "less"
+                _, p_pair = fisher_exact([[ka, na-ka], [kb, nb-kb]], alternative=direction)
+                sig = _sig_stars(p_pair)
+                x_left  = x[oi] + offsets[ci]
+                x_right = x[oi] + offsets[cj]
+                y_base  = max(bars_data[ca][outcome], bars_data[cb][outcome])
+                y_start = max(y_base + 0.02, current_top)
+                ax.plot([x_left, x_left, x_right, x_right],
+                        [y_start, y_start+bh, y_start+bh, y_start],
+                        lw=0.9, color="black" if sig != "ns" else "#bbbbbb")
+                col = "black" if sig != "ns" else "#aaaaaa"
+                ax.text((x_left+x_right)/2, y_start+bh+0.003, sig,
+                        ha="center", va="bottom", fontsize=11, color=col,
+                        fontweight="bold" if sig != "ns" else "normal")
+                current_top = y_start + bh + 0.025
+            global_y_max = max(global_y_max, current_top)
+        y_max = global_y_max + 0.04
+    else:
+        sig_overall = _sig_stars(p_chi)
+        for oi in range(2):
+            vals = [bars_data[cat][outcomes[oi]] for cat in cats]
+            top  = max(vals) + 0.03
+            ax.plot([x[oi]-_mc_w/2, x[oi]-_mc_w/2, x[oi]+_mc_w/2, x[oi]+_mc_w/2],
+                    [top, top+bh, top+bh, top], lw=1, color="black")
+            col = "black" if sig_overall != "ns" else "#888888"
+            ax.text(x[oi], top+bh+0.005, sig_overall, ha="center", va="bottom",
+                    fontsize=13, color=col, fontweight="bold" if sig_overall != "ns" else "normal")
+        y_max = max(max(bars_data[cat][o] for cat in cats) for o in outcomes) + 0.12
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(outcomes)
+    ax.set_ylabel("Proportion of berms")
+    ax.set_title(f"{title}\n({p_str})", fontsize=12)
+    ax.set_ylim(0, 1.0)
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:.0%}"))
+    ax.legend(frameon=False, fontsize=11, loc="upper right")
+    sns.despine(ax=ax)
+
+# ── Two-category structural integrity metrics ──────────────────────────────
+len_m   = _two_cat_metrics(df, "len_bin", long_lbl, short_lbl)
+slope_m = _two_cat_metrics(data, "Slope_Class", shallow_lbl, steep_lbl)
+
+LENGTH_COLORS_MAP = {long_lbl:  LENGTH_COLORS["Long (> 50 m)"],
+                     short_lbl: LENGTH_COLORS["Short (≤ 50 m)"]}
+SLOPE_COLORS_MAP  = {shallow_lbl: SLOPE_COLORS["Shallow (≤ 2%)"],
+                     steep_lbl:   SLOPE_COLORS["Steep (> 2%)"]}
+
+# ── Soil texture colours (earthy, n > 100 filter) ─────────────────────────
+tex_counts  = data["Texture"].value_counts()
+tex_keep    = tex_counts[tex_counts > 100].index
+tex_order_plot = [t for t in texture_order if t in tex_keep]
+_tex_earthy = {
+    "Clay loam":  "#7b5e3a",
+    "Silt loam":  "#b89a6a",
+    "Sandy loam": "#e8d4a8",
+}
+_fb = sns.color_palette("YlOrBr", n_colors=max(len(tex_order_plot), 3))
+tex_colors = {t: _tex_earthy.get(t, f"#{int(r*255):02x}{int(g*255):02x}{int(b*255):02x}")
+              for t, (r,g,b) in zip(tex_order_plot, _fb)}
+
+# ── 2×2 figure ────────────────────────────────────────────────────────────
+plt.rcParams.update({"font.size": 12, "axes.titlesize": 12, "axes.labelsize": 12,
+                     "xtick.labelsize": 12, "ytick.labelsize": 12})
+fig, axes = plt.subplots(2, 2, figsize=(13, 10))
+
+_draw_two_cat_panel(axes[0, 0], len_m, long_lbl, short_lbl,
+    LENGTH_COLORS_MAP, "Length class",
+    f"Berm length (threshold {thr} m)")
+
+_draw_two_cat_panel(axes[0, 1], slope_m, shallow_lbl, steep_lbl,
+    SLOPE_COLORS_MAP, "Slope class",
+    "Slope class")
+
+_draw_multi_cat_panel(axes[1, 0], data, "Landform",
+    lf_order, LF_COLORS,
+    "Landform", pairwise=True)
+
+_draw_multi_cat_panel(axes[1, 1], data, "Texture",
+    tex_order_plot, tex_colors,
+    "Soil texture (n > 100)", pairwise=True)
+
+plt.suptitle("Structural integrity by predictor class", fontsize=14, y=1.01)
+plt.tight_layout()
+plt.show()
+------------------
+
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mNameError[0m                                 Traceback (most recent call last)
+Cell [0;32mIn[25], line 147[0m
+[1;32m    145[0m [38;5;66;03m# ── Two-category structural integrity metrics ──────────────────────────────[39;00m
+[1;32m    146[0m len_m   [38;5;241m=[39m _two_cat_metrics(df, [38;5;124m"[39m[38;5;124mlen_bin[39m[38;5;124m"[39m, long_lbl, short_lbl)
+[0;32m--> 147[0m slope_m [38;5;241m=[39m _two_cat_metrics(data, [38;5;124m"[39m[38;5;124mSlope_Class[39m[38;5;124m"[39m, shallow_lbl, steep_lbl)
+[1;32m    149[0m LENGTH_COLORS_MAP [38;5;241m=[39m {long_lbl:  LENGTH_COLORS[[38;5;124m"[39m[38;5;124mLong (> 50 m)[39m[38;5;124m"[39m],
+[1;32m    150[0m                      short_lbl: LENGTH_COLORS[[38;5;124m"[39m[38;5;124mShort (≤ 50 m)[39m[38;5;124m"[39m]}
+[1;32m    151[0m SLOPE_COLORS_MAP  [38;5;241m=[39m {shallow_lbl: SLOPE_COLORS[[38;5;124m"[39m[38;5;124mShallow (≤ 2[39m[38;5;124m%[39m[38;5;124m)[39m[38;5;124m"[39m],
+[1;32m    152[0m                      steep_lbl:   SLOPE_COLORS[[38;5;124m"[39m[38;5;124mSteep (> 2[39m[38;5;124m%[39m[38;5;124m)[39m[38;5;124m"[39m]}
+
+[0;31mNameError[0m: name 'shallow_lbl' is not defined
+
+    [FAIL]  berm analysis with API - 2026-02-28 morning.ipynb  (Fri Mar 13 06:20:36 PDT 2026)
+
+>>>  berm analysis with API - 2026-03-10.ipynb  (kernel: ee-map)
+    Start: Fri Mar 13 06:20:36 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/ berm analysis with API - 2026-03-10.ipynb to notebook
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+Traceback (most recent call last):
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/bin/jupyter-nbconvert", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/jupyter_core/application.py", line 280, in launch_instance
+    super().launch_instance(argv=argv, **kwargs)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/traitlets/config/application.py", line 992, in launch_instance
+    app.start()
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 420, in start
+    self.convert_notebooks()
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 597, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 563, in convert_single_notebook
+    output, resources = self.export_single_notebook(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 487, in export_single_notebook
+    output, resources = self.exporter.from_filename(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 201, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 220, in from_file
+    return self.from_notebook_node(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/notebook.py", line 36, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 154, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 353, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/preprocessors/base.py", line 48, in __call__
+    return self.preprocess(nb, resources)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 103, in preprocess
+    self.preprocess_cell(cell, resources, index)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 124, in preprocess_cell
+    cell = self.execute_cell(cell, index, store_history=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 173, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# ── Export len_metrics as Paper 2 SI Table 2 (LaTeX) ───────────────────────────────────────────
+from pathlib import Path
+from datetime import datetime
+import re
+
+# def _upsert_si_table(latex_path, tag, table_latex):
+#     """Replace content between %% {tag}_START and %% {tag}_END markers."""
+#     latex_path = Path(latex_path)
+#     if not latex_path.exists():
+#         print(f"⚠ {latex_path} not found — skipping SI table upsert")
+#         return
+#     text = latex_path.read_text(encoding="utf-8")
+#     start_tag = f"%% {tag}_START"
+#     end_tag   = f"%% {tag}_END"
+#     patt = rf"({re.escape(start_tag)})\n(.*?)({re.escape(end_tag)})"
+#     def _repl(m):
+#         return f"{m.group(1)}\n{table_latex}\n{m.group(3)}"
+#     if re.search(patt, text, flags=re.S):
+#         text = re.sub(patt, _repl, text, flags=re.S)
+#     else:
+        # Insert just before \end{document} if markers missing
+#         text = text.replace(r"\end{document}",
+#                             f"{start_tag}\n{table_latex}\n{end_tag}\n\n\\end{{document}}")
+#     latex_path.write_text(text, encoding="utf-8")
+
+
+# ── Format len_metrics for LaTeX ─────────────────────────────────────────────────────
+# si_tab = len_metrics.copy()
+
+# Round numeric columns to 3 decimal places
+# num_cols = si_tab.select_dtypes(include="number").columns
+# si_tab[num_cols] = si_tab[num_cols].round(3)
+
+
+# ── Save CSV to figures/failure_mechanisms/ ──────────────────────────────────────────
+# _csv_dir = Path("../../figures/failure_mechanisms")
+# _csv_dir.mkdir(parents=True, exist_ok=True)
+# _csv_path = _csv_dir / "SI_table2_length_outcomes.csv"
+# columns at this point are still the original (pre-LaTeX-rename) names
+# si_tab.rename(columns={"Δ": "Delta", "sig": "Sig"}).to_csv(_csv_path)
+# print(f"CSV saved  → {_csv_path}")
+
+
+# Rename columns for presentation
+# col_rename = {
+#     long_lbl:           f"P(Long $>$ {thr}\\,m)",
+#     short_lbl:          f"P(Short $\\leq$ {thr}\\,m)",
+#     "Δ":               "$\\Delta$",
+#     "direction":        "Direction",
+#     "p-value (1-sided)":"$p$ (1-sided)",
+#     "sig":              "Sig.",
+# }
+# si_tab = si_tab.rename(columns=col_rename)
+
+# Column order: P(long), P(short), Δ, Direction, p, Sig.
+# col_order = [
+#     f"P(Long $>$ {thr}\\,m)",
+#     f"P(Short $\\leq$ {thr}\\,m)",
+#     "$\\Delta$",
+#     "Direction",
+#     "$p$ (1-sided)",
+#     "Sig.",
+# ]
+# col_order = [c for c in col_order if c in si_tab.columns]
+# si_tab = si_tab[col_order]
+
+# Build LaTeX tabular string
+# l for Outcome index + numeric/text cols
+# col_spec = "l" + "".join(
+#     "l" if c in ("Direction", "Sig.") else "r"
+#     for c in si_tab.columns
+# )
+# updated = datetime.now().strftime("%Y-%m-%d %H:%M")
+
+# lines = [
+#     r"\begin{table}[H]",
+#     r"  \centering",
+#     rf"  \caption{{SI Table 2: Berm outcome proportions by length class (threshold = {thr}\,m). "
+#         r"$\Delta$ = P(Long) $-$ P(Short) as a decimal proportion. "
+#         r"$p$-values from one-sided Fisher exact tests in direction of the observed difference. "
+#         rf"Updated {updated}.}}",
+#     r"  \label{tab:si_table2_length_outcomes}",
+#     r"  \small",
+#     rf"  \begin{{tabular}}{{{col_spec}}}",
+#     r"    \toprule",
+#     "    Outcome & " + " & ".join(str(c) for c in si_tab.columns) + r" \\",
+#     r"    \midrule",
+# ]
+# for idx, row in si_tab.iterrows():
+#     vals = " & ".join(
+#         f"{v:.3f}" if isinstance(v, float) else str(v)
+#         for v in row
+#     )
+#     lines.append(f"    {idx} & {vals}" + r" \\")
+# lines += [
+#     r"    \bottomrule",
+#     r"  \end{tabular}",
+#     r"\end{table}",
+# ]
+
+# table_latex = "\n".join(lines)
+
+# Write to the Paper 2 LaTeX report
+# latex_path = Path("../../latex/figure_report_failure_mechanisms.tex")
+# _upsert_si_table(latex_path, "SI_TABLE_2", table_latex)
+# print(f"SI Table 2 written to {latex_path}")
+# print()
+display(si_tab)
+
+------------------
+
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mNameError[0m                                 Traceback (most recent call last)
+Cell [0;32mIn[25], line 108[0m
+[1;32m      4[0m [38;5;28;01mimport[39;00m [38;5;21;01mre[39;00m
+[1;32m      6[0m [38;5;66;03m# def _upsert_si_table(latex_path, tag, table_latex):[39;00m
+[1;32m      7[0m [38;5;66;03m#     """Replace content between %% {tag}_START and %% {tag}_END markers."""[39;00m
+[1;32m      8[0m [38;5;66;03m#     latex_path = Path(latex_path)[39;00m
+[0;32m   (...)[0m
+[1;32m    106[0m [38;5;66;03m# print(f"SI Table 2 written to {latex_path}")[39;00m
+[1;32m    107[0m [38;5;66;03m# print()[39;00m
+[0;32m--> 108[0m display(si_tab)
+
+[0;31mNameError[0m: name 'si_tab' is not defined
+
+    [FAIL]  berm analysis with API - 2026-03-10.ipynb  (Fri Mar 13 06:20:49 PDT 2026)
+
+>>> analysis - condition vegetation - keep.ipynb  (kernel: ee-map)
+    Start: Fri Mar 13 06:20:49 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/analysis - condition vegetation - keep.ipynb to notebook
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+Traceback (most recent call last):
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/bin/jupyter-nbconvert", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/jupyter_core/application.py", line 280, in launch_instance
+    super().launch_instance(argv=argv, **kwargs)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/traitlets/config/application.py", line 992, in launch_instance
+    app.start()
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 420, in start
+    self.convert_notebooks()
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 597, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 563, in convert_single_notebook
+    output, resources = self.export_single_notebook(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 487, in export_single_notebook
+    output, resources = self.exporter.from_filename(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 201, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 220, in from_file
+    return self.from_notebook_node(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/notebook.py", line 36, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 154, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 353, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/preprocessors/base.py", line 48, in __call__
+    return self.preprocess(nb, resources)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 103, in preprocess
+    self.preprocess_cell(cell, resources, index)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 124, in preprocess_cell
+    cell = self.execute_cell(cell, index, store_history=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 173, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+from scipy.stats import fisher_exact, chi2_contingency  # kept for local use
+from plotting import (
+from scipy.stats import chi2_contingency
+    width,
+    _sig_stars, _two_cat_metrics,
+    _draw_two_cat_panel, _draw_multi_cat_panel,
+)
+
+# Slope labels (referenced by later cells)
+shallow_lbl = 'Shallow (≤ 2%)'
+steep_lbl   = 'Steep (> 2%)'
+
+------------------
+
+
+[0;36m  Cell [0;32mIn[19], line 3[0;36m[0m
+[0;31m    from scipy.stats import chi2_contingency[0m
+[0m    ^[0m
+[0;31mSyntaxError[0m[0;31m:[0m invalid syntax
+
+
+    [FAIL] analysis - condition vegetation - keep.ipynb  (Fri Mar 13 06:21:02 PDT 2026)
+
+>>> models - condition vegetation 2026-03-10.ipynb  (kernel: ee-map)
+    Start: Fri Mar 13 06:21:02 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/models - condition vegetation 2026-03-10.ipynb to notebook
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+Traceback (most recent call last):
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/bin/jupyter-nbconvert", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/jupyter_core/application.py", line 280, in launch_instance
+    super().launch_instance(argv=argv, **kwargs)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/traitlets/config/application.py", line 992, in launch_instance
+    app.start()
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 420, in start
+    self.convert_notebooks()
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 597, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 563, in convert_single_notebook
+    output, resources = self.export_single_notebook(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 487, in export_single_notebook
+    output, resources = self.exporter.from_filename(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 201, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 220, in from_file
+    return self.from_notebook_node(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/notebook.py", line 36, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 154, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 353, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/preprocessors/base.py", line 48, in __call__
+    return self.preprocess(nb, resources)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 103, in preprocess
+    self.preprocess_cell(cell, resources, index)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 124, in preprocess_cell
+    cell = self.execute_cell(cell, index, store_history=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 173, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# ── Shared setup for model cells ─────────────────────────────────────────────
+from analysis import (
+import numpy as np
+    _coerce_binary, rank_predictors, _format_ranking_for_si, _clean_predictor_name,
+)
+
+# Working copy: drop artificial structures if present
+df = data.loc[data["Structure_"].isna()].copy() if "Structure_" in data.columns else data.copy()
+
+# Binary effectiveness target and condition string label
+df["eff_bin"]   = (df["Effective"] == LBL_EFFECTIVE).astype(int)
+df["Condition"] = np.where(df["Intact"], "Intact", "Degraded")
+
+# Legend palettes (re-used across multiple model cells)
+palette_eff = eff_colors
+palette_int = {"Intact": INTACT_COL, "Degraded": DEGRADED_COL}
+
+# Grouping variables for EOF exploratory analysis
+GROUP_VARS = [
+    "Landform", "ParentMaterial", "Soil_Development",
+    "Texture", "Slope_Class", "Berm_Length_Class",
+]
+
+# Full predictor list for GLM ranking → `ranked` and `ranked_intact`
+predictors = [
+    "Landform",
+    "slope_200",
+    "slope_100",
+    "Berm_Length_Class",
+    "Shape_Leng",
+    "ParentMaterial",
+    "Soil_Development",
+    "TypicalProfile",
+    "sandtotal_r",
+    "silttotal_r",
+    "claytotal_r",
+    "High_Clay",
+    "channel_200m",
+    "channel_500m",
+    "channel_1000m",
+    "FA_30_max",
+    "Texture",
+]
+treat_as = {"Shape_Leng": "numeric", "High_Clay": "categorical"}
+
+ranked        = rank_predictors(df, y="eff_bin", predictors=predictors, treat_as=treat_as)
+ranked_intact = rank_predictors(df, y="Intact",  predictors=predictors, treat_as=treat_as)
+
+print(f"df: {len(df):,} rows   |   predictors ranked: {len(ranked)}")
+
+------------------
+
+
+[0;36m  Cell [0;32mIn[5], line 3[0;36m[0m
+[0;31m    import numpy as np[0m
+[0m    ^[0m
+[0;31mSyntaxError[0m[0;31m:[0m invalid syntax
+
+
+    [FAIL] models - condition vegetation 2026-03-10.ipynb  (Fri Mar 13 06:21:06 PDT 2026)
+
+>>>  berm analysis with API - 2026-03-01 morning.ipynb  (kernel: ee)
+    Start: Fri Mar 13 06:21:06 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/ berm analysis with API - 2026-03-01 morning.ipynb to notebook
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+Traceback (most recent call last):
+  File "/Users/octaviacrompton/anaconda3/envs/ee/bin/jupyter-nbconvert", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/jupyter_core/application.py", line 280, in launch_instance
+    super().launch_instance(argv=argv, **kwargs)
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/traitlets/config/application.py", line 992, in launch_instance
+    app.start()
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 420, in start
+    self.convert_notebooks()
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 597, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 563, in convert_single_notebook
+    output, resources = self.export_single_notebook(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 487, in export_single_notebook
+    output, resources = self.exporter.from_filename(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 201, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 220, in from_file
+    return self.from_notebook_node(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/exporters/notebook.py", line 36, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 154, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 353, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/preprocessors/base.py", line 48, in __call__
+    return self.preprocess(nb, resources)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 103, in preprocess
+    self.preprocess_cell(cell, resources, index)
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 124, in preprocess_cell
+    cell = self.execute_cell(cell, index, store_history=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 173, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# Visualise Long vs Short proportions with significance annotations
+plot_metrics = ["Intact", "Any failure", "Breach", "Flank"]
+
+plot_df = (
+    len_metrics.loc[plot_metrics, [long_lbl, short_lbl, "sig"]]
+    .reset_index()
+    .rename(columns={"index": "Metric"})
+    .melt(id_vars=["Metric", "sig"], var_name="Length", value_name="Proportion")
+)
+
+fig, ax = plt.subplots(figsize=(8, 4.5))
+
+bar_colors = {long_lbl: LENGTH_COLORS["Long (> 50 m)"], short_lbl: LENGTH_COLORS["Short (≤ 50 m)"]}
+x = np.arange(len(plot_metrics))
+width = 0.35
+
+for i, (lbl, offset) in enumerate([(long_lbl, -width/2), (short_lbl, width/2)]):
+    vals = [len_metrics.loc[m, lbl] for m in plot_metrics]
+    bars = ax.bar(x + offset, vals, width, label=lbl,
+                  color=bar_colors[lbl], edgecolor="black", linewidth=0.7)
+
+# Significance brackets above each pair
+for i, metric in enumerate(plot_metrics):
+    sig = len_metrics.loc[metric, "sig"]
+    p_l = len_metrics.loc[metric, long_lbl]
+    p_s = len_metrics.loc[metric, short_lbl]
+    top = max(p_l, p_s) + 0.03
+    bracket_h = 0.015
+    ax.plot([x[i] - width/2, x[i] - width/2, x[i] + width/2, x[i] + width/2],
+            [top, top + bracket_h, top + bracket_h, top],
+            lw=1, color="black")
+    color = "black" if sig != "ns" else "#888888"
+    ax.text(x[i], top + bracket_h + 0.005, sig, ha="center", va="bottom",
+            fontsize=11, color=color, fontweight="bold" if sig != "ns" else "normal")
+
+ax.set_xticks(x)
+ax.set_xticklabels(plot_metrics)
+ax.set_ylabel("Proportion of berms")
+ax.set_title(f"Berm outcomes by length (threshold = {thr} m)")
+ax.set_ylim(0, 1.05)
+ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:.0%}"))
+ax.legend(title="Length class", frameon=False)
+sns.despine(ax=ax)
+plt.tight_layout()
+
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+out_path = Path("../../figures/paper2/fig2.png")
+out_path.parent.mkdir(parents=True, exist_ok=True)
+# fig.savefig(out_path, dpi=300, bbox_inches="tight")
+
+register_paper2_figure(
+    label="fig2",
+    file_name=out_path.name,
+    stats_text="Grouped comparison of berm outcome proportions between Long and Short berm classes, with per-metric 2×2 contingency-table significance tests shown as bracket annotations.",
+    interpretation_text="Outcome proportions differ by length class, and this figure serves as Paper 2 Figure 2 for the breach/flank-focused comparison.",
+)
+
+plt.show()
+------------------
+
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mNameError[0m                                 Traceback (most recent call last)
+Cell [0;32mIn[23], line 54[0m
+[1;32m     51[0m out_path[38;5;241m.[39mparent[38;5;241m.[39mmkdir(parents[38;5;241m=[39m[38;5;28;01mTrue[39;00m, exist_ok[38;5;241m=[39m[38;5;28;01mTrue[39;00m)
+[1;32m     52[0m [38;5;66;03m# fig.savefig(out_path, dpi=300, bbox_inches="tight")[39;00m
+[0;32m---> 54[0m register_paper2_figure(
+[1;32m     55[0m     label[38;5;241m=[39m[38;5;124m"[39m[38;5;124mfig2[39m[38;5;124m"[39m,
+[1;32m     56[0m     file_name[38;5;241m=[39mout_path[38;5;241m.[39mname,
+[1;32m     57[0m     stats_text[38;5;241m=[39m[38;5;124m"[39m[38;5;124mGrouped comparison of berm outcome proportions between Long and Short berm classes, with per-metric 2×2 contingency-table significance tests shown as bracket annotations.[39m[38;5;124m"[39m,
+[1;32m     58[0m     interpretation_text[38;5;241m=[39m[38;5;124m"[39m[38;5;124mOutcome proportions differ by length class, and this figure serves as Paper 2 Figure 2 for the breach/flank-focused comparison.[39m[38;5;124m"[39m,
+[1;32m     59[0m )
+[1;32m     61[0m plt[38;5;241m.[39mshow()
+
+[0;31mNameError[0m: name 'register_paper2_figure' is not defined
+
+    [FAIL]  berm analysis with API - 2026-03-01 morning.ipynb  (Fri Mar 13 06:21:20 PDT 2026)
+
+>>> berm_analysis_with_API_dedup.ipynb  (kernel: ee)
+    Start: Fri Mar 13 06:21:20 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/berm_analysis_with_API_dedup.ipynb to notebook
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+Traceback (most recent call last):
+  File "/Users/octaviacrompton/anaconda3/envs/ee/bin/jupyter-nbconvert", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/jupyter_core/application.py", line 280, in launch_instance
+    super().launch_instance(argv=argv, **kwargs)
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/traitlets/config/application.py", line 992, in launch_instance
+    app.start()
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 420, in start
+    self.convert_notebooks()
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 597, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 563, in convert_single_notebook
+    output, resources = self.export_single_notebook(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 487, in export_single_notebook
+    output, resources = self.exporter.from_filename(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 201, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 220, in from_file
+    return self.from_notebook_node(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/exporters/notebook.py", line 36, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 154, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 353, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/preprocessors/base.py", line 48, in __call__
+    return self.preprocess(nb, resources)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 103, in preprocess
+    self.preprocess_cell(cell, resources, index)
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 124, in preprocess_cell
+    cell = self.execute_cell(cell, index, store_history=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 173, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+from pathlib import Path
+import sys
+import pandas as pd
+
+# Allow importing helpers from ../src
+sys.path.insert(0, str(Path("..") / "src"))
+
+from sda_access import fetch_landforms_df, norm_landform, sda_post, sda_to_df
+
+# your one explicit recode
+RECODE_EXACT = {"basin floors, fan terraces": "fan terraces"}
+
+def canonical_landform(lf: str) -> str:
+    lf = norm_landform(lf)
+    return RECODE_EXACT.get(lf, lf)
+
+
+def classify_landform(lf: str) -> str:
+    lf = canonical_landform(lf)
+
+    # Priority 1: stream terraces (always its own class)
+    if ("stream terraces" in lf) :
+        return "Stream terraces"
+
+    # Priority 2: fans + fan terraces (incl alluvial fans + fan remnants)
+    if ("fan terraces" in lf) or ("alluvial fans" in lf) or ("fan remnants" in lf) \
+      or ("eroded fan" in lf) or ("fans" in lf) or ("fan piedmonts" in lf):
+        return "Fan terraces"
+
+    # Priority 3: valley bottom (basin floors + flood plains + drainageways/swales)
+    if ("flood plains" in lf) or ("basin floors" in lf) or ("drainageways" in lf) or \
+       ("swales" in lf) or ("plains" in lf):
+        return "Flood plains"
+
+    # Priority 4: uplands (hills/mountains/pediments + combos)
+    if ("hills" in lf) or ("mountains" in lf) or ("pediments" in lf) or ("ridges" in lf):
+        return "Fan terraces"# "Uplands"
+
+    if ("terraces" in lf) :
+        return "Stream terraces"    
+    
+    return  "Unknown"
+
+
+def print_gee_dict(varname: str, d: dict):
+    print(f"\nvar {varname} = ee.Dictionary({{")
+    for k in sorted(d.keys(), key=lambda x: int(x) if str(x).isdigit() else str(x)):
+        v = str(d[k]).replace("'", "\\'")
+        print(f"  '{k}': '{v}',")
+    print("});")
+
+# -------------------------
+# Curated overrides (optional; keep if you trust these more than SDA)
+# -------------------------
+MUKEY_to_landform_base = {
+    "53807": "stream terraces",
+    "53875": "flood plains",
+    "53793": "fan terraces",
+    "53738": "fan terraces",
+    "53806": "flood plains",
+    "53895": "fan terraces",
+    "53886": "fan terraces, hills",
+    "53799": "stream terraces",
+    "53759": "flood plains",
+}
+
+mukeys_extra = [
+    "1416070","1421630","1421631","1423101","1425287","1425309","1425386","1425394",
+    "1425688", "1426107","1426108","1426109", "1427770","1427772","1427773","1427775", 
+    "1427776","1427809","1427812","1427814","1427815","1427817","54393","54430",
+    "53533","53539","53540","53546","53550","53557","53562","53563","53569",
+    "53739","53741","53744","53750","53754","53756","53757","53767","53768",
+    "53781","53783","53786","53788","53795","801772","801773","801777",
+    "53808","53810","53812","53816","53817","53820","53822","53823","53824","53826",
+    "53830","53832","53834","53838","53839","53840","53827","53863","54658","54594",
+    "53844","53845","53846","53849","53851","53853","53855","53857","53859","53861",
+    "53864","53865","53867","53868","53869","53876","53879","53881","53883","53885",
+    "53891","53892","53897","53898","53899","53901","53902","53903","53907","53910",
+    "54340","54341","54342","54343","54344","54345","54347","54365","53887","54364",
+    "54354","54355","54356","54357","54358","54359","54360","54361","54362","54363",
+    "54367","54370","54372","54374","54375","54376","54377","54378","54379","54380",
+    "54382","54383","54384","54385","54386","54387","54389","54390","54391","54392",
+    "54397","54398","54399","54400","54401","54402","54426","54427","54428","54429",
+    "54404","54405","54406","54407","54408","54409","54410","54412","54413","54395",
+    "54415","54416","54417","54418","54419","54420","54421","54423","54424","54654",
+    "54538","54544","54546","54553","54555","54557","54561","54567","54582","54585",
+    "54601","54609","54612","54616","54626","54628","54632","54635","54639","54645",
+    "54661","54672",
+
+]
+
+mukeys = sorted(set(list(MUKEY_to_landform_base.keys()) + mukeys_extra), key=int)
+
+df = fetch_landforms_df(mukeys, batch_size=150)
+df["landform"] = df["landform"].apply(norm_landform)
+
+# collapse multiple landforms per MUKEY (if any)
+mukey_landforms_sda = (
+    df.dropna(subset=["landform"])
+      .groupby("mukey")["landform"]
+      .apply(lambda s: ", ".join(sorted(set(s.astype(str)))))
+      .to_dict()
+ )
+
+# raw landforms (canonicalized) for all requested mukeys
+MUKEY_to_landform_raw = {mk: canonical_landform(mukey_landforms_sda.get(mk, "unknown")) for mk in mukeys}
+MUKEY_to_landform_raw.update({k: canonical_landform(v) for k, v in MUKEY_to_landform_base.items()})  # curated override
+
+# THIS is the simplified MUKEY_to_landform you want
+MUKEY_to_landform = {mk: classify_landform(lf) for mk, lf in MUKEY_to_landform_raw.items()}
+
+print(pd.Series(MUKEY_to_landform).value_counts())
+------------------
+
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
+Cell [0;32mIn[2], line 8[0m
+[1;32m      5[0m [38;5;66;03m# Allow importing helpers from ../src[39;00m
+[1;32m      6[0m sys[38;5;241m.[39mpath[38;5;241m.[39minsert([38;5;241m0[39m, [38;5;28mstr[39m(Path([38;5;124m"[39m[38;5;124m..[39m[38;5;124m"[39m) [38;5;241m/[39m [38;5;124m"[39m[38;5;124msrc[39m[38;5;124m"[39m))
+[0;32m----> 8[0m [38;5;28;01mfrom[39;00m [38;5;21;01msda_access[39;00m [38;5;28;01mimport[39;00m fetch_landforms_df, norm_landform, sda_post, sda_to_df
+[1;32m     10[0m [38;5;66;03m# your one explicit recode[39;00m
+[1;32m     11[0m RECODE_EXACT [38;5;241m=[39m {[38;5;124m"[39m[38;5;124mbasin floors, fan terraces[39m[38;5;124m"[39m: [38;5;124m"[39m[38;5;124mfan terraces[39m[38;5;124m"[39m}
+
+[0;31mModuleNotFoundError[0m: No module named 'sda_access'
+
+    [FAIL] berm_analysis_with_API_dedup.ipynb  (Fri Mar 13 06:21:24 PDT 2026)
+
+>>> berm_analysis_with_API_original_redundant.ipynb  (kernel: ee)
+    Start: Fri Mar 13 06:21:24 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/berm_analysis_with_API_original_redundant.ipynb to notebook
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+Traceback (most recent call last):
+  File "/Users/octaviacrompton/anaconda3/envs/ee/bin/jupyter-nbconvert", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/jupyter_core/application.py", line 280, in launch_instance
+    super().launch_instance(argv=argv, **kwargs)
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/traitlets/config/application.py", line 992, in launch_instance
+    app.start()
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 420, in start
+    self.convert_notebooks()
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 597, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 563, in convert_single_notebook
+    output, resources = self.export_single_notebook(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 487, in export_single_notebook
+    output, resources = self.exporter.from_filename(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 201, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 220, in from_file
+    return self.from_notebook_node(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/exporters/notebook.py", line 36, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 154, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 353, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/preprocessors/base.py", line 48, in __call__
+    return self.preprocess(nb, resources)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 103, in preprocess
+    self.preprocess_cell(cell, resources, index)
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 124, in preprocess_cell
+    cell = self.execute_cell(cell, index, store_history=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 173, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/octaviacrompton/anaconda3/envs/ee/lib/python3.11/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# data.groupby("Texture")['effective'].mean(),\
+data.query("Fail_Type =='Breach'").groupby("Texture")['effective'].mean()
+# Where breaches occurred on coarser textured soils, the  up and downslope differences in grass cover diminished.
+------------------
+
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mNameError[0m                                 Traceback (most recent call last)
+Cell [0;32mIn[7], line 2[0m
+[1;32m      1[0m [38;5;66;03m# data.groupby("Texture")['effective'].mean(),\[39;00m
+[0;32m----> 2[0m data[38;5;241m.[39mquery([38;5;124m"[39m[38;5;124mFail_Type ==[39m[38;5;124m'[39m[38;5;124mBreach[39m[38;5;124m'[39m[38;5;124m"[39m)[38;5;241m.[39mgroupby([38;5;124m"[39m[38;5;124mTexture[39m[38;5;124m"[39m)[[38;5;124m'[39m[38;5;124meffective[39m[38;5;124m'[39m][38;5;241m.[39mmean()
+
+[0;31mNameError[0m: name 'data' is not defined
+
+    [FAIL] berm_analysis_with_API_original_redundant.ipynb  (Fri Mar 13 06:21:34 PDT 2026)
+
+>>> berm_condition_bayesian_report.ipynb  (kernel: berm-venv)
+    Start: Fri Mar 13 06:21:34 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/berm_condition_bayesian_report.ipynb to notebook
+Traceback (most recent call last):
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/bin/jupyter-nbconvert", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/jupyter_core/application.py", line 280, in launch_instance
+    super().launch_instance(argv=argv, **kwargs)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/traitlets/config/application.py", line 992, in launch_instance
+    app.start()
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 420, in start
+    self.convert_notebooks()
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 597, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 563, in convert_single_notebook
+    output, resources = self.export_single_notebook(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/nbconvertapp.py", line 487, in export_single_notebook
+    output, resources = self.exporter.from_filename(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 201, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 220, in from_file
+    return self.from_notebook_node(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/notebook.py", line 36, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 154, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/exporters/exporter.py", line 353, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/preprocessors/base.py", line 48, in __call__
+    return self.preprocess(nb, resources)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 103, in preprocess
+    self.preprocess_cell(cell, resources, index)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbconvert/preprocessors/execute.py", line 124, in preprocess_cell
+    cell = self.execute_cell(cell, index, store_history=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 173, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/octaviacrompton/anaconda3/envs/ee-map/lib/python3.11/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# ── Null model AOI summary ─────────────────────────────────────────────────────
+import numpy as np
+null_aoi = az.summary(idata_null, var_names=['alpha'], round_to=3)
+null_aoi.index = sorted(df['AOI'].unique())
+print('Null model: posterior intact log-odds by AOI')
+display(null_aoi[['mean','sd','hdi_3%','hdi_97%']])
+print('\nCorresponding P(intact):')
+print((1/(1+np.exp(-null_aoi['mean']))).round(3).to_dict())
+------------------
+
+
+[31m---------------------------------------------------------------------------[39m
+[31mTypeError[39m                                 Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[14][39m[32m, line 4[39m
+[32m      2[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mnumpy[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mnp[39;00m
+[32m      3[39m null_aoi = az.summary(idata_null, var_names=[[33m'[39m[33malpha[39m[33m'[39m], round_to=[32m3[39m)
+[32m----> [39m[32m4[39m null_aoi.index = [38;5;28;43msorted[39;49m[43m([49m[43mdf[49m[43m[[49m[33;43m'[39;49m[33;43mAOI[39;49m[33;43m'[39;49m[43m][49m[43m.[49m[43munique[49m[43m([49m[43m)[49m[43m)[49m
+[32m      5[39m [38;5;28mprint[39m([33m'[39m[33mNull model: posterior intact log-odds by AOI[39m[33m'[39m)
+[32m      6[39m display(null_aoi[[[33m'[39m[33mmean[39m[33m'[39m,[33m'[39m[33msd[39m[33m'[39m,[33m'[39m[33mhdi_3[39m[33m%[39m[33m'[39m,[33m'[39m[33mhdi_97[39m[33m%[39m[33m'[39m]])
+
+[31mTypeError[39m: '<' not supported between instances of 'float' and 'str'
+
+    [FAIL] berm_condition_bayesian_report.ipynb  (Fri Mar 13 06:21:56 PDT 2026)
+
+======================================
+All notebooks attempted — Fri Mar 13 06:21:56 PDT 2026
+======================================
+
+    [FAIL]  berm analysis with API - 2026-02-28 morning.ipynb  (Fri Mar 13 06:20:36 PDT 2026)
+    [FAIL]  berm analysis with API - 2026-03-10.ipynb  (Fri Mar 13 06:20:49 PDT 2026)
+    [FAIL] analysis - condition vegetation - keep.ipynb  (Fri Mar 13 06:21:02 PDT 2026)
+    [FAIL] models - condition vegetation 2026-03-10.ipynb  (Fri Mar 13 06:21:06 PDT 2026)
+    [FAIL]  berm analysis with API - 2026-03-01 morning.ipynb  (Fri Mar 13 06:21:20 PDT 2026)
+    [FAIL] berm_analysis_with_API_dedup.ipynb  (Fri Mar 13 06:21:24 PDT 2026)
+    [FAIL] berm_analysis_with_API_original_redundant.ipynb  (Fri Mar 13 06:21:34 PDT 2026)
+    [FAIL] berm_condition_bayesian_report.ipynb  (Fri Mar 13 06:21:56 PDT 2026)

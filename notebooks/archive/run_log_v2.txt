@@ -1,0 +1,90 @@
+======================================
+Archive notebook run (allow-errors) — Fri Mar 13 06:34:55 PDT 2026
+======================================
+
+>>>  berm analysis with API - 2026-02-28 morning.ipynb  (kernel: ee-map)
+    Start: Fri Mar 13 06:34:55 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/ berm analysis with API - 2026-02-28 morning.ipynb to notebook
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+[NbConvertApp] Writing 1479453 bytes to /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/ berm analysis with API - 2026-02-28 morning.ipynb
+    [OK]   berm analysis with API - 2026-02-28 morning.ipynb  (Fri Mar 13 06:35:31 PDT 2026)
+
+>>>  berm analysis with API - 2026-03-10.ipynb  (kernel: ee-map)
+    Start: Fri Mar 13 06:35:31 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/ berm analysis with API - 2026-03-10.ipynb to notebook
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+[NbConvertApp] Writing 1314798 bytes to /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/ berm analysis with API - 2026-03-10.ipynb
+    [OK]   berm analysis with API - 2026-03-10.ipynb  (Fri Mar 13 06:36:29 PDT 2026)
+
+>>> analysis - condition vegetation - keep.ipynb  (kernel: ee-map)
+    Start: Fri Mar 13 06:36:29 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/analysis - condition vegetation - keep.ipynb to notebook
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+[NbConvertApp] Writing 1760244 bytes to /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/analysis - condition vegetation - keep.ipynb
+    [OK]  analysis - condition vegetation - keep.ipynb  (Fri Mar 13 06:37:16 PDT 2026)
+
+>>> models - condition vegetation 2026-03-10.ipynb  (kernel: ee-map)
+    Start: Fri Mar 13 06:37:16 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/models - condition vegetation 2026-03-10.ipynb to notebook
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+[NbConvertApp] Writing 997698 bytes to /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/models - condition vegetation 2026-03-10.ipynb
+    [OK]  models - condition vegetation 2026-03-10.ipynb  (Fri Mar 13 06:37:55 PDT 2026)
+
+>>>  berm analysis with API - 2026-03-01 morning.ipynb  (kernel: ee)
+    Start: Fri Mar 13 06:37:55 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/ berm analysis with API - 2026-03-01 morning.ipynb to notebook
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+[NbConvertApp] Writing 1475611 bytes to /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/ berm analysis with API - 2026-03-01 morning.ipynb
+    [OK]   berm analysis with API - 2026-03-01 morning.ipynb  (Fri Mar 13 06:38:35 PDT 2026)
+
+>>> berm_analysis_with_API_dedup.ipynb  (kernel: ee)
+    Start: Fri Mar 13 06:38:35 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/berm_analysis_with_API_dedup.ipynb to notebook
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+[NbConvertApp] Writing 942467 bytes to /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/berm_analysis_with_API_dedup.ipynb
+    [OK]  berm_analysis_with_API_dedup.ipynb  (Fri Mar 13 06:39:13 PDT 2026)
+
+>>> berm_analysis_with_API_original_redundant.ipynb  (kernel: ee)
+    Start: Fri Mar 13 06:39:13 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/berm_analysis_with_API_original_redundant.ipynb to notebook
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+[NbConvertApp] Writing 946522 bytes to /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/berm_analysis_with_API_original_redundant.ipynb
+    [OK]  berm_analysis_with_API_original_redundant.ipynb  (Fri Mar 13 06:39:51 PDT 2026)
+
+>>> berm_condition_bayesian_report.ipynb  (kernel: berm-venv)
+    Start: Fri Mar 13 06:39:51 PDT 2026
+[NbConvertApp] Converting notebook /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/berm_condition_bayesian_report.ipynb to notebook
+[NbConvertApp] Writing 433311 bytes to /Users/octaviacrompton/Projects/altar-berms-outcomes/notebooks/archive/berm_condition_bayesian_report.ipynb
+    [OK]  berm_condition_bayesian_report.ipynb  (Fri Mar 13 06:40:22 PDT 2026)
+
+======================================
+All done — Fri Mar 13 06:40:22 PDT 2026
+    [OK]   berm analysis with API - 2026-02-28 morning.ipynb  (Fri Mar 13 06:35:31 PDT 2026)
+    [OK]   berm analysis with API - 2026-03-10.ipynb  (Fri Mar 13 06:36:29 PDT 2026)
+    [OK]  analysis - condition vegetation - keep.ipynb  (Fri Mar 13 06:37:16 PDT 2026)
+    [OK]  models - condition vegetation 2026-03-10.ipynb  (Fri Mar 13 06:37:55 PDT 2026)
+    [OK]   berm analysis with API - 2026-03-01 morning.ipynb  (Fri Mar 13 06:38:35 PDT 2026)
+    [OK]  berm_analysis_with_API_dedup.ipynb  (Fri Mar 13 06:39:13 PDT 2026)
+    [OK]  berm_analysis_with_API_original_redundant.ipynb  (Fri Mar 13 06:39:51 PDT 2026)
+    [OK]  berm_condition_bayesian_report.ipynb  (Fri Mar 13 06:40:22 PDT 2026)
