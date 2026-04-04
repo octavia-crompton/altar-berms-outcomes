@@ -76,60 +76,38 @@ statistical test applied, and a brief interpretation of the key result.
 %% FIG_1_START
 \figentry%
   {fig1}%
-  {fig1_rf_permutation_importance.png}%
-  {2026-03-02 18:43}%
-  {Random Forest (n_estimators=300, class_weight='balanced'), 5-fold stratified CV. Permutation importance = mean decrease in holdout AUC from shuffling each predictor (30 repeats). Top 5 predictors shown for each outcome. CV AUC (condition) = 0.73 ± 0.01 (n=743). CV AUC (vegetation response) = 0.65 ± 0.04 (n=743).}%
-  {Flow accumulation and berm length dominate condition prediction. Hillslope gradient and soil properties (texture, typical profile) are more important for vegetation response than for condition, reflecting different mechanisms.}
+  {fig1_study_area.png}%
+  {2026-04-01 07:36}%
+  {Study area map showing 773 berms across three landform types in the Altar Valley, southern Arizona. Fan terraces: 531, Stream terraces: 154, Flood plains: 88. Panel A: location within Arizona (satellite). Panel B: berm locations overlaid on landform polygons (satellite). Berms not intersecting any mapped landform polygon assigned to Fan terraces.}%
+  {Berms are distributed across the three principal landform types in the Altar Valley. Fan terraces and flood plains contain the majority of berms, with stream terraces forming a narrower transitional band.}
 %% FIG_1_END
 
-% ── Fig 1 (alternate) ────────────────────────────────────────
-%% FIG_1_ALT_START
+% ── SI: Drop-column importance ───────────────────────────────
+%% SI_DROP_COLUMN_IMPORTANCE_START
 \figentry%
-  {fig1_alt}%
-  {fig1_alt.png}%
+  {SI_drop_column_importance}%
+  {SI_drop_column_importance.png}%
   {2026-03-02 18:44}%
   {Drop-column (leave-one-out) importance: Random Forest (n_estimators=300, class_weight='balanced'), 5-fold stratified CV. Importance = decrease in mean CV AUC when predictor is removed from the full model. Top 5 predictors shown per outcome. Full-model CV AUC: condition = 0.73 ± 0.01, vegetation response = 0.65 ± 0.04.}%
   {Drop-column importances corroborate permutation importance rankings. Removing flow accumulation or berm length produces the largest AUC drop for condition; soil properties and landform show the largest effect for vegetation response.}
-%% FIG_1_ALT_END
+%% SI_DROP_COLUMN_IMPORTANCE_END
 
 % ── Fig 2 ────────────────────────────────────────────────────
 %% FIG_2_START
 \figentry%
-  {Figure 2}%
-  {fig2\_geomorph\_soil\_intact\_effective.png}%
-  {2026-02-27 08:45}%
-  {Panel A: Pearson $\chi^2$ ($\varphi$ coefficient) for a
-   2$\times$2 Intact $\times$ Vegetation-response contingency table ($N = 743$).
-   Panel B: two-sided Fisher's exact test comparing proportions between Intact and
-   Degraded berms within each soil texture class.}%
-  {Berm intactness and vegetation response are statistically independent
-   ($\varphi = -0.01$, $p = 0.739$), indicating that intact and degraded berms
-   produce vegetation responses at similar overall rates. The exception is Sandy
-   loam, where intact berms show significantly higher vegetation response than
-   degraded berms ($p = 0.034$).}
+  {fig2}%
+  {fig2_model_performance_importance.png}%
+  {2026-03-31 17:07}%
+  {Random Forest (n_estimators=300, class_weight='balanced'), 5-fold stratified CV. Permutation importance = mean decrease in holdout AUC from shuffling each predictor (30 repeats). Importances aggregated across one-hot columns for categorical predictors. CV AUC (condition) = 0.71 ± 0.03 (n=775). CV AUC (vegetation response) = 0.64 ± 0.05 (n=775).}%
+  {Panel A: both outcomes are predictable above chance, with structural condition (AUC=0.71) outperforming vegetation response (AUC=0.64). Panels B–C: the predictor rankings differ between outcomes — flow accumulation and berm length dominate condition prediction, while hillslope gradient and soil properties are more important for vegetation response.}
 %% FIG_2_END
-
-% ── Fig 3 ────────────────────────────────────────────────────
-%% FIG_3_START
-\figentry%
-  {Figure 3}%
-  {fig3\_berm\_condition.png}%
-  {2026-02-27 09:39}%
-  {Two-category panels (length, slope) use a one-sided Fisher's exact test;
-   multi-category panels (landform, texture) use pairwise Fisher's exact tests
-   with the overall $\chi^2$ $p$-value shown in the panel title.}%
-  {Berm condition is strongly associated with berm length --- shorter berms are
-   markedly more likely to be intact ($p < 0.001$) --- and modestly associated
-   with slope class ($p < 0.05$). Landform does not significantly predict
-   condition ($p = 0.204$), but soil texture does ($p < 0.001$).}
-%% FIG_3_END
 
 % ── Fig 4 ────────────────────────────────────────────────────
 %% FIG_4_START
 \figentry%
   {fig4}%
   {fig4_vegetation_response.png}%
-  {2026-03-13 07:52}%
+  {2026-03-18 16:36}%
   {2×3 panel figure. Row 1: berm length, slope class, landform (upper right). Row 2: soil texture, B horizon presence, flow accumulation. Two-category panels (length, slope, B horizon, flow accumulation) use one-sided Fisher's exact tests. Multi-category panels (landform, texture) use pairwise Fisher's exact tests with the overall chi-squared p-value shown in the panel title. Flow accumulation (30 m) binarized at the significance-maximising threshold (2k contributing cells, Fisher p = 0.0001139); threshold selected by scanning all unique values between the 10th and 90th percentiles.}%
   {Six predictors of vegetation response shown in a 2×3 grid. Row 1: berm length (threshold 50 m), slope class, and landform. Row 2: soil texture (n > 100 per class), B horizon presence, and flow accumulation (optimal threshold 2k cells, Fisher p = 0.0001139). Vegetation response is significantly associated with slope class (p < 0.001), landform (p < 0.001), and soil texture (p < 0.001), but not with berm length alone. Steep-slope berms and flood-plain berms show the highest rates of vegetation response.}
 %% FIG_4_END
@@ -239,7 +217,7 @@ Negative permutation importances indicate features that add noise rather than si
 \figentry%
   {RF Performance Comparison}%
   {fig_rf_performance_comparison.png}%
-  {2026-03-14 07:01}%
+  {2026-03-27 15:59}%
   {Bar chart comparison of model performance (CV AUC and Holdout AUC) for Full vs Binary random forest models on Intact and Effective outcomes.
 
 Full model (n=8 predictors): Intact CV AUC = 0.728, Effective CV AUC = 0.652
@@ -252,14 +230,14 @@ Performance difference is minimal (max delta = 0.113 AUC), indicating that simpl
 
 %% fig_rf_full_importance_START
 \figentry%
-  {RF Full — feature importance}%
+  {RF — feature importance}%
   {fig_rf_full_importance.png}%
-  {2026-03-14 07:01}%
-  {Full random forest model (8 predictors) feature importance for Condition (Intact) and Veg response (Effective) outcomes side by side.
+  {2026-03-28 06:18}%
+  {Random forest model (8 predictors) feature importance for Condition (Intact) and Veg response (Effective) outcomes side by side.
 Condition CV AUC = 0.728; top predictors: FA_30_max, Shape_Leng, slope_200.
 Veg response CV AUC = 0.652; top predictors: slope_200, Berm_Length_Class, Texture.
 Negative importances indicate features that add no signal beyond correlated predictors (effectively zero importance).}%
-  {Full model (8 predictors) permutation importance: Condition CV AUC 0.728, Veg response CV AUC 0.652. FA_30_max and Shape_Leng dominate for Condition; slope_200 dominates for Veg response.}
+  {RF (8 predictors) permutation importance: Condition CV AUC 0.728, Veg response CV AUC 0.652. FA_30_max and Shape_Leng dominate for Condition; slope_200 dominates for Veg response.}
 %% fig_rf_full_importance_END
 
 
@@ -267,7 +245,7 @@ Negative importances indicate features that add no signal beyond correlated pred
 \figentry%
   {RF Binary — feature importance}%
   {fig_rf_binary_importance.png}%
-  {2026-03-14 07:01}%
+  {2026-03-27 15:59}%
   {Binary random forest model (5 simplified predictors) feature importance for Condition (Intact) and Veg response (Effective) outcomes side by side.
 Condition CV AUC = 0.614; top predictors: Long_Berm, Texture, Soil_Development.
 Veg response CV AUC = 0.635; top predictors: High_Slope, Texture, Soil_Development.
@@ -280,7 +258,7 @@ AUC loss vs full model: Condition 0.113, Veg response 0.016.}%
 \figentry%
   {fig5}%
   {fig5_berm_condition.png}%
-  {2026-03-13 07:48}%
+  {2026-03-18 16:36}%
   {2×3 panel figure. Two-category panels (berm length, slope class, B horizon presence, flow accumulation) use one-sided Fisher's exact tests. Multi-category panels (landform, soil texture) use pairwise Fisher's exact tests with the overall chi-squared p-value in the panel title. Flow accumulation (30 m) binarized at the significance-maximising threshold (1k contributing cells, two-sided Fisher p = 2.065e-16); threshold selected by scanning all unique values between the 10th and 90th percentiles.}%
   {Six predictors of structural condition (Intact vs Degraded) shown in a 2×3 grid. Row 1: berm length (threshold 50 m), slope class, and landform. Row 2: soil texture (n > 100 per class), B horizon presence, and flow accumulation (optimal threshold 1k cells, Fisher p = 2.065e-16).}
 %% FIG_5_END
@@ -290,11 +268,11 @@ AUC loss vs full model: Condition 0.113, Veg response 0.016.}%
 \figentry%
   {Model comparison — scenario sweep}%
   {fig_model_comparison_scenarios.png}%
-  {2026-03-15 18:00}%
+  {2026-03-28 12:58}%
   {Dot-plot comparing RF and Logistic L2 across four predictor scenarios for both outcomes.
-All-predictors: Condition RF AUC 0.730 ± 0.015, Logistic 0.681 ± 0.037.
-All-predictors: Veg response RF AUC 0.646 ± 0.042, Logistic 0.642 ± 0.043.}%
-  {RF and Logistic L2 compared across 4 predictor scenarios. All-predictors condition AUC: RF 0.730, Logistic 0.681.}
+All-predictors: Condition RF AUC 0.729 ± 0.018, Logistic 0.673 ± 0.036.
+All-predictors: Veg response RF AUC 0.652 ± 0.035, Logistic 0.639 ± 0.040.}%
+  {RF and Logistic L2 compared across 4 predictor scenarios. All-predictors condition AUC: RF 0.729, Logistic 0.673.}
 %% fig_model_comparison_scenarios_END
 
 
@@ -302,10 +280,10 @@ All-predictors: Veg response RF AUC 0.646 ± 0.042, Logistic 0.642 ± 0.043.}%
 \figentry%
   {RFECV feature selection effect}%
   {fig_rfecv_feature_selection.png}%
-  {2026-03-15 18:00}%
-  {Bar chart showing CV AUC before (all 8 predictors) and after RFECV selection for RF and Logistic.
-Condition: RFECV selected 8 predictors. Veg response: RFECV selected 4 predictors.}%
-  {RFECV reduces predictors (8 → 8 for condition, 4 for veg response) with minimal AUC change.}
+  {2026-03-28 06:19}%
+  {Bar chart showing CV AUC before (all 12 predictors) and after RFECV selection for RF and Logistic.
+Condition: RFECV selected 12 predictors. Veg response: RFECV selected 4 predictors.}%
+  {RFECV reduces predictors (12 → 12 for condition, 4 for veg response) with minimal AUC change.}
 %% fig_rfecv_feature_selection_END
 
 
@@ -313,10 +291,93 @@ Condition: RFECV selected 8 predictors. Veg response: RFECV selected 4 predictor
 \figentry%
   {Feature importance — RF vs Logistic}%
   {fig_model_feature_importance.png}%
-  {2026-03-15 18:00}%
+  {2026-03-28 12:58}%
   {2×2 feature importance panel: RF permutation importance (top row) and Logistic |coefficient| (bottom row) for Condition and Veg response.
-Top RF predictors for Condition: FA_30_max, Shape_Leng, slope_200. Top RF predictors for Veg response: slope_200, Texture, Landform.}%
-  {RF vs Logistic feature importance: top condition predictors are FA_30_max, Shape_Leng, slope_200; top veg response predictors are slope_200, Texture, Landform.}
+Top RF predictors for Condition: Shape_Leng, FA_30_max, slope_200. Top RF predictors for Veg response: slope_200, Texture, Berm_Length_Class.}%
+  {RF vs Logistic feature importance: top condition predictors are Shape_Leng, FA_30_max, slope_200; top veg response predictors are slope_200, Texture, Berm_Length_Class.}
 %% fig_model_feature_importance_END
+
+
+%% FIG_6_START
+\figentry%
+  {fig6}%
+  {fig6_pca_biplot.png}%
+  {2026-03-18 16:36}%
+  {PCA on 8 features (3 numeric + 3 categorical, one-hot encoded, top 3 textures only, n = 630). PC1: 37.5% variance (soil texture–slope axis). PC2: 29.7% variance (landform axis). Cumulative PC1–2: 67.2%.}%
+  {PC1 (37.5%) separates berms by soil texture and slope, while PC2 (29.7%) captures landform variation. Intactness shows weak separation along PC1, consistent with soil texture being a secondary predictor of condition. Landform clusters are well separated on PC2 but do not align with intactness, consistent with landform not being independently significant for condition.}
+%% FIG_6_END
+
+
+%% FIG_7_START
+\figentry%
+  {fig7}%
+  {fig7_partial_dependence.png}%
+  {2026-03-18 16:36}%
+  {Partial dependence plots from Random Forest (n_estimators=300, class_weight='balanced'). Top row: structural condition (Intact probability). Bottom row: vegetation response. Each panel shows the marginal effect of one numeric predictor on the probability of the positive class, averaged over all other features (n = 775).}%
+  {Flow accumulation shows a sharp decrease in intactness probability above ~1000 cells, consistent with the optimised FA threshold for condition. Berm length shows decreasing intactness with length. For vegetation response, hillslope gradient shows increasing probability of vegetation response with slope, consistent with steeper slopes enhancing runoff redistribution.}
+%% FIG_7_END
+
+
+%% SI_FA30_POINTPLOT_START
+\figentry%
+  {Supplementary Figure 1}%
+  {SI_fa30_pointplot_by_landform.png}%
+  {2026-03-18 15:35}%
+  {Point plots show mean $\pm$ 95\% CI of 30\,m flow accumulation (log scale) by landform, grouped by vegetation response (Panel A) and structural condition (Panel B).}%
+  {Flood-plain berms experience the highest contributing flow accumulation regardless of outcome, while fan-terrace berms receive the least. Within each landform, effective berms tend to have similar or higher flow accumulation than ineffective berms, and degraded berms tend toward higher values than intact berms, consistent with greater hydraulic stress on degraded structures.}
+%% SI_FA30_POINTPLOT_END
+
+
+%% SI_COUNTPLOTS_START
+\figentry%
+  {Supplementary Figure 3}%
+  {SI_countplots_by_outcome_and_landform.png}%
+  {2026-03-18 16:36}%
+  {3$\times$3 panel of count plots. Rows: soil development (B horizon vs.\ none), berm length class (short vs.\ long), slope class (shallow vs.\ steep). Columns: vegetation response, structural condition, landform.}%
+  {Fan-terrace berms are overwhelmingly found in B-horizon soils, whereas stream-terrace and flood-plain berms dominate in soils without a B horizon. Berm length and slope class are more evenly distributed across outcomes, though short berms are disproportionately intact and steep-slope berms show a higher proportion of vegetation response.}
+%% SI_COUNTPLOTS_END
+
+
+%% FIG_3_START
+\figentry%
+  {fig3}%
+  {fig3_veg_response_by_condition_texture.png}%
+  {2026-03-18 16:36}%
+  {Panel A: φ = -0.02, p = 0.612. Panel B: Fisher's exact tests per texture (top 3 by sample size); proportions with count labels.}%
+  {Structural condition and vegetation response are statistically independent (φ ≈ 0). Sandy loam shows the only significant difference in vegetation response between intact and degraded berms.}
+%% FIG_3_END
+
+
+%% SI_FA30_LANDFORM_START
+\figentry%
+  {SI_fa30}%
+  {SI_fa30_by_landform.png}%
+  {2026-03-18 16:36}%
+  {Flow accumulation (30 m, log scale) by landform. Panel A: mean ± 95% CI grouped by vegetation response (point plot). Panel B: mean ± 95% CI grouped by structural condition (bar plot). Flood-plain berms experience the highest contributing flow accumulation regardless of outcome, while fan-terrace berms receive the least.}%
+  {Flood-plain berms receive the highest flow accumulation, consistent with their low-gradient valley-floor position. Within each landform, effective berms tend to have similar or higher flow accumulation than ineffective berms, and degraded berms tend toward higher values than intact berms, consistent with greater hydraulic stress on degraded structures.}
+%% SI_FA30_LANDFORM_END
+
+
+%% fig_dropcol_importance_START
+\figentry%
+  {Drop-column feature importance (RF)}%
+  {fig_dropcol_importance.png}%
+  {2026-03-28 12:58}%
+  {Drop-column feature importance for RF: ΔAUC when each predictor is removed from the full model.
+Condition: 8/12 predictors retained (ΔAUC ≥ 0), 4 dropped.
+Veg response: 8/12 retained, 4 dropped.}%
+  {Drop-column importance: condition retains 8/12 predictors, veg response retains 8/12.}
+%% fig_dropcol_importance_END
+
+
+%% fig_dropcol_feature_selection_START
+\figentry%
+  {Drop-column feature selection effect}%
+  {fig_dropcol_feature_selection.png}%
+  {2026-03-28 12:58}%
+  {Bar chart showing CV AUC before (all 12 predictors) and after drop-column selection for RF and Logistic.
+Condition: kept 8 predictors. Veg response: kept 8 predictors.}%
+  {Drop-column selection keeps 8 predictors for condition, 8 for veg response.}
+%% fig_dropcol_feature_selection_END
 
 \end{document}

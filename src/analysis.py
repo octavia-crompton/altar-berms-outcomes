@@ -704,6 +704,9 @@ PRETTY_LABELS = {
     "channel_200m":       "Channel distance (200 m)",
     "channel_500m":       "Channel distance (500 m)",
     "channel_1000m":      "Channel distance (1000 m)",
+    "profile_depth_cm":   "Profile depth (cm)",
+    "b_horizon_depth_cm": "B-horizon depth (cm)",
+    "restriction_depth_cm": "Restriction depth (cm)",
     "effect_percent":     "Effectiveness (%)",
     "Intact":             "Intact",
 }

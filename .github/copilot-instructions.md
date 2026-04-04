@@ -108,6 +108,7 @@ Canonical colour palettes, label strings, and category orderings.
 | `LBL_EFFECTIVE`, `LBL_INEFFECTIVE`, `eff_order` | str, list | Effectiveness labels |
 | `fail_order`, `fail_colors` | list, dict | Failure-type ordering and colours |
 | `MODEL_CLR_CONDITION`, `MODEL_CLR_VEGRESPONSE`, `MODEL_CLR_CHANCE` | str | Model-outcome panel colours (condition vs veg response figures) |
+| `FS`, `FS_SUP` | int | Uniform within-figure font size (11) and figure suptitle size (13) |
 
 When a new categorical variable needs canonical colours, add them here.
 
@@ -235,6 +236,9 @@ Fig 1 — fig1_descriptive_name.png
 - Numbering should be stable; don't renumber existing figures without explicit request
 
 ### Figure style rules
+
+- **All text within a single figure must use the same font size.** Import `FS` from `constants.py` and use it for titles, axis labels, tick labels, legends, and annotations. Only figure-level suptitles may use `FS_SUP`. Never use `_FS + 1`, `_FS - 1`, or hardcoded numeric font sizes.
+- Use `_FS = FS` at the top of each figure cell; use `_FS` throughout that cell.
 
 - Use font-size constants from the shared module (`FS_LABEL`, `FS_TITLE`, etc.)
 - Use `VAR_CMAPS` when colouring by a variable

@@ -36,6 +36,7 @@ import matplotlib.ticker as _mticker
 import seaborn as sns
 from scipy.stats import fisher_exact
 from itertools import combinations as _combinations
+from constants import FS
 
 # Module-level constant used by panel helpers
 width = 0.25  # bar half-width for 2-category panels
@@ -165,7 +166,7 @@ def _draw_two_cat_panel(ax, m, cat_a, cat_b, colors, legend_title, title):
         col = "black" if sig != "ns" else "#888888"
         ax.text(
             x[i], top + bh + 0.005, sig,
-            ha="center", va="bottom", fontsize=13, color=col,
+            ha="center", va="bottom", fontsize=FS, color=col,
             fontweight="bold" if sig != "ns" else "normal",
         )
     ax.set_xticks(x)
@@ -174,7 +175,7 @@ def _draw_two_cat_panel(ax, m, cat_a, cat_b, colors, legend_title, title):
     ax.set_title(title)
     ax.set_ylim(0, 1.0)
     ax.yaxis.set_major_formatter(_mticker.FuncFormatter(lambda v, _: f"{v:.0%}"))
-    ax.legend(title=legend_title, frameon=False, fontsize=11, loc="upper right")
+    ax.legend(title=legend_title, frameon=False, fontsize=FS, loc="upper right")
     sns.despine(ax=ax)
 
 
@@ -249,7 +250,7 @@ def _draw_multi_cat_panel(ax, df_sub, group_col, cat_order, cat_colors, title, p
                 col = "black" if sig != "ns" else "#aaaaaa"
                 ax.text(
                     (x_left + x_right) / 2, y_start + bh + 0.003, sig,
-                    ha="center", va="bottom", fontsize=11, color=col,
+                    ha="center", va="bottom", fontsize=FS, color=col,
                     fontweight="bold" if sig != "ns" else "normal",
                 )
                 current_top = y_start + bh + 0.025
@@ -268,17 +269,17 @@ def _draw_multi_cat_panel(ax, df_sub, group_col, cat_order, cat_colors, title, p
             col = "black" if sig_overall != "ns" else "#888888"
             ax.text(
                 x[oi], top + bh + 0.005, sig_overall,
-                ha="center", va="bottom", fontsize=13, color=col,
+                ha="center", va="bottom", fontsize=FS, color=col,
                 fontweight="bold" if sig_overall != "ns" else "normal",
             )
 
     ax.set_xticks(x)
     ax.set_xticklabels(outcomes)
     ax.set_ylabel("Proportion of berms")
-    ax.set_title(f"{title}\n({p_str})", fontsize=12)
+    ax.set_title(f"{title}\n({p_str})", fontsize=FS)
     ax.set_ylim(0, 1.0)
     ax.yaxis.set_major_formatter(_mticker.FuncFormatter(lambda v, _: f"{v:.0%}"))
-    ax.legend(frameon=False, fontsize=11, loc="upper right")
+    ax.legend(frameon=False, fontsize=FS, loc="upper right")
     sns.despine(ax=ax)
 
 
@@ -334,7 +335,7 @@ def _draw_outcome_panel(ax, result, lf_order, title, ylabel, lf_colors):
         stars = "***" if q_val < 0.001 else "**" if q_val < 0.01 else "*"
         ax.text(
             (xa + xb) / 2, bracket_y + 0.005, stars,
-            ha="center", va="bottom", fontsize=9, fontweight="bold",
+            ha="center", va="bottom", fontsize=FS, fontweight="bold",
         )
         current_top = bracket_y + 0.04
 
@@ -342,7 +343,7 @@ def _draw_outcome_panel(ax, result, lf_order, title, ylabel, lf_colors):
         f"p = {g_stats['p_value']:.3g}" if g_stats["p_value"] >= 0.001 else "p < 0.001"
     )
     ax.set_title(
-        f"{title}\n{p_str}, Cramér's V = {g_stats['cramers_v']:.2f}", fontsize=10
+        f"{title}\n{p_str}, Cramér's V = {g_stats['cramers_v']:.2f}", fontsize=FS
     )
     ax.set_xticks(x_vals)
     ax.set_xticklabels(lf_order, rotation=15, ha="right")

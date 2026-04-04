@@ -151,8 +151,7 @@ USDA Agricultural Research Service, Southwest Watershed Research Center. Soil su
  - what determined variability, as opposed to just mean response.  Do some berms have a larger response in a wet year... 
 
 
-- check Michelle databases of berms, climate gradient along database
-
 - automate clip imagery around geodatabase berms. 
 
 
+- Quantify failure rate per berm length.

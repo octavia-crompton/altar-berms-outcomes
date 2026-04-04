@@ -92,3 +92,10 @@ fail_colors = {
 MODEL_CLR_CONDITION = "#4285bf"   # blue         – predicting berm condition
 MODEL_CLR_VEGRESPONSE = "#72ab8d" # sage green   – predicting vegetation response
 MODEL_CLR_CHANCE = "#aaaaaa"      # grey dashed  – chance baseline (AUC = 0.5)
+
+# ── Font-size standard ───────────────────────────────────────────────────────
+# Use FS for ALL text within a figure (titles, axis labels, tick labels,
+# legends, annotations).  Every text element in a single figure should share
+# one size.  Only figure-level suptitles may use FS_SUP.
+FS     = 11   # uniform within-figure font size
+FS_SUP = 13   # figure suptitle only

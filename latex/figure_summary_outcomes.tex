@@ -1,7 +1,7 @@
 % ============================================================
 %  Altar Valley Berms — Figure Summary  (Paper 1)
 %  Paper 1: Berm condition and vegetation response
-%  Captions drawn from figures/paper1/figure_registry_concise.txt
+%  Captions drawn from figures/outcomes/figure_registry_concise.txt
 %  Date: 2026-03-01
 % ============================================================
 \documentclass[11pt, a4paper]{article}
@@ -28,18 +28,18 @@
   {\LARGE \textbf{Geomorphic and Soil Controls on Berm Structural Integrity}} \\
   {\LARGE \textbf{and Vegetation Response in the Altar Valley, Arizona}} \\[0.4em]
   {\large Figure Summary — Paper 1} \\[0.3em]
-  {\small Generated 2026-03-01 \quad|\quad Source: \texttt{figures/paper1/figure\_registry\_concise.txt}}
+  {\small Generated 2026-03-01 \quad|\quad Source: \texttt{figures/outcomes/figure\_registry\_concise.txt}}
 \end{center}
 
 \vspace{1em}
 \hrule
 \vspace{1.5em}
 
-% ── Figure 1 ─────────────────────────────────────────────────
+% ── SI: RF Permutation Importance ─────────────────────────────────────
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{../figures/paper1/fig1_rf_permutation_importance.png}
-  \caption*{\textbf{Figure 1.}
+  \includegraphics[width=\linewidth]{../figures/outcomes/SI_rf_permutation_importance.png}
+  \caption*{\textbf{SI Figure — RF Permutation Importance.}
     Random Forest classifier with 5-fold cross-validation; permutation importance
     computed by randomly shuffling each predictor and measuring the decrease in AUC.
     Top 5 predictors shown for each outcome.
@@ -54,11 +54,11 @@
 
 \vspace{2em}
 
-% ── Figure 1 (alternate) ─────────────────────────────────────
+% ── SI: Drop-Column Importance ─────────────────────────────────────
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{../figures/paper1/fig1_alt.png}
-  \caption*{\textbf{Figure 1 (alternate).}
+  \includegraphics[width=\linewidth]{../figures/outcomes/SI_drop_column_importance.png}
+  \caption*{\textbf{SI Figure — Drop-Column Importance.}
     Random Forest classifier with 5-fold cross-validation; drop-column importance
     computed by comparing baseline CV AUC (with all predictors) to CV AUC with
     each predictor removed. Top 5 predictors shown for each outcome.
@@ -73,11 +73,11 @@
 
 \clearpage
 
-% ── Figure 2 ─────────────────────────────────────────────────
+% ── SI: Geomorph × Soil × Condition × Effectiveness ──────────────────
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{../figures/paper1/fig2_geomorph_soil_intact_effective.png}
-  \caption*{\textbf{Figure 2.}
+  \includegraphics[width=\linewidth]{../figures/outcomes/SI_geomorph_soil_intact_effective.png}
+  \caption*{\textbf{SI Figure — Geomorphology \& Soil vs.\ Condition \& Effectiveness.}
     Panel A uses Pearson $\chi^2$ ($\varphi$ coefficient) for a 2$\times$2
     intact $\times$ vegetation-response table; Panel B uses two-sided Fisher's
     exact test to compare proportions between Intact and Degraded berms within
@@ -89,28 +89,12 @@
     vegetation response than degraded berms ($p = 0.034$).}
 \end{figure}
 
-\vspace{2em}
-
-% ── Figure 3 ─────────────────────────────────────────────────
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\linewidth]{../figures/paper1/fig3_berm_condition.png}
-  \caption*{\textbf{Figure 3.}
-    Two-category panels use one-sided Fisher's exact test; multi-category panels
-    (landform, texture) use pairwise Fisher's exact with overall $\chi^2$ $p$-value.
-    Berm condition is strongly associated with berm length~--- shorter berms are
-    markedly more likely to be intact ($p < 0.001$)~--- and modestly associated
-    with slope class ($p < 0.05$).
-    Landform does not significantly predict condition ($p = 0.204$), but soil
-    texture does ($p < 0.001$).}
-\end{figure}
-
 \clearpage
 
 % ── Figure 4 ─────────────────────────────────────────────────
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{../figures/paper1/fig4_vegetation_response.png}
+  \includegraphics[width=\linewidth]{../figures/outcomes/fig4_vegetation_response.png}
   \caption*{\textbf{Figure 4.}
     Two-category panels use one-sided Fisher's exact test; multi-category panels
     (landform, texture) use pairwise Fisher's exact with overall $\chi^2$ $p$-value.
@@ -126,7 +110,7 @@
 % ── Supplementary Figure 1 ───────────────────────────────────
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{../figures/paper1/SI_fig1_fa30_pointplot_by_landform.png}
+  \includegraphics[width=\linewidth]{../figures/outcomes/SI_fa30_pointplot_by_landform.png}
   \caption*{\textbf{Supplementary Figure 1.}
     Point plots show mean $\pm$ 95\,\% CI of 30\,m flow accumulation (log scale)
     by landform, grouped by vegetation response (Panel A) and structural condition
@@ -144,7 +128,7 @@
 % ── Supplementary Figure 2 ───────────────────────────────────
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{../figures/paper1/SI_landform_by_predictors.png}
+  \includegraphics[width=\linewidth]{../figures/outcomes/SI_landform_by_predictors.png}
   \caption*{\textbf{Supplementary Figure 2.}
     Two-sided binomial test ($H_0$: 50/50 split) applied within each landform
     group for each predictor category (length, slope, clay content, soil
@@ -161,7 +145,7 @@
 % ── Supplementary Figure 3 ───────────────────────────────────
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{../figures/paper1/SI_fig3_countplots_by_outcome_and_landform.png}
+  \includegraphics[width=\linewidth]{../figures/outcomes/SI_countplots_by_outcome_and_landform.png}
   \caption*{\textbf{Supplementary Figure 3.}
     $3 \times 3$ panel of count plots.
     Rows: soil development (B horizon vs.\ none), berm length class (short
