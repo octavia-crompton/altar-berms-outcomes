@@ -173,7 +173,7 @@ These columns estimate surface soil properties from remote sensing within upslop
 
 | Column | Type | Values / Range | Notes | Nulls |
 |--------|------|---------------|-------|-------|
-| `Berm_Length_Class` | string | `Short (≤ 50 m)`, `Long (> 50 m)` | Binary length class; threshold of 50 m from literature (Nichols et al., 2023). | 0 |
+| `Berm_Length_Class` | string | `Short (≤ 60 m)`, `Long (> 60 m)` | Binary length class; threshold at sample median (60 m). | 0 |
 | `Berm_Lengt` | string | same | Truncated shapefile version. | 25 |
 | `Direction` | string | `parallel`, `perpendicular`, `undetermined` | Berm orientation relative to drainage flow direction, from `Berm_Directionality.shp`. `perpendicular` berms intercept overland flow directly; `parallel` berms route it laterally. | 25 |
 

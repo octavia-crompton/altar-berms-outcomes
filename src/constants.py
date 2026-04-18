@@ -32,8 +32,8 @@ lf_order = ["Fan terraces", "Stream terraces", "Flood plains"]
 
 # ── Berm length-class colours – blue-grey family ─────────────────────────────
 LENGTH_COLORS = {
-    "Short (≤ 50 m)": "#b8cfe0",   # pale blue-grey
-    "Long (> 50 m)":  "#2e6899",   # deep steel blue
+    "Short (≤ 60 m)": "#b8cfe0",   # pale blue-grey
+    "Long (> 60 m)":  "#2e6899",   # deep steel blue
 }
 length_order = list(LENGTH_COLORS)
 

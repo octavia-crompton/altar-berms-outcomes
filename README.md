@@ -21,7 +21,7 @@ The study area is the *Altar Valley*, a 247,000 ha semi-arid watershed in southe
 - Berms on *fan terraces* with well-developed soils (Bt/Bk horizons) are significantly more likely to remain intact and show greater upslope vegetation greenness
 - Berms on *flood plains* have higher breach rates and show smaller upslope–downslope vegetation differences
 - *Stream terraces* exhibit intermediate behavior, reflecting their transitional geomorphic position
-- *Longer berms* (> 50 m) and *steeper slopes* (> 2%) are associated with higher failure rates
+- *Longer berms* (> 60 m) and *steeper slopes* (> 2%) are associated with higher failure rates
 - Berm structural condition and vegetation response are *not tightly coupled* — intact berms do not always produce strong vegetation responses, and vice versa
 - *Soil development* (presence of B horizons) is a consistent cross-cutting predictor of both berm stability and vegetation response
 
@@ -88,7 +88,7 @@ All predictor variables are drawn from NRCS soil survey data and LiDAR-derived t
 | Soil development | Weak (A-C profile) vs. Strong (Bt or Bk horizon present) |
 | Clay content | ≤ 25% vs. > 25% |
 | Sand content | ≤ 50% vs. > 50% |
-| Berm length | ≤ 50 m vs. > 50 m |
+| Berm length | ≤ 60 m vs. > 60 m |
 | Slope | ≤ 2% vs. > 2% |
 
 ### Statistical approach
@@ -155,3 +155,6 @@ USDA Agricultural Research Service, Southwest Watershed Research Center. Soil su
 
 
 - Quantify failure rate per berm length.
+
+- steep slopes / mechanical failure.
+- spearman correlation?
