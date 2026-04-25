@@ -70,6 +70,27 @@ These columns are keyed via `MUKEY` → lookup dictionaries built in the data-pr
 | `High_Clay` | bool | True/False | True if `claytotal_r` > median clay content across all berms. | 0 |
 | `MapUnitNam` | string | same as `MapUnitName` | Truncated version from shapefile merge (≤10 char). | 25 |
 
+### 4a. Sodicity / dispersive-clay indicators (SSURGO)
+
+Added to support a manuscript caveat about whether dispersive-clay (sodic) failure mechanisms could be a dominant control on berm condition. All values reflect the **dominant component** of each MUKEY (mirrors how `Texture`, `claytotal_r`, `Soil_Development` are derived). SAR fields come from the SSURGO `chorizon` table (`sar_r`, representative value); taxonomy flags come from the `component` table (`taxclname`, `taxsubgrp`, `taxgrtgroup`, `taxorder`). Sodic threshold: SAR > 13. Upper 1 m defined as horizons with `hzdept_r < 100 cm`.
+
+| Column | Type | Values / Range | Notes | Nulls |
+|--------|------|---------------|-------|-------|
+| `SAR_surface` | float | 0.0–~1.0 (all sites in this dataset) | Sodium Adsorption Ratio of the topmost horizon for the dominant component. | 0 |
+| `SAR_max_upper1m` | float | 0.0–~1.0 (95th pct = 1.0) | Maximum SAR across all horizons with `hzdept_r < 100 cm`. | 0 |
+| `SAR_n_horizons` | int | ≥1 | Number of horizons with non-null `sar_r` returned by SDA for the dominant component. Use as a coverage-quality flag. | 0 |
+| `Sodic_surface` | bool | False (all sites) | True if `SAR_surface > 13` (classical sodic threshold). No berm sites exceed this. | 0 |
+| `Sodic_subsurface` | bool | False (all sites) | True if `SAR_max_upper1m > 13`. No berm sites exceed this in any horizon of the upper 1 m. | 0 |
+| `Tax_class` | string | e.g. `Fine, mixed, superactive, thermic Typic Haplargids` | Full SSURGO `taxclname` (family-level taxonomy) for the dominant component. | 0 |
+| `Tax_sodic_subgroup` | bool | False (all sites) | True if the taxonomy string contains `\bSodic\b` (e.g. Sodic Haplargids). No berm sites flag. | 0 |
+| `Tax_natric` | bool | False (all sites) | True if the taxonomy string contains a `Natr-` prefix (Natrargids, Natrigypsids, etc.). No berm sites flag. | 0 |
+| `Tax_smectitic` | bool | True/False | True if the taxonomy mineralogy class is `smectitic`. 2 of 775 berm sites flag (0.3%, both Fan terraces / Intact). | 0 |
+| `Tax_vertic` | bool | False (all sites) | True if the taxonomy string contains `Vert(ic|i)`. No berm sites flag. | 0 |
+
+**Caveat-ready summary** (across 775 berms; 100% SAR coverage from SSURGO):
+- 0 sites exceed the sodic SAR threshold (SAR > 13) at the surface or in the upper 1 m. The 95th-percentile `SAR_max_upper1m` is 1.0 — well below sodic.
+- 0 sites are classified into Sodic or Natric subgroups; 0 are vertic; 2 (0.3%) sit on smectitic-mineralogy components. Together this suggests dispersive-clay failure is unlikely to be a dominant control on berm condition in this dataset.
+
 ---
 
 ## 5. Berm Failure / Structural Condition
