@@ -69,8 +69,8 @@ The primary analysis dataset is `data/merged.csv` (one row per berm).
 │   ├── figure_summary_outcomes.tex   # figure captions / summaries
 │   └── ...
 ├── draft/
-│   ├── local/            # working copy of the manuscript (edit & compile here)
-│   └── overleaf/         # read-only mirror of the Overleaf project (see draft/README.md)
+│   ├── overleaf/         # read-only mirror of the Overleaf project (see draft/README.md)
+│   └── archive/          # older dated manuscript drafts
 ├── data/
 │   ├── merged.csv              # primary dataset (one row per berm)
 │   └── ...
@@ -141,7 +141,7 @@ Notebook 1 requires network access (USDA SDA API and, for SAVI extraction, Googl
 
 ### Manuscript
 
-The manuscript lives in `draft/`. Pull the current Overleaf version into `draft/overleaf/` and compile the working copy in `draft/local/` — see `draft/README.md` for the full workflow.
+The manuscript is written on Overleaf; `draft/overleaf/` holds a read-only local mirror. Refresh it from the `overleaf` git remote — see `draft/README.md` for the workflow.
 
 ---
 
