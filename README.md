@@ -2,6 +2,10 @@
 
 Analysis of earthen berm **structural condition** and **vegetation response** across the Altar Valley, southern Arizona. This repository supports a manuscript examining how soil properties, flow accumulation, berm geometry, and slope control (1) whether a berm remains intact or degrades and (2) the vegetation response near each berm, using landscape, soil, and remote sensing data for **775 water spreader berms**.
 
+![Study area: 775 water spreader berms across the Altar Valley, southern Arizona, colored by structural condition (intact vs. degraded), over the stream network and terrain.](docs/study_area.png)
+
+*Study area — berm locations across the Altar Valley watershed, colored by structural condition (green = intact, red = degraded), with an inset showing example berms in high-resolution imagery.*
+
 ---
 
 ## Background
