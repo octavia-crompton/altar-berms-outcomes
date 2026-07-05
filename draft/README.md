@@ -1,117 +1,63 @@
 # Manuscript Drafts
 
+The manuscript is written and edited **directly on Overleaf**. This folder keeps a
+local, read-only mirror of the Overleaf project so you can read, grep, and diff the
+current source alongside the code and figures.
+
 ## Folder structure
 
 | Folder | Purpose |
 |---|---|
-| `local/` | **Working copy** — edit here, compile here, commit via git. |
-| `overleaf/` | **Read-only Overleaf mirror** — download from Overleaf and drop files here. Do not edit directly. |
+| `overleaf/` | **Read-only mirror of the Overleaf project.** Refreshed by pulling from the `overleaf` git remote. Do not edit here — edits go on Overleaf. |
 | `archive/` | Older dated drafts kept for reference. |
 
----
-
-## Daily workflow
-
-### 1. Pull latest from Overleaf
-
-Always start here to make sure you're diffing against the current Overleaf state.
-
-**Option A — manual download (simplest):**
-
-1. Open the Overleaf project in a browser.
-2. **Menu → Download → Source** → save the zip.
-3. Unzip and copy the changed files into `draft/overleaf/`:
-   ```bash
-   cp /path/to/download/main.tex draft/overleaf/main.tex
-   cp /path/to/download/references.bib draft/overleaf/references.bib   # if changed
-   ```
-
-**Option B — Overleaf git bridge:**
-
-The `overleaf` remote is already configured for this project.
-
-```bash
-# Pull latest Overleaf commits into draft/overleaf/
-git subtree pull --prefix=draft/overleaf overleaf master --squash
-```
+The `overleaf/` mirror is gitignored (manuscript files are tracked on Overleaf, not in
+this repo), so refreshing it never shows up as a change in `git status`.
 
 ---
 
-### 2. Compile local draft
+## Pull the latest from Overleaf
 
-Run from the repo root (or `cd draft/local` first):
+The `overleaf` git remote is already configured for this project.
 
 ```bash
-cd draft/local
-pdflatex main.tex
-bibtex main
-pdflatex main.tex
-pdflatex main.tex    # second pass resolves cross-references
-open main.pdf
+# from the repo root
+git fetch overleaf master
+git archive overleaf/master | tar -x -C draft/overleaf/
 ```
 
-Auxiliary files (`main.aux`, `main.bbl`, `main.log`, `main.out`, `main.spl`) are gitignored — only `main.tex`, `main.pdf`, and `.bst`/`.bib`/`.sty` support files are tracked.
+This unpacks the exact current Overleaf snapshot into `draft/overleaf/`. It touches only
+that folder — it does **not** merge into the `main` code branch and does not push anything.
+
+**Verify it matches the remote (optional):**
+
+```bash
+diff <(git show overleaf/master:main.tex) draft/overleaf/main.tex && echo "in sync"
+```
+
+**Alternatives:**
+
+- *Manual download:* Overleaf **Menu → Download → Source**, unzip, and copy the files into
+  `draft/overleaf/`.
+- *Subtree:* `git subtree pull --prefix=draft/overleaf overleaf master --squash`.
 
 ---
 
-### 3. Compare local draft to Overleaf version (latexdiff)
+## Edit the manuscript
 
-**Prerequisites:** `latexdiff` ships with most TeX distributions.
-Check with `which latexdiff`; install via `brew install latexdiff` if missing.
-
-#### 3a. Generate the diff
-
-Run from the repo root:
-
-```bash
-latexdiff draft/overleaf/main.tex draft/local/main.tex > draft/local/main_diff.tex
-```
-
-#### 3b. Compile the diff PDF
-
-```bash
-cd draft/local
-pdflatex main_diff.tex
-bibtex main_diff
-pdflatex main_diff.tex
-pdflatex main_diff.tex
-open main_diff.pdf
-```
-
-The diff PDF highlights **additions in blue** and **deletions in red**. Review it before pushing changes back to Overleaf.
-
-> **Tip:** if the diff fails to compile (common with complex macros), try the `--flatten` flag to inline `\input`/`\include` files first:
-> ```bash
-> latexdiff --flatten draft/overleaf/main.tex draft/local/main.tex > draft/local/main_diff.tex
-> ```
+Edit on Overleaf in the browser. When you want the changes reflected locally (for reading,
+searching, or comparing against the code/figures), re-run the pull above.
 
 ---
 
-### 4. Push reviewed changes to Overleaf
+## Compare against an older version (latexdiff)
 
-After reviewing the diff and confirming the local version is ready:
-
-**Option A — manual upload (simplest):**
-
-1. Open the Overleaf project in a browser.
-2. Click **Upload** (top-left file tree) → upload `draft/local/main.tex`.
-3. Upload any updated `.bib` file if references changed.
-4. Compile on Overleaf to confirm it builds cleanly.
-
-**Option B — Overleaf git bridge:**
+To see what changed between an archived draft and the current Overleaf source:
 
 ```bash
-# Push local changes from draft/local/
-git subtree push --prefix=draft/local overleaf master
+latexdiff draft/archive/<older_main>.tex draft/overleaf/main.tex > /tmp/main_diff.tex
 ```
 
----
-
-## Commit convention
-
-```
-git add draft/local/main.tex draft/local/references.bib
-git commit -m "draft: <brief description of changes>"
-```
-
-Keep `main_diff.tex` and compiled aux files out of commits (they are gitignored).
+Compile `/tmp/main_diff.tex` to get a PDF with additions in blue and deletions in red.
+If it fails on complex macros, add `--flatten` to inline `\input`/`\include` files first.
+`latexdiff` ships with most TeX distributions (`brew install latexdiff` if missing).
