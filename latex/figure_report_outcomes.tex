@@ -77,7 +77,7 @@ statistical test applied, and a brief interpretation of the key result.
 \figentry%
   {fig1}%
   {fig1_study_area.png}%
-  {2026-04-18 14:49}%
+  {2026-06-06 08:06}%
   {Study area map showing 775 berms across three landform types in the Altar Valley, southern Arizona. Fan terraces: 276, Stream terraces: 140, Flood plains: 359. Panel A: location within Arizona (satellite). Panel B: berm locations overlaid on landform polygons (satellite). Berms not intersecting any mapped landform polygon assigned to Fan terraces.}%
   {Berms are distributed across the three principal landform types in the Altar Valley. Fan terraces and flood plains contain the majority of berms, with stream terraces forming a narrower transitional band.}
 %% FIG_1_END
@@ -108,7 +108,7 @@ statistical test applied, and a brief interpretation of the key result.
 \figentry%
   {fig5}%
   {fig5_model_performance_importance.png}%
-  {2026-04-18 14:49}%
+  {2026-06-06 08:07}%
   {Random Forest (n_estimators=300, class_weight='balanced'), 5-fold stratified CV. Permutation importance = mean decrease in holdout AUC from shuffling each predictor (30 repeats). Importances aggregated across one-hot columns for categorical predictors. CV AUC (condition) = 0.71 ± 0.03 (n=775). CV AUC (vegetation response) = 0.64 ± 0.05 (n=775).}%
   {Panel A: the predictor rankings differ between outcomes — flow accumulation and berm length dominate condition prediction, while hillslope gradient and soil properties are more important for vegetation response. CV AUC: condition = 0.71, vegetation response = 0.64.}
 %% FIG_5_END
@@ -118,9 +118,9 @@ statistical test applied, and a brief interpretation of the key result.
 \figentry%
   {fig7}%
   {fig7_vegetation_response.png}%
-  {2026-04-18 14:49}%
-  {2×3 panel figure. Row 1: berm length, slope class, landform (upper right). Row 2: soil texture, B horizon presence, flow accumulation. Two-category panels (length, slope, B horizon, flow accumulation) use one-sided Fisher's exact tests. Multi-category panels (landform, texture) use pairwise Fisher's exact tests with the overall chi-squared p-value shown in the panel title. Flow accumulation (30 m) binarized at the significance-maximising threshold (2k contributing cells, Fisher p = 0.0001139); threshold selected by scanning all unique values between the 10th and 90th percentiles.}%
-  {Six predictors of vegetation response shown in a 2×3 grid. Row 1: berm length (threshold 60 m), slope class, and landform. Row 2: soil texture (n > 100 per class), B horizon presence, and flow accumulation (optimal threshold 2k cells, Fisher p = 0.0001139). Vegetation response is significantly associated with slope class (p < 0.001), landform (p < 0.001), and soil texture (p < 0.001), but not with berm length alone. Steep-slope berms and flood-plain berms show the highest rates of vegetation response.}
+  {2026-06-06 08:07}%
+  {2x3 panel figure. Row 1: berm length, slope class, landform. Row 2: soil texture, B horizon presence, flow accumulation. Two-category panels (length, slope, B horizon, flow accumulation) use two-sided Fisher's exact tests. Multi-category panels (landform, texture) use pairwise two-sided Fisher's exact tests with Benjamini-Hochberg FDR correction. Flow accumulation (30 m) binarized at 2k contributing cells (two-sided Fisher p = 0.0001139).}%
+  {Six predictors of vegetation response shown in a 2x3 grid. Row 1: berm length (threshold 60 m), slope class, and landform. Row 2: soil texture (n > 100 per class), B horizon presence, and flow accumulation. Vegetation response is significantly associated with slope class, landform, and soil texture. Steep-slope berms and flood-plain berms show the highest rates of vegetation response.}
 %% FIG_7_END
 
 % ── SI Fig 1 ─────────────────────────────────────────────────
@@ -268,10 +268,10 @@ AUC loss vs full model: Condition 0.113, Veg response 0.016.}%
 %% FIG_8_START
 \figentry%
   {fig8}%
-  {fig8_berm_condition.png}%
-  {2026-04-18 14:49}%
-  {2×3 panel figure. Two-category panels (berm length, slope class, B horizon presence, flow accumulation) use one-sided Fisher's exact tests. Multi-category panels (landform, soil texture) use pairwise Fisher's exact tests with the overall chi-squared p-value in the panel title. Flow accumulation (30 m) binarized at the significance-maximising threshold (1k contributing cells, two-sided Fisher p = 2.065e-16); threshold selected by scanning all unique values between the 10th and 90th percentiles.}%
-  {Six predictors of structural condition (Intact vs Degraded) shown in a 2×3 grid. Row 1: berm length (threshold 60 m), slope class, and landform. Row 2: soil texture (n > 100 per class), B horizon presence, and flow accumulation (optimal threshold 1k cells, Fisher p = 2.065e-16).}
+  {fig8_veg_response_by_condition_texture.png}%
+  {2026-06-06 11:57}%
+  {Panel A: φ = -0.02, p = 0.612. Panel B: Fisher's exact tests per texture (top 3 by sample size); proportions with count labels.}%
+  {Structural condition and vegetation response are statistically independent (φ ≈ 0). Sandy loam shows the only significant difference in vegetation response between intact and degraded berms.}
 %% FIG_8_END
 
 
@@ -313,7 +313,7 @@ Top RF predictors for Condition: FA_30_max, Shape_Leng, slope_200. Top RF predic
 \figentry%
   {fig4}%
   {fig4_pca_biplot.png}%
-  {2026-04-18 14:49}%
+  {2026-06-06 08:07}%
   {PCA on 8 features (3 numeric + 3 categorical, one-hot encoded, top 3 textures only, n = 630). PC1: 37.5% variance (soil texture–slope axis). PC2: 29.7% variance (landform axis). Cumulative PC1–2: 67.2%.}%
   {PC1 (37.5%) separates berms by soil texture and slope, while PC2 (29.7%) captures landform variation. Intactness shows weak separation along PC1, consistent with soil texture being a secondary predictor of condition. Landform clusters are well separated on PC2 but do not align with intactness, consistent with landform not being independently significant for condition.}
 %% FIG_4_END
@@ -343,7 +343,7 @@ Top RF predictors for Condition: FA_30_max, Shape_Leng, slope_200. Top RF predic
 \figentry%
   {Supplementary Figure 3}%
   {SI_countplots_by_outcome_and_landform.png}%
-  {2026-04-18 14:49}%
+  {2026-06-06 08:08}%
   {3$\times$3 panel of count plots. Rows: soil development (B horizon vs.\ none), berm length class (short vs.\ long), slope class (shallow vs.\ steep). Columns: vegetation response, structural condition, landform.}%
   {Fan-terrace berms are overwhelmingly found in B-horizon soils, whereas stream-terrace and flood-plain berms dominate in soils without a B horizon. Berm length and slope class are more evenly distributed across outcomes, though short berms are disproportionately intact and steep-slope berms show a higher proportion of vegetation response.}
 %% SI_COUNTPLOTS_END
@@ -352,10 +352,10 @@ Top RF predictors for Condition: FA_30_max, Shape_Leng, slope_200. Top RF predic
 %% FIG_6_START
 \figentry%
   {fig6}%
-  {fig6_veg_response_by_condition_texture.png}%
-  {2026-04-18 14:50}%
-  {Panel A: φ = -0.02, p = 0.612. Panel B: Fisher's exact tests per texture (top 3 by sample size); proportions with count labels.}%
-  {Structural condition and vegetation response are statistically independent (φ ≈ 0). Sandy loam shows the only significant difference in vegetation response between intact and degraded berms.}
+  {fig6_berm_condition.png}%
+  {2026-06-06 08:07}%
+  {2x3 panel figure. Two-category panels (berm length, slope class, B horizon presence, flow accumulation) use two-sided Fisher's exact tests. Multi-category panels (landform, soil texture) use pairwise two-sided Fisher's exact tests with Benjamini-Hochberg FDR correction. Flow accumulation (30 m) binarized at the fixed 2k cell threshold (two-sided Fisher p = 1.168e-09).}%
+  {Six predictors of structural condition (Intact vs Degraded) shown in a 2x3 grid. Row 1: berm length (threshold 60 m), slope class, and landform. Row 2: soil texture (n > 100 per class), B horizon presence, and flow accumulation.}
 %% FIG_6_END
 
 
@@ -363,7 +363,7 @@ Top RF predictors for Condition: FA_30_max, Shape_Leng, slope_200. Top RF predic
 \figentry%
   {SI_fa30}%
   {SI_fa30_by_landform.png}%
-  {2026-04-18 14:49}%
+  {2026-06-06 08:08}%
   {Flow accumulation (30 m, log scale) by landform. Panel A: mean ± 95% CI grouped by vegetation response (point plot). Panel B: mean ± 95% CI grouped by structural condition (bar plot). Flood-plain berms experience the highest contributing flow accumulation regardless of outcome, while fan-terrace berms receive the least.}%
   {Flood-plain berms receive the highest flow accumulation, consistent with their low-gradient valley-floor position. Within each landform, effective berms tend to have similar or higher flow accumulation than ineffective berms, and degraded berms tend toward higher values than intact berms, consistent with greater hydraulic stress on degraded structures.}
 %% SI_FA30_LANDFORM_END
@@ -396,9 +396,29 @@ Condition: kept 12 predictors. Veg response: kept 6 predictors.}%
 \figentry%
   {fig3}%
   {fig3_controlled_predictors.png}%
-  {2026-04-08 17:00}%
+  {2026-06-14 06:56}%
   {Side-by-side comparison of univariate and controlled (LRT) predictor significance for berm structural condition and vegetation response. Panel A: ΔAIC from drop-one likelihood ratio tests (positive = predictor improves model). Panel B: shift from univariate to controlled p-values (circles = univariate, squares = controlled). Six predictors: berm length, slope, landform, soil texture, B-horizon presence, flow accumulation.}%
   {Flow accumulation and berm length are the strongest controlled predictors of condition (largest ΔAIC), while slope drives vegetation response. Several predictors that are significant in univariate tests (e.g. landform, soil texture) lose significance after controlling for confounders, indicating that their apparent effects are partly mediated by correlated site characteristics.}
 %% FIG_3_END
+
+
+%% SI_PREDICTOR_ASSOCIATION_START
+\figentry%
+  {SI_assoc}%
+  {SI_predictor_association.png}%
+  {2026-06-10 12:14}%
+  {Pairwise association among 8 variables (3 numeric + 3 categorical predictors + 2 binary outcomes — structural condition and vegetation response; top 3 textures only, n = 630). Numeric–numeric pairs use |Spearman ρ|, categorical–categorical pairs use the Bergsma-Wicher bias-corrected Cramer's V, and mixed pairs use the correlation ratio η; all bounded on [0, 1]. Strongest pair: Landform – Soil texture (0.97).}%
+  {Spearman's ρ is appropriate only for ordered numeric pairs; for nominal categoricals it reduces to the phi coefficient and discards non-monotonic structure, so Cramer's V and the correlation ratio are used instead. The largest association (Landform–Soil texture, 0.97) indicates predictors are only moderately collinear, while structural condition and vegetation response show only weak association with the predictors and with each other, supporting their joint use in the PCA and predictor-ranking analyses.}
+%% SI_PREDICTOR_ASSOCIATION_END
+
+
+%% SI_THRESHOLD_SENSITIVITY_START
+\figentry%
+  {SI_threshold_sensitivity}%
+  {SI_threshold_sensitivity.png}%
+  {2026-06-13 19:24}%
+  {Vegetation-response logistic regression refit at SAVI-difference cut-offs from 4% to 12%. Panel A: significance (-log10 p) of slope (Wald) and soil texture (joint LRT) vs. threshold; dashed line p = 0.05, shaded 5-10% reported band, dotted line the 7% cut-off. Panel B: response prevalence vs. threshold (47% at 7%). Across 5-10%, slope is significant (p<0.001) and positive at every cut-off (OR 1.28-1.37); soil texture's joint LRT is significant at [6, 7, 8, 10]%.}%
+  {The two headline vegetation-response findings are stable across a band of thresholds: slope is the dominant controlled predictor (significant and positive at every cut-off) and soil texture is second. Texture softens only at the band edges, where the prevalence has drifted furthest from 50% and the joint test loses power, indicating the 7% choice does not drive the conclusions.}
+%% SI_THRESHOLD_SENSITIVITY_END
 
 \end{document}

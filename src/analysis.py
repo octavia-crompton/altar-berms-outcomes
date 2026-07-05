@@ -17,7 +17,7 @@ from itertools import combinations
 from scipy.stats import chi2_contingency, fisher_exact, norm, chi2
 
 from sklearn.model_selection import (
-    StratifiedKFold, train_test_split, cross_validate,
+    StratifiedKFold, train_test_split, cross_validate, cross_val_score,
 )
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.cross_decomposition import PLSRegression
@@ -742,3 +742,301 @@ def _format_ranking_for_si(ranked_df, pretty=PRETTY_LABELS, decimals=3):
     out[num_cols] = out[num_cols].round(decimals)
 
     return out
+
+
+# ============================================================================
+# 5. Controlled predictor analysis & threshold sensitivity
+# ============================================================================
+
+# Nine-predictor specification shared by both outcomes (condition & vegetation).
+_ALL_PRED_COLS = ['Shape_Leng', 'slope_200', 'FA_30_max', 'claytotal_r',
+                  'silttotal_r', 'sandtotal_r',
+                  'Landform', 'Texture', 'Soil_Development']
+
+_FOCAL_PREDICTORS = [
+    ('Shape_Leng',       'Berm length'),
+    ('slope_200',        'Slope'),
+    ('Landform',         'Landform'),
+    ('Texture',          'Soil texture'),
+    ('Soil_Development', 'B-horizon presence'),
+    ('FA_30_max',        'Flow accumulation'),
+    ('claytotal_r',      'Clay content'),
+    ('silttotal_r',      'Silt content'),
+    ('sandtotal_r',      'Sand content'),
+]
+
+_CATEGORICALS = {'Landform', 'Texture', 'Soil_Development'}
+
+
+def _prepare_model_matrix(df, y_col):
+    """Complete-cases design matrix with dummies."""
+    cols = [y_col] + _ALL_PRED_COLS
+    mdf = df[cols].dropna().copy()
+    mdf['_has_B'] = (mdf['Soil_Development'] == 'B horizon').astype(int)
+    mdf = mdf.drop(columns=['Soil_Development'])
+    cat_cols = [c for c in ['Landform', 'Texture'] if c in mdf.columns]
+    X = pd.get_dummies(mdf.drop(columns=[y_col]),
+                       columns=cat_cols, drop_first=True).astype(float)
+    X = sm.add_constant(X)
+    y = mdf[y_col].astype(float)
+    return X, y, mdf
+
+
+def _focal_model_cols(X, focal):
+    """Column name(s) in X that correspond to a focal predictor."""
+    if focal == 'Soil_Development':
+        return ['_has_B']
+    if focal in _CATEGORICALS:
+        return [c for c in X.columns if c.startswith(focal + '_')]
+    return [focal]
+
+
+def _univariate(df, focal, y_col):
+    """Univariate association test."""
+    d = df[[focal, y_col]].dropna()
+    if focal in _CATEGORICALS:
+        ct = pd.crosstab(d[focal], d[y_col])
+        chi2_val, p, dof, _ = chi2_contingency(ct)
+        n = ct.sum().sum()
+        v = np.sqrt(chi2_val / (n * (min(ct.shape) - 1)))
+        return {'test': 'chi-square', 'stat': chi2_val, 'p': p,
+                'effect': f"V = {v:.3f}", 'n': n}
+    X_u = sm.add_constant(d[focal].astype(float))
+    fit = sm.Logit(d[y_col].astype(float), X_u).fit(disp=0)
+    coef = fit.params[focal]
+    return {'test': 'logistic', 'p': fit.pvalues[focal],
+            'effect': f"OR = {np.exp(coef):.3f}", 'n': len(d)}
+
+
+def controlled_predictor_analysis(df, y_col, outcome_label):
+    """
+    Full controlled analysis for each focal predictor.
+    Returns (summary_df, coef_df, importance_df).
+    """
+    X, y, mdf = _prepare_model_matrix(df, y_col)
+    n = len(y)
+
+    # ── Full model ────────────────────────────────────────────────────────
+    logit_full = sm.Logit(y, X).fit(disp=0)
+    print(f"\n{'═'*70}")
+    print(f"  {outcome_label}")
+    print(f"  Full model: n = {n},  Pseudo R² = {logit_full.prsquared:.4f},"
+          f"  AIC = {logit_full.aic:.1f}")
+    print(f"{'═'*70}")
+
+    # ── Full coefficient table ────────────────────────────────────────────
+    coef_df = pd.DataFrame({
+        'coef':  logit_full.params,
+        'OR':    np.exp(logit_full.params),
+        'SE':    logit_full.bse,
+        'z':     logit_full.tvalues,
+        'p':     logit_full.pvalues,
+    }).drop(index='const')
+    coef_df['sig'] = coef_df['p'].apply(
+        lambda p: '***' if p < 0.001 else '**' if p < 0.01
+                  else '*' if p < 0.05 else 'ns')
+    coef_df = coef_df.sort_values('z', key=abs, ascending=False)
+
+    # ── Per-focal LRT ─────────────────────────────────────────────────────
+    rows = []
+    for focal, label in _FOCAL_PREDICTORS:
+        uni = _univariate(df, focal, y_col)
+        focal_cols = _focal_model_cols(X, focal)
+        X_red = X.drop(columns=focal_cols)
+        logit_red = sm.Logit(y, X_red).fit(disp=0)
+        lr_stat = -2 * (logit_red.llf - logit_full.llf)
+        lr_df   = len(focal_cols)
+        lr_p    = chi2.sf(lr_stat, df=lr_df)
+        d_aic   = logit_red.aic - logit_full.aic
+
+        # Extract OR for single-column focal predictors
+        if len(focal_cols) == 1:
+            fc = focal_cols[0]
+            c  = logit_full.params[fc]
+            se = logit_full.bse[fc]
+            or_str = (f"{np.exp(c):.3f} "
+                      f"({np.exp(c - 1.96*se):.3f}\u2013{np.exp(c + 1.96*se):.3f})")
+            p_coef = f"{logit_full.pvalues[fc]:.4f}"
+        else:
+            or_str = f"({lr_df} df joint)"
+            p_coef = "\u2014"
+
+        sig_u = ('***' if uni['p'] < 0.001 else '**' if uni['p'] < 0.01
+                 else '*' if uni['p'] < 0.05 else 'ns')
+        sig_l = ('***' if lr_p < 0.001 else '**' if lr_p < 0.01
+                 else '*' if lr_p < 0.05 else 'ns')
+        print(f"  {label:25s}  Uni p={uni['p']:.4f} ({sig_u:3s})  "
+              f"LRT={lr_stat:6.2f} (df={lr_df}, p={lr_p:.4f}, {sig_l:3s})  "
+              f"\u0394AIC={d_aic:+.1f}")
+
+        rows.append({
+            'Predictor': label,
+            'Column': focal,
+            'n': uni['n'],
+            'Univariate effect': uni['effect'],
+            'Univariate p': uni['p'],
+            'LRT': lr_stat,
+            'LRT df': lr_df,
+            'LRT p': lr_p,
+            'Controlled OR (95% CI)': or_str,
+            'Coef p': p_coef,
+            '\u0394AIC': d_aic,
+        })
+
+    summary = pd.DataFrame(rows)
+
+    # ── Random forest ─────────────────────────────────────────────────────
+    X_rf = X.drop(columns=['const'])
+    rf = RandomForestClassifier(n_estimators=500, max_depth=5,
+                                random_state=42, class_weight='balanced')
+    rf.fit(X_rf, y)
+    cv = cross_val_score(rf, X_rf, y,
+                         cv=StratifiedKFold(5, shuffle=True, random_state=42),
+                         scoring='roc_auc')
+    perm = permutation_importance(rf, X_rf, y, n_repeats=30,
+                                  random_state=42, scoring='accuracy')
+    imp = pd.DataFrame({
+        'importance': perm.importances_mean,
+        'std':        perm.importances_std,
+    }, index=X_rf.columns).sort_values('importance', ascending=False)
+    print(f"\n  RF 5-fold CV AUC = {cv.mean():.3f} \u00b1 {cv.std():.3f}")
+
+    return summary, coef_df, imp
+
+
+# ── Threshold-sensitivity helpers (vegetation response only) ────────────────
+
+def veg_threshold_scan(df, thresholds, effect_col='effect_percent'):
+    """
+    Refit the controlled vegetation-response logistic regression at each
+    cut-off in *thresholds* (percent units, e.g. [5, 6, 7, 8, 9, 10]) and
+    tabulate whether slope and soil texture stay significant and keep sign.
+
+    For every threshold the binary outcome is ``effect_percent > t``; all
+    other predictors and the design matrix are identical to
+    :func:`controlled_predictor_analysis`.
+
+    Returns
+    -------
+    pd.DataFrame
+        One row per threshold with: n, n_effective, prevalence, pseudo_r2,
+        slope coefficient / OR / p / significance / sign, and the soil-texture
+        joint-LRT statistic / p / significance.
+    """
+    rows = []
+    for t in thresholds:
+        work = df.copy()
+        work['_y_thresh'] = (work[effect_col] > t).astype(float)
+
+        X, y, _ = _prepare_model_matrix(work, '_y_thresh')
+        logit_full = sm.Logit(y, X).fit(disp=0)
+
+        # Slope: single-coefficient focal predictor
+        slope_coef = logit_full.params['slope_200']
+        slope_p    = logit_full.pvalues['slope_200']
+
+        # Soil texture: joint likelihood-ratio test (drop all texture dummies)
+        tex_cols = _focal_model_cols(X, 'Texture')
+        logit_red = sm.Logit(y, X.drop(columns=tex_cols)).fit(disp=0)
+        tex_lr = -2 * (logit_red.llf - logit_full.llf)
+        tex_df = len(tex_cols)
+        tex_p  = chi2.sf(tex_lr, df=tex_df)
+
+        rows.append({
+            'threshold':      t,
+            'n':              int(len(y)),
+            'n_effective':    int(y.sum()),
+            'prevalence':     float(y.mean()),
+            'pseudo_r2':      float(logit_full.prsquared),
+            'slope_coef':     float(slope_coef),
+            'slope_OR':       float(np.exp(slope_coef)),
+            'slope_p':        float(slope_p),
+            'slope_sig':      _sig_label(slope_p),
+            'slope_sign':     '+' if slope_coef > 0 else '-',
+            'texture_LRT':    float(tex_lr),
+            'texture_df':     int(tex_df),
+            'texture_p':      float(tex_p),
+            'texture_sig':    _sig_label(tex_p),
+        })
+
+    return pd.DataFrame(rows)
+
+
+def _sig_label(p):
+    """p-value → significance stars (matches notebook convention)."""
+    return ('***' if p < 0.001 else '**' if p < 0.01
+            else '*' if p < 0.05 else 'ns')
+
+
+def continuous_vs_binary_ranking(df, threshold=7, effect_col='effect_percent',
+                                 focal=('slope_200', 'claytotal_r',
+                                        'silttotal_r', 'sandtotal_r')):
+    """
+    Cross-check that the threshold only binarises a signal already present in
+    the continuous Delta-S metric.
+
+    Fits, on the same complete-case design matrix used by
+    :func:`controlled_predictor_analysis`:
+
+    * a **binary logistic** model on ``effect_percent > threshold``;
+    * an **OLS** model on continuous ``effect_percent``;
+    * a **rank** (Spearman-style) OLS on the rank-transformed metric.
+
+    All predictors are z-scored so coefficients are directly comparable.
+    Returns a tidy DataFrame of standardised coefficients, p-values and the
+    within-model importance rank for each focal continuous predictor, so the
+    three rankings can be compared side by side.
+    """
+    work = df.copy()
+    work['_y_thresh'] = (work[effect_col] > threshold).astype(float)
+
+    # Build the shared design matrix on complete cases of every predictor +
+    # the continuous response, so all three models see identical rows.
+    cols = _ALL_PRED_COLS + [effect_col]
+    mdf = work[cols].dropna().copy()
+    mdf['_has_B'] = (mdf['Soil_Development'] == 'B horizon').astype(int)
+    mdf = mdf.drop(columns=['Soil_Development'])
+    cat_cols = [c for c in ['Landform', 'Texture'] if c in mdf.columns]
+    X = pd.get_dummies(mdf.drop(columns=[effect_col]),
+                       columns=cat_cols, drop_first=True).astype(float)
+
+    # z-score every design column so standardised coefficients are comparable
+    Xz = (X - X.mean()) / X.std(ddof=0)
+    Xz = Xz.fillna(0.0)
+    Xz_const = sm.add_constant(Xz)
+
+    cont = mdf[effect_col].astype(float).values
+    y_bin = (cont > threshold).astype(float)
+    y_rank = pd.Series(cont).rank().values
+
+    logit = sm.Logit(y_bin, Xz_const).fit(disp=0)
+    ols   = sm.OLS(cont, Xz_const).fit()
+    ols_r = sm.OLS(y_rank, Xz_const).fit()
+
+    def _rank_within(fit, names):
+        sub = fit.params[list(names)].abs().sort_values(ascending=False)
+        return {nm: i + 1 for i, nm in enumerate(sub.index)}
+
+    logit_rank = _rank_within(logit, focal)
+    ols_rank   = _rank_within(ols, focal)
+    olsr_rank  = _rank_within(ols_r, focal)
+
+    rows = []
+    for nm in focal:
+        rows.append({
+            'predictor':        _clean_predictor_name(nm),
+            'column':           nm,
+            'logit_coef':       float(logit.params[nm]),
+            'logit_p':          float(logit.pvalues[nm]),
+            'logit_rank':       logit_rank[nm],
+            'ols_coef':         float(ols.params[nm]),
+            'ols_p':            float(ols.pvalues[nm]),
+            'ols_rank':         ols_rank[nm],
+            'ols_rank_coef':    float(ols_r.params[nm]),
+            'ols_rank_p':       float(ols_r.pvalues[nm]),
+            'ols_rank_rank':    olsr_rank[nm],
+            'sign_agree':       (np.sign(logit.params[nm])
+                                 == np.sign(ols.params[nm])),
+        })
+
+    return pd.DataFrame(rows)
