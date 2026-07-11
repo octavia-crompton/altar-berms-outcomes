@@ -21,3 +21,6 @@ dependencies:
   - earthaccess
   - openpyxl
   - datacube
+  - pip
+  - pip:
+      - python-pptx
