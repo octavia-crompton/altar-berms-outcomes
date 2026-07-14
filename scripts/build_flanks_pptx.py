@@ -47,6 +47,28 @@ PORT_FIGS = [
     "fig3_landform_fail_type.png",
 ]
 
+# Analysis topic per figure — used to drop replicate figures that appear in
+# both notebooks (the port reproduces the 5 univariate panels). First
+# occurrence wins, so the comprehensive notebook's versions are kept.
+TOPIC = {
+    "fig3_texture_fail_type.png": "texture",
+    "fig4_landform_fail_type.png": "landform",
+    "fig5_length_fail_type.png": "length",
+    "fig6_slope_fail_type.png": "slope",
+    "fig7_soildev_fail_type.png": "soildev",
+    "fig_stacked_fail_by_landform.png": "landform_composition",
+    "fig_angle_fail_type.png": "angle",
+    "fig_flowaccum_fail_type.png": "flowaccum",
+    "fig_savi_fail_type.png": "savi",
+    "fig_roaddist_fail_type.png": "roaddist",
+    "fig13_highclay_fail_type.png": "highclay",
+    "fig2_length_fail_type_brackets.png": "length",
+    "fig2b_slope_fail_type_brackets.png": "slope",
+    "fig2c_soildev_fail_type_brackets.png": "soildev",
+    "fig2d_texture_fail_type.png": "texture",
+    "fig3_landform_fail_type.png": "landform",
+}
+
 # Clean slide titles keyed by filename.
 TITLES = {
     "fig3_texture_fail_type.png": "Soil texture × Failure type",
@@ -154,17 +176,29 @@ def main():
     )
 
     n_added = 0
+    seen_topics = set()
     for nb, figs, label in [
         (MAIN_NB, MAIN_FIGS, "Comprehensive analysis"),
         (PORT_NB, PORT_FIGS, "Bracketed univariate panels (port notebook)"),
     ]:
-        add_section_slide(prs, f"{label}\n{nb}")
+        # Figures for this section that aren't replicates of one already added.
+        section = []
         for fn in figs:
-            path = FIG_DIR / fn
-            if not path.exists():
+            topic = TOPIC.get(fn, fn)
+            if topic in seen_topics:
+                print(f"  [dedup] skip replicate: {fn} (topic '{topic}')")
+                continue
+            if not (FIG_DIR / fn).exists():
                 print(f"  [skip] missing: {fn}")
                 continue
-            add_figure_slide(prs, path, TITLES.get(fn, fn), caps.get(fn, ""))
+            section.append(fn)
+            seen_topics.add(topic)
+        if not section:
+            print(f"  [dedup] section '{label}' empty after dedup — omitted")
+            continue
+        add_section_slide(prs, f"{label}\n{nb}")
+        for fn in section:
+            add_figure_slide(prs, FIG_DIR / fn, TITLES.get(fn, fn), caps.get(fn, ""))
             n_added += 1
 
     prs.save(OUT)
