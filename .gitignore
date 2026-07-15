@@ -56,6 +56,9 @@ references.bib
 Figures/
 Altar berm manuscript drafts/
 
+# ── Local-only manuscript downloads (PDFs, AI scans, third-party papers) ────
+draft_from_downloads/
+
 # ── Legacy / unused ─────────────────────────────────────────
 berm-regression/
 manuscript/
