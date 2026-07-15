@@ -151,7 +151,7 @@ The manuscript is written on Overleaf; `draft/overleaf/` holds a read-only local
 
 ## Citation
 
-*Manuscript in preparation.* Crompton, O., Nichols, M., Lapides, D.A. "Soil-geomorphic impact on berm structural condition and vegetation response in the US Southwest." *Catena* (in prep).
+*Under review.* Crompton, O.V., Koop, A.N., Anderson, S., Chaulagain, S., Lapides, D.A., Meles, M.B., Nichols, M.H. "Controls on berm structural condition and vegetation response in the Altar Valley, southern Arizona." *Journal of Soil and Water Conservation* (under review).
 
 ---
 
