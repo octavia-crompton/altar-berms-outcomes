@@ -21,6 +21,7 @@ REPO = Path(__file__).resolve().parents[1]
 FIGS = REPO / "draft" / "overleaf" / "Figures"
 OUTC = REPO / "figures" / "outcomes"
 OUT = REPO / "agu_poster_H138.pptx"
+TEMPLATE = REPO / "CUAHSI biennial.pptx"   # inherit its embedded Montserrat + 48x36 canvas
 
 # ── Template design tokens ───────────────────────────────────────────────────
 FONT = "Montserrat"
@@ -34,6 +35,26 @@ PANEL_LN = RGBColor(0xD3, 0xE0, 0xE6)
 WHITE = RGBColor(0xFF, 0xFF, 0xFF)
 
 def IN(v): return Inches(v)
+
+
+def set_theme_font(prs, name):
+    """Set the deck's theme major/minor Latin fonts, so any text that falls back
+    to the theme (instead of an explicit run font) still renders in *name*.
+    The CUAHSI template overrides runs with Montserrat but leaves the theme as
+    Times New Roman; matching the theme too makes the look robust."""
+    from lxml import etree
+    ns = {"a": "http://schemas.openxmlformats.org/drawingml/2006/main"}
+    for master in prs.slide_masters:
+        for rel in master.part.rels.values():
+            if "theme" not in rel.reltype:
+                continue
+            part = rel.target_part
+            root = etree.fromstring(part.blob)
+            for tag in ("majorFont", "minorFont"):
+                for latin in root.findall(f".//a:{tag}/a:latin", ns):
+                    latin.set("typeface", name)
+            part._blob = etree.tostring(root, xml_declaration=True,
+                                        encoding="UTF-8", standalone=True)
 
 # 48 x 36 canvas, four 11-in columns
 COL_X = [0.6, 12.55, 24.5, 36.45]
@@ -147,7 +168,7 @@ class Column:
             yy = y + ry
             if kind == "header":
                 s, col = payload
-                text(self.slide, s, inner_x, yy, inner_w, 1.0, 34, col, bold=True)
+                text(self.slide, s, inner_x, yy, inner_w, 1.0, 32, col, bold=False)
             elif kind == "body":
                 s, sz, bh = payload
                 text(self.slide, s, inner_x, yy, inner_w, bh, sz, INK)
@@ -160,10 +181,10 @@ class Column:
                                               IN(yy), IN(dw), IN(dh))
             elif kind == "caption":
                 s, ch = payload
-                text(self.slide, s, inner_x, yy, inner_w, ch, 16, MUTE, italic=True)
+                text(self.slide, s, inner_x, yy, inner_w, ch, 18, MUTE, italic=True)
             elif kind == "takeaway":
                 s, th = payload
-                text(self.slide, s, inner_x, yy, inner_w, th, 22, GREEN, bold=True)
+                text(self.slide, s, inner_x, yy, inner_w, th, 22, GREEN, bold=False)
 
     def render(self, verbose=False):
         laid = [self._layout(sp) for sp in self.specs]
@@ -189,10 +210,13 @@ class Column:
 
 
 def build():
-    prs = Presentation()
-    prs.slide_width = IN(48)
-    prs.slide_height = IN(36)
-    s = prs.slides.add_slide(prs.slide_layouts[6])
+    # Start from the CUAHSI template so the poster inherits its embedded
+    # Montserrat, theme, 48x36 canvas, and background; then clear its shapes.
+    prs = Presentation(str(TEMPLATE))
+    s = prs.slides[0]
+    for shp in list(s.shapes):
+        shp._element.getparent().remove(shp._element)
+    set_theme_font(prs, FONT)
 
     # ── Title band ───────────────────────────────────────────────────────────
     band = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, IN(0), IN(0), IN(48), IN(6.6))
@@ -204,10 +228,10 @@ def build():
 
     text(s, "Structure is not function: satellite greenness reveals the hydrologic "
             "footprint of legacy water-spreader berms",
-         1.0, 0.7, 46.0, 2.6, 62, TEAL, bold=True, align=PP_ALIGN.CENTER)
+         1.0, 0.55, 46.0, 2.8, 74, TEAL, bold=False, align=PP_ALIGN.CENTER)
     text(s, "O. V. Crompton¹, A. N. Koop², S. Anderson³, S. Chaulagain³, "
             "D. A. Lapides⁴, M. B. Meles⁵, M. H. Nichols⁴",
-         1.0, 4.05, 46.0, 0.9, 30, NAVY, bold=True, align=PP_ALIGN.CENTER)
+         1.0, 4.15, 46.0, 0.9, 38, TEAL, bold=False, align=PP_ALIGN.CENTER)
     text(s, "¹USDA-ARS Hydrology & Remote Sensing Lab  ·  ²ORISE / USDA-ARS SCINet  ·  "
             "³Univ. of Arizona  ·  ⁴USDA-ARS Southwest Watershed Research Center  ·  "
             "⁵USDA-ARS Sustainable Ag. Water Systems      |      AGU H138 — Human Impacts on the Water Cycle",
