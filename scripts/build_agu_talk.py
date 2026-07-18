@@ -6,7 +6,7 @@ the talking. Optional one-line subtitle; no bullet walls.
 Usage:
     python scripts/build_agu_talk.py
 Output:
-    agu_talk_H138.pptx  (repo root; gitignored)
+    presentations/agu_talk_H138.pptx  (gitignored)
 """
 from pathlib import Path
 
@@ -19,7 +19,7 @@ from pptx.dml.color import RGBColor
 REPO = Path(__file__).resolve().parents[1]
 FIGS = REPO / "draft" / "overleaf" / "Figures"      # manuscript-quality figures
 OUTC = REPO / "figures" / "outcomes"
-OUT = REPO / "agu_talk_H138.pptx"
+OUT = REPO / "presentations" / "agu_talk_H138.pptx"
 
 # 16:9
 SW, SH = Inches(13.333), Inches(7.5)
@@ -209,6 +209,7 @@ def main():
         _txt(s, p, Inches(1.5), y, SW - Inches(2.6), Inches(0.9), 18, INK)
         y += Inches(1.0)
 
+    OUT.parent.mkdir(parents=True, exist_ok=True)
     prs.save(OUT)
     print(f"Saved {OUT}  ({len(prs.slides._sldIdLst)} slides)")
 

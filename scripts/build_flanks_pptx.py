@@ -8,7 +8,7 @@ notebook that produced it.
 Usage:
     python scripts/build_flanks_pptx.py
 Output:
-    flanks_breaches_figures.pptx  (repo root; gitignored)
+    presentations/flanks_breaches_figures.pptx  (gitignored)
 """
 from pathlib import Path
 import re
@@ -20,7 +20,7 @@ from pptx.dml.color import RGBColor
 
 REPO = Path(__file__).resolve().parents[1]
 FIG_DIR = REPO / "figures" / "failure_mechanisms"
-OUT = REPO / "flanks_breaches_figures.pptx"
+OUT = REPO / "presentations" / "flanks_breaches_figures.pptx"
 
 # Figures in the order each notebook produces them.
 MAIN_NB = "analysis - flanks breaches.ipynb"
@@ -201,6 +201,7 @@ def main():
             add_figure_slide(prs, FIG_DIR / fn, TITLES.get(fn, fn), caps.get(fn, ""))
             n_added += 1
 
+    OUT.parent.mkdir(parents=True, exist_ok=True)
     prs.save(OUT)
     print(f"Saved {OUT}  ({n_added} figure slides, {len(prs.slides.__iter__.__self__._sldIdLst)} total slides)")
 

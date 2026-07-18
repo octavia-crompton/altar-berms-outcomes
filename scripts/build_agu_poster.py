@@ -6,7 +6,7 @@ fonts, colors, column grid, rounded panels) is inherited from
 'CUAHSI biennial.pptx'.
 
 Usage:  python scripts/build_agu_poster.py
-Output: agu_poster_H138.pptx  (repo root; gitignored)
+Output: presentations/agu_poster_H138.pptx  (gitignored)
 """
 from pathlib import Path
 
@@ -20,8 +20,8 @@ from pptx.dml.color import RGBColor
 REPO = Path(__file__).resolve().parents[1]
 FIGS = REPO / "draft" / "overleaf" / "Figures"
 OUTC = REPO / "figures" / "outcomes"
-OUT = REPO / "agu_poster_H138.pptx"
-TEMPLATE = REPO / "CUAHSI biennial.pptx"   # inherit its embedded Montserrat + 48x36 canvas
+OUT = REPO / "presentations" / "agu_poster_H138.pptx"
+TEMPLATE = REPO / "presentations" / "CUAHSI biennial.pptx"   # inherit its embedded Montserrat + 48x36 canvas
 
 # ── Template design tokens ───────────────────────────────────────────────────
 FONT = "Montserrat"
@@ -342,6 +342,7 @@ def build():
     for col in (c1, c2, c3, c4):
         col.render(verbose=True)
 
+    OUT.parent.mkdir(parents=True, exist_ok=True)
     prs.save(OUT)
     return prs
 
