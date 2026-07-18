@@ -85,60 +85,69 @@ def panel(slide, x, y, w, h):
     return sh
 
 
+CPI = 5.1   # approx characters per inch of text width at body size (for wrapping)
+
+
 class Column:
-    """Stacks section panels down one column."""
+    """Collects section specs, then lays them out vertically justified."""
     def __init__(self, slide, xi):
         self.slide = slide
         self.x = COL_X[xi]
-        self.y = CONTENT_TOP
+        self.specs = []
 
-    def section(self, header, header_color=NAVY, body=None, body_size=21,
-                image=None, caption=None, takeaway=None, bullets_items=None,
-                img_scale=1.0):
-        x, w = self.x, COL_W
-        inner_x = x + PAD
-        inner_w = w - 2 * PAD
-        # measure
-        cy = PAD                                   # cursor inside panel (rel)
-        parts = []
-        # header
-        parts.append(("header", cy, header))
+    def section(self, header=None, **spec):
+        if header is not None:
+            spec["header"] = header
+        self.specs.append(spec)
+
+    # -- measure one section: return (parts, total_height) -------------------
+    def _layout(self, sp):
+        inner_w = COL_W - 2 * PAD
+        body_size = sp.get("body_size", 21)
+        cy = PAD
+        parts = [("header", cy, (sp["header"], sp.get("header_color", NAVY)))]
         cy += 1.15
-        if body:
-            nlines = max(1, int(len(body) / (inner_w * 4.0)) + body.count("\n") + 1)
-            bh = nlines * (body_size / 72.0 * 1.25) + 0.15
-            parts.append(("body", cy, (body, body_size, bh)))
-            cy += bh + 0.15
-        if bullets_items:
-            bh = sum(int(len(b) / (inner_w * 4.2)) + 1 for b in bullets_items) * \
-                 (body_size / 72.0 * 1.3) + 0.2 * len(bullets_items)
-            parts.append(("bullets", cy, (bullets_items, body_size, bh)))
+        if sp.get("body"):
+            b = sp["body"]
+            nlines = sum(max(1, int(len(seg) / (inner_w * CPI)) + 1)
+                         for seg in b.split("\n"))
+            bh = nlines * (body_size / 72.0 * 1.32) + 0.12
+            parts.append(("body", cy, (b, body_size, bh)))
+            cy += bh + 0.12
+        if sp.get("bullets_items"):
+            items = sp["bullets_items"]
+            nlines = sum(max(1, int(len(b) / (inner_w * CPI)) + 1) for b in items)
+            bh = nlines * (body_size / 72.0 * 1.32) + 0.16 * len(items)
+            parts.append(("bullets", cy, (items, body_size, bh)))
             cy += bh + 0.1
-        if image:
-            iw, ih = Image.open(image).size
-            disp_w = inner_w * img_scale
+        if sp.get("image"):
+            iw, ih = Image.open(sp["image"]).size
+            disp_w = inner_w * sp.get("img_scale", 1.0)
             disp_h = disp_w * ih / iw
-            parts.append(("image", cy, (image, disp_w, disp_h)))
-            cy += disp_h + 0.12
-        if caption:
-            ch = 0.55 + int(len(caption) / (inner_w * 4.6)) * 0.3
-            parts.append(("caption", cy, (caption, ch)))
-            cy += ch + 0.05
-        if takeaway:
-            th = 0.6 + int(len(takeaway) / (inner_w * 3.4)) * 0.42
-            parts.append(("takeaway", cy, (takeaway, th)))
-            cy += th + 0.05
+            parts.append(("image", cy, (sp["image"], disp_w, disp_h)))
+            cy += disp_h + 0.14
+        if sp.get("caption"):
+            c = sp["caption"]
+            ch = (int(len(c) / (inner_w * (CPI + 1))) + 1) * 0.30 + 0.12
+            parts.append(("caption", cy, (c, ch)))
+            cy += ch + 0.04
+        if sp.get("takeaway"):
+            t = sp["takeaway"]
+            th = (int(len(t) / (inner_w * (CPI - 1.4))) + 1) * 0.42 + 0.12
+            parts.append(("takeaway", cy, (t, th)))
+            cy += th + 0.04
         cy += PAD - 0.15
-        total_h = cy
+        return parts, cy
 
-        # draw panel then content
-        panel(self.slide, x, self.y, w, total_h)
-        base = self.y
+    def _draw(self, sp, y, parts, total_h):
+        x, w = self.x, COL_W
+        inner_x, inner_w = x + PAD, COL_W - 2 * PAD
+        panel(self.slide, x, y, w, total_h)
         for kind, ry, payload in parts:
-            yy = base + ry
+            yy = y + ry
             if kind == "header":
-                text(self.slide, payload, inner_x, yy, inner_w, 1.0, 34,
-                     header_color, bold=True)
+                s, col = payload
+                text(self.slide, s, inner_x, yy, inner_w, 1.0, 34, col, bold=True)
             elif kind == "body":
                 s, sz, bh = payload
                 text(self.slide, s, inner_x, yy, inner_w, bh, sz, INK)
@@ -147,17 +156,36 @@ class Column:
                 bullets(self.slide, items, inner_x, yy, inner_w, bh, sz, INK)
             elif kind == "image":
                 img, dw, dh = payload
-                left = x + (w - dw) / 2
-                self.slide.shapes.add_picture(str(img), IN(left), IN(yy),
-                                              IN(dw), IN(dh))
+                self.slide.shapes.add_picture(str(img), IN(x + (w - dw) / 2),
+                                              IN(yy), IN(dw), IN(dh))
             elif kind == "caption":
                 s, ch = payload
                 text(self.slide, s, inner_x, yy, inner_w, ch, 16, MUTE, italic=True)
             elif kind == "takeaway":
                 s, th = payload
                 text(self.slide, s, inner_x, yy, inner_w, th, 22, GREEN, bold=True)
-        self.y += total_h + GAP
-        return total_h
+
+    def render(self, verbose=False):
+        laid = [self._layout(sp) for sp in self.specs]
+        heights = [h for _, h in laid]
+        n = len(heights)
+        avail = CONTENT_BOT - CONTENT_TOP
+        # gap = the slack distributed exactly across the n-1 inter-panel gaps,
+        # clamped so panels neither collide nor drift too far apart.
+        if n > 1:
+            gap = (avail - sum(heights)) / (n - 1)
+            gap = max(0.30, min(3.1, gap))
+        else:
+            gap = GAP
+        y = CONTENT_TOP
+        for sp, (parts, h) in zip(self.specs, laid):
+            self._draw(sp, y, parts, h)
+            y += h + gap
+        bottom = y - gap
+        if verbose:
+            print(f"  col x={self.x}: sum_h={sum(heights):.1f} gap={gap:.2f} "
+                  f"bottom={bottom:.1f} {'OVERFLOW' if bottom > CONTENT_BOT + 0.05 else 'ok'}")
+        return bottom
 
 
 def build():
@@ -198,9 +226,9 @@ def build():
              "whether they do?",
         body_size=21)
     c1.section(
-        "Study system: Altar Valley, Arizona",
+        header="Study system: Altar Valley, Arizona",
         header_color=TEAL,
-        image=OUTC / "fig1_study_area.png",
+        image=OUTC / "fig1_study_area.png", img_scale=1.0,
         caption="775 mapped berms across a 247,000-ha semi-arid watershed, colored by "
                 "structural condition (intact vs. degraded).")
     c1.section(
@@ -286,6 +314,9 @@ def build():
              "SSURGO. LiDAR: Pima County RFCD.  Berm inventory: Nichols et al. (2021), "
              "Catena. Vegetation metric after Crompton et al. (2025).",
         body_size=16)
+
+    for col in (c1, c2, c3, c4):
+        col.render(verbose=True)
 
     prs.save(OUT)
     return prs
