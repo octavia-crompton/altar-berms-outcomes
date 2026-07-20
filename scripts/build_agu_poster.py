@@ -226,8 +226,8 @@ def build():
     rule.fill.solid(); rule.fill.fore_color.rgb = TEAL
     rule.line.fill.background(); rule.shadow.inherit = False
 
-    text(s, "Structure is not function: satellite greenness reveals the hydrologic "
-            "footprint of legacy water-spreader berms",
+    text(s, "Controls on berm structural condition and vegetation response "
+            "in the Altar Valley, southern Arizona",
          1.0, 0.55, 46.0, 2.8, 74, TEAL, bold=False, align=PP_ALIGN.CENTER)
     text(s, "O. V. Crompton¹, A. N. Koop², S. Anderson³, S. Chaulagain³, "
             "D. A. Lapides⁴, M. B. Meles⁵, M. H. Nichols⁴",
@@ -237,106 +237,120 @@ def build():
             "⁵USDA-ARS Sustainable Ag. Water Systems      |      AGU H138 — Human Impacts on the Water Cycle",
          1.0, 5.05, 46.0, 0.8, 19, MUTE, align=PP_ALIGN.CENTER)
 
-    # ── Column 1 — motivation & study system ─────────────────────────────────
+    # ── Column 1 — background, study area, open question ─────────────────────
     c1 = Column(s, 0)
     c1.section(
-        "The unmeasured plumbing of drylands",
-        body="Beginning in the 1930s, agencies and ranchers built earthworks across "
-             "the US Southwest to slow runoff and force infiltration. More than 1,500 "
-             "water-spreader berms remain in the Altar Valley alone. These structures "
-             "still redirect water — yet their condition and hydrologic effect are "
-             "absent from the models we use to represent human influence on the water "
-             "cycle. We ask: after 90 years, which berms still work, and what controls "
-             "whether they do?",
+        "Legacy conservation earthworks",
+        body="Beginning in the 1930s, the US Soil Conservation Service (now the "
+             "NRCS) partnered with private landowners to fund and construct water "
+             "management structures, resulting in thousands of earthen berms across "
+             "southwestern rangelands. Water spreader berms were typically "
+             "constructed as large earthen structures (often more than 100 m long "
+             "and 3–5 m wide) along landscape contours. Built perpendicular to the "
+             "flow direction, they reduce flow velocities, allowing time for runoff "
+             "to infiltrate and increase soil moisture, which is critical for "
+             "supporting vegetation.",
         body_size=21)
     c1.section(
-        header="Study system: Altar Valley, Arizona",
+        header="Study area: Altar Valley, southern Arizona",
         header_color=TEAL,
-        image=OUTC / "fig1_study_area.png", img_scale=1.0,
-        caption="775 mapped berms across a 247,000-ha semi-arid watershed, colored by "
-                "structural condition (intact vs. degraded).")
+        image=FIGS / "LocMap.png",
+        caption="Berm locations in the Altar Valley, colored by structural condition "
+                "(green, intact; red, degraded), over shaded relief with the stream "
+                "network (blue) and study-area boundary (black). Insets: location in "
+                "the southwestern US, and aerial imagery of a representative berm "
+                "cluster.")
     c1.section(
-        "By the numbers", header_color=TEAL,
-        bullets_items=[
-            "1,500+ structures built since the 1930s",
-            "775 berms analyzed with Sentinel-2 (2016–2024)",
-            "6 soil / landscape predictors; 2 outcomes",
-        ], body_size=22)
+        "The open question", header_color=TEAL,
+        body="Earthen berms are subject to failure over time: many have been "
+             "breached (concentrated runoff cuts through a berm) or flanked "
+             "(runoff routes around the end). Yet few studies have addressed how "
+             "landscape controls — geomorphic position, soils, and local topography "
+             "— influence berm condition and vegetation response. Likewise, whether "
+             "berm failure affects vegetation response is unknown.",
+        body_size=21)
 
-    # ── Column 2 — approach ──────────────────────────────────────────────────
+    # ── Column 2 — vegetation-response metric and approach ───────────────────
     c2 = Column(s, 1)
     c2.section(
-        "Each berm is a measurement",
+        "Quantifying vegetation response",
         header_color=TEAL,
         image=FIGS / "fig2_veg_response.png",
-        caption="Vegetation response ΔS = (upslope − downslope) SAVI, normalized by "
-                "background, over August–September 2016–2024.",
-        takeaway="Satellite greenness turns a landscape of structures into hundreds of "
-                 "field experiments.")
+        caption="Vegetation response metric for an example berm.",
+        takeaway="Following Crompton et al. (2025), vegetation response is the "
+                 "percent difference in SAVI between areas immediately upslope and "
+                 "downslope of berms, within 60 m, normalized by background "
+                 "conditions (ΔS).")
     c2.section(
-        "Predictors and analysis",
-        body="For each berm we assembled soil texture, soil development (B-horizon), "
-             "landform, hillslope slope, flow accumulation, and berm length from NRCS "
-             "SSURGO and LiDAR. Two binary outcomes — structural condition (intact vs. "
-             "degraded) and vegetation response (ΔS > 7%) — were tested against each "
-             "predictor with two-sided Fisher / chi-square tests, controlled logistic "
-             "regression, and Random Forests (CV-AUC, permutation importance). A "
-             "threshold sweep (0–10%) confirmed the results are not an artifact of the "
-             "7% cutoff.",
+        "Approach",
+        body="We use controlled logistic regression to isolate the independent "
+             "contributions of landform, soil texture, soil development, berm "
+             "length, surface slope, and flow accumulation to berm structural "
+             "condition (intact vs. degraded) and vegetation response, complemented "
+             "by a Random Forest classifier to assess overall predictive "
+             "performance. Predictors are derived from NRCS SSURGO soil survey data "
+             "and LiDAR-derived terrain. Nearly half of berms (47%) exceed the 7% "
+             "SAVI-difference threshold used to identify a measurable vegetation "
+             "response.",
         body_size=21)
     c2.section(
-        "Models recover both outcomes",
+        "Predictive performance",
         header_color=TEAL,
         image=FIGS / "fig5_model_performance_importance.png",
-        caption="Random Forest permutation importance for berm condition and "
-                "vegetation response (cross-validated).",
-        takeaway="The same landscape predictors skillfully rank both outcomes — but "
-                 "rank them differently.")
+        caption="Random Forest permutation importance for each outcome.",
+        takeaway="Predictive accuracy is modest (CV AUC = 0.71 for condition, 0.64 "
+                 "for vegetation response), identifying broad landscape-scale "
+                 "controls rather than mechanistic predictors.")
 
-    # ── Column 3 — what controls each outcome ────────────────────────────────
+    # ── Column 3 — controls on each outcome ──────────────────────────────────
     c3 = Column(s, 2)
     c3.section(
-        "What keeps a berm intact",
+        "Structural condition",
         header_color=TEAL,
         image=FIGS / "fig6_berm_condition.png",
-        caption="Structural condition by predictor (Fisher / χ² with FDR correction).",
-        takeaway="Condition is set by berm length, flow accumulation, and soil texture "
-                 "— shorter berms, lower flow accumulation, and finer soils stay intact.")
+        caption="Six predictors of berm structural condition (intact vs. degraded).",
+        takeaway="Berms are more likely to remain intact when they are shorter, "
+                 "located in positions of lower flow accumulation, and built on "
+                 "finer-textured soils.")
     c3.section(
-        "What drives a vegetation response",
+        "Vegetation response",
         header_color=TEAL,
         image=FIGS / "fig7_vegetation_response.png",
-        caption="Vegetation response by predictor.",
-        takeaway="Response follows a different recipe — slope and soil texture; steeper "
-                 "slopes and coarser (sandy loam) soils give the largest response.")
+        caption="Six predictors of vegetation response.",
+        takeaway="Vegetation responses are larger on steeper slopes and "
+                 "coarser-textured (sandy loam) soils.")
 
-    # ── Column 4 — key result, conclusions, refs ─────────────────────────────
+    # ── Column 4 — independence, confounding, conclusions ────────────────────
     c4 = Column(s, 3)
     c4.section(
-        "Structure ≠ function",
+        "Condition and response are independent",
         header_color=NAVY,
         image=FIGS / "fig8_veg_response_by_condition_texture.png",
-        caption="Co-occurrence of condition and vegetation response across berms.",
-        takeaway="An intact berm is not a working berm: structural condition and "
-                 "vegetation response are statistically independent (φ ≈ −0.02, p = 0.61).")
+        caption="Co-occurrence of structural condition and vegetation response.",
+        takeaway="Structural condition and vegetation response are statistically "
+                 "independent, indicating that intact berms do not necessarily "
+                 "produce stronger vegetation responses.")
     c4.section(
-        "Landform is a red herring",
+        "Landform is confounded",
         header_color=TEAL,
         image=FIGS / "fig3_controlled_predictors.png",
-        takeaway="Apparent landform effects vanish once slope and soil are controlled.")
+        takeaway="Landform is univariately associated with vegetation response but "
+                 "loses significance after controlling for slope and soil "
+                 "properties, indicating confounding effects of these variables.")
     c4.section(
         "Conclusions", header_color=NAVY,
         bullets_items=[
-            "Legacy earthworks are a widespread, unrepresented human control on dryland hydrology.",
-            "Structure and function are decoupled — condition does not predict vegetation response.",
-            "Distinct controls govern each outcome, so a single \"berm effect\" is misleading.",
-            "Remote sensing makes the human footprint measurable at the scale of the intervention.",
+            "Structural condition and vegetation response are shaped by largely separate landscape controls.",
+            "Condition is primarily determined by berm length, flow accumulation, and soil texture; vegetation response is more sensitive to slope and soil texture.",
+            "The two outcomes are statistically independent, highlighting the need to evaluate physical integrity and ecological function separately.",
+            "These controls can be assessed from existing terrain and soil survey data, providing a basis for prioritizing maintenance or removal across large berm inventories.",
         ], body_size=20)
     c4.section(
         "Acknowledgements & references", header_color=TEAL,
-        body="USDA-NRCS CEAP–Grazing Lands (NR213A750023C013). Soil data: USDA-NRCS "
-             "SSURGO. LiDAR: Pima County RFCD.  Berm inventory: Nichols et al. (2021), "
-             "Catena. Vegetation metric after Crompton et al. (2025).",
+        body="Supported by USDA-NRCS CEAP–Grazing Lands (NR213A750023C013). Soil "
+             "data: USDA-NRCS SSURGO. LiDAR: Pima County RFCD. Berm inventory: "
+             "Nichols and Degginger (2021), Catena. Vegetation metric follows "
+             "Crompton et al. (2025).",
         body_size=16)
 
     for col in (c1, c2, c3, c4):
