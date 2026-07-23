@@ -51,6 +51,12 @@ def blank(prs):
     return prs.slides.add_slide(prs.slide_layouts[6])
 
 
+def notes(slide, text):
+    """Attach speaker notes to a slide."""
+    slide.notes_slide.notes_text_frame.text = text
+    return slide
+
+
 def title_slide(prs, title, subtitle, byline):
     s = blank(prs)
     _txt(s, title, Inches(1.0), Inches(2.15), SW - Inches(2.0), Inches(2.0),
@@ -124,40 +130,31 @@ def main():
     )
 
     # 2 — Hook: the human alteration
-    figure_slide(
+    #     (former slide 3 "the gap" now lives in these speaker notes)
+    notes(figure_slide(
         prs, FIGS / "LocMap.png",                      # manuscript Figure 1
         "Beginning in the 1930s we re-plumbed these watersheds — and walked away",
         "More than 1,500 structures built across the 247,000 ha Altar Valley since "
         "the early 1900s; we analyze 775 mapped water spreader berms "
         "(green, intact; red, degraded)",
-    )
+    ),
+        "Thousands of these structures still redirect water. Almost none are "
+        "represented in our models. Their condition and their hydrologic effect "
+        "are essentially unmeasured at scale.")
 
-    # 3 — The gap (session framing)
-    statement_slide(
-        prs,
-        "Thousands of these structures still redirect water.\n"
-        "Almost none are represented in our models.",
-        "Their condition and their hydrologic effect are essentially unmeasured at scale.",
-    )
-
-    # 4 — Method
-    figure_slide(
+    # 3 — Method
+    #     (former slide 5 "scale of the effect" now lives in these speaker notes)
+    notes(figure_slide(
         prs, FIGS / "fig2_veg_response.png",
         "Satellite greenness turns each berm into a measurement",
         "ΔS = percent SAVI difference 15–60 m upslope vs. downslope, normalized by "
         "background >200 m from any berm (Aug–Sep 2016–2024, Sentinel-2)",
-    )
+    ),
+        "Ninety years on, the outcomes are mixed: 775 berms analyzed; 41% "
+        "structurally degraded (203 flanked, 114 breached); 47% show a vegetation "
+        "response (ΔS > 7%).")
 
-    # 5 — The scale of the effect
-    stat_slide(
-        prs,
-        [("775", "berms analyzed"),
-         ("41%", "structurally degraded\n(203 flanked, 114 breached)"),
-         ("47%", "show a vegetation\nresponse (ΔS > 7%)")],
-        "Ninety years on, the outcomes are mixed",
-    )
-
-    # 6 — Condition controls
+    # 4 — Condition controls
     figure_slide(
         prs, FIGS / "fig6_berm_condition.png",
         "Structural condition is set by length, flow accumulation, and soil texture",
@@ -165,7 +162,7 @@ def main():
         "soils stay intact (ΔAIC +30.6, +6.7, +3.0)",
     )
 
-    # 7 — Vegetation response controls
+    # 5 — Vegetation response controls
     figure_slide(
         prs, FIGS / "fig7_vegetation_response.png",
         "Vegetation response is set by slope and soil texture — a different recipe",
@@ -173,7 +170,7 @@ def main():
         "response (ΔAIC +18.8 and +5.6; RF CV AUC 0.71 condition / 0.64 response)",
     )
 
-    # 8 — Key finding
+    # 6 — Key finding
     figure_slide(
         prs, FIGS / "fig8_veg_response_by_condition_texture.png",
         "An intact berm is not a working berm",
@@ -182,23 +179,19 @@ def main():
         "(52% vs. 38%, p = 0.034)",
     )
 
-    # 9 — Confounding / controlled analysis
-    figure_slide(
+    # 7 — Confounding / controlled analysis
+    #     (former slide 10 "so what" now lives in these speaker notes)
+    notes(figure_slide(
         prs, FIGS / "fig3_controlled_predictors.png",
         "Landform looks important — until you control for slope and soil",
         "Univariately associated with vegetation response (p < 0.001), landform "
         "drops to p = 0.310 once slope and soil texture are controlled",
-    )
+    ),
+        "To represent human influence, it is not enough to know that a structure "
+        "exists — or even that it is intact. Function depends on landscape context, "
+        "and remote sensing can measure it at scale.")
 
-    # 10 — So what (session-facing)
-    statement_slide(
-        prs,
-        "To represent human influence, it is not enough to know\n"
-        "that a structure exists — or even that it is intact.",
-        "Function depends on landscape context, and remote sensing can measure it at scale.",
-    )
-
-    # 11 — Takeaways
+    # 8 — Takeaways
     s = blank(prs)
     _txt(s, "Takeaways", Inches(0.9), Inches(0.9), SW - Inches(1.8), Inches(0.8),
          30, INK, bold=True)
