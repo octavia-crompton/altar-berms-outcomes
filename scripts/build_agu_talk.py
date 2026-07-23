@@ -97,16 +97,28 @@ def stat_slide(prs, stats, headline=None):
 
 
 def figure_slide(prs, img, headline, sub=None):
-    """Takeaway as the title; figure fills the rest."""
+    """Takeaway as the title; figure fills the rest. Headline and subtitle
+    heights adapt to their text length, so a title that wraps to two lines
+    no longer collides with the caption or the figure."""
     s = blank(prs)
-    _txt(s, headline, Inches(0.7), Inches(0.42), SW - Inches(1.4), Inches(0.75),
+    text_w = SW - Inches(1.4)
+
+    # Headline (27 pt bold): allow wrapping to multiple lines (~60 chars/line).
+    hl_lines = max(1, -(-len(headline) // 60))
+    hl_h = 0.52 * hl_lines + 0.10
+    _txt(s, headline, Inches(0.7), Inches(0.42), text_w, Inches(hl_h),
          27, INK, bold=True)
-    top = Inches(1.30)
+    cur = 0.42 + hl_h + 0.06
+
     if sub:
-        _txt(s, sub, Inches(0.7), Inches(1.18), SW - Inches(1.4), Inches(0.5),
-             14, MUTE)
-        top = Inches(1.72)
-    max_w = SW - Inches(1.4)
+        # Subtitle (14 pt): ~115 chars/line at this width.
+        sub_lines = max(1, -(-len(sub) // 115))
+        sub_h = 0.26 * sub_lines + 0.06
+        _txt(s, sub, Inches(0.7), Inches(cur), text_w, Inches(sub_h), 14, MUTE)
+        cur += sub_h + 0.10
+
+    top = Inches(cur)
+    max_w = text_w
     max_h = SH - top - Inches(0.45)
     iw, ih = Image.open(img).size
     scale = min(max_w / iw, max_h / ih)
@@ -133,7 +145,7 @@ def main():
     #     (former slide 3 "the gap" now lives in these speaker notes)
     notes(figure_slide(
         prs, FIGS / "LocMap.png",                      # manuscript Figure 1
-        "Beginning in the 1930s we re-plumbed these watersheds — and walked away",
+        "In the 1930s we re-engineered these watersheds — then walked away",
         "More than 1,500 structures built across the 247,000 ha Altar Valley since "
         "the early 1900s; we analyze 775 mapped water spreader berms "
         "(green, intact; red, degraded)",
