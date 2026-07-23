@@ -125,10 +125,11 @@ def main():
 
     # 2 — Hook: the human alteration
     figure_slide(
-        prs, OUTC / "fig1_study_area.png",
-        "In the 1930s we re-plumbed these watersheds — and walked away",
-        "More than 1,500 structures built across the 247,000 ha Altar Valley to "
-        "slow runoff and force infiltration",
+        prs, FIGS / "LocMap.png",                      # manuscript Figure 1
+        "Beginning in the 1930s we re-plumbed these watersheds — and walked away",
+        "More than 1,500 structures built across the 247,000 ha Altar Valley since "
+        "the early 1900s; we analyze 775 mapped water spreader berms "
+        "(green, intact; red, degraded)",
     )
 
     # 3 — The gap (session framing)
@@ -143,8 +144,8 @@ def main():
     figure_slide(
         prs, FIGS / "fig2_veg_response.png",
         "Satellite greenness turns each berm into a measurement",
-        "ΔS = upslope − downslope SAVI, normalized by background "
-        "(Aug–Sep, 2016–2024)",
+        "ΔS = percent SAVI difference 15–60 m upslope vs. downslope, normalized by "
+        "background >200 m from any berm (Aug–Sep 2016–2024, Sentinel-2)",
     )
 
     # 5 — The scale of the effect
@@ -160,14 +161,16 @@ def main():
     figure_slide(
         prs, FIGS / "fig6_berm_condition.png",
         "Structural condition is set by length, flow accumulation, and soil texture",
-        "Shorter berms, in lower flow accumulation, on finer soils stay intact",
+        "Shorter berms, in positions of lower flow accumulation, on finer-textured "
+        "soils stay intact (ΔAIC +30.6, +6.7, +3.0)",
     )
 
     # 7 — Vegetation response controls
     figure_slide(
         prs, FIGS / "fig7_vegetation_response.png",
         "Vegetation response is set by slope and soil texture — a different recipe",
-        "Steeper slopes and coarser (sandy loam) soils give the largest response",
+        "Steeper slopes and coarser-textured (sandy loam) soils give the largest "
+        "response (ΔAIC +18.8 and +5.6; RF CV AUC 0.71 condition / 0.64 response)",
     )
 
     # 8 — Key finding
@@ -175,14 +178,16 @@ def main():
         prs, FIGS / "fig8_veg_response_by_condition_texture.png",
         "An intact berm is not a working berm",
         "Structural condition and vegetation response are statistically "
-        "independent (φ ≈ −0.02, p = 0.61)",
+        "independent (φ = −0.02, p = 0.612); only sandy-loam berms differ "
+        "(52% vs. 38%, p = 0.034)",
     )
 
     # 9 — Confounding / controlled analysis
     figure_slide(
         prs, FIGS / "fig3_controlled_predictors.png",
         "Landform looks important — until you control for slope and soil",
-        "Apparent landform effects are explained by correlated slope and texture",
+        "Univariately associated with vegetation response (p < 0.001), landform "
+        "drops to p = 0.310 once slope and soil texture are controlled",
     )
 
     # 10 — So what (session-facing)
@@ -199,9 +204,10 @@ def main():
          30, INK, bold=True)
     points = [
         "Legacy earthworks are a widespread, unrepresented human control on dryland hydrology.",
-        "Structure and function are decoupled — condition does not predict vegetation response.",
-        "Different controls govern each: length / flow accumulation / texture vs. slope / texture.",
-        "Satellite greenness makes the human impact measurable across hundreds of structures.",
+        "Structural condition and vegetation response are shaped by largely separate landscape controls.",
+        "Condition is determined by berm length, flow accumulation, and soil texture; vegetation response by slope and soil texture.",
+        "The two outcomes are statistically independent — physical integrity and ecological function must be evaluated separately.",
+        "These controls can be read from existing terrain and soil-survey data, guiding maintenance or removal at scale.",
     ]
     y = Inches(2.1)
     for p in points:
